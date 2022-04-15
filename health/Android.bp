@@ -17,22 +17,22 @@
 package {
     // See: http://go/android-license-faq
     // A large-scale-change added 'default_applicable_licenses' to import
-    // all of the 'license_kinds' from "//device/google/gs201:device_google_gs201_license"
+    // all of the 'license_kinds' from "//device/google/zuma:device_google_zuma_license"
     // to get the below license kinds:
     //   SPDX-license-identifier-Apache-2.0
     default_applicable_licenses: [
-        "//device/google/gs201:device_google_gs201_license",
+        "//device/google/zuma:device_google_zuma_license",
     ],
 }
 
 cc_defaults {
-    name: "android.hardware.health-service.gs201-defaults",
+    name: "android.hardware.health-service.zuma-defaults",
     defaults: [
         "libhealth_aidl_impl_user",
         "libhealth_aidl_charger_defaults",
     ],
     relative_install_path: "hw",
-    vintf_fragments: ["android.hardware.health-service.gs201.xml"],
+    vintf_fragments: ["android.hardware.health-service.zuma.xml"],
     srcs: [
         "Health.cpp",
     ],
@@ -48,10 +48,10 @@ cc_defaults {
 }
 
 cc_binary {
-    name: "android.hardware.health-service.gs201",
-    defaults: ["android.hardware.health-service.gs201-defaults"],
+    name: "android.hardware.health-service.zuma",
+    defaults: ["android.hardware.health-service.zuma-defaults"],
     proprietary: true,
-    init_rc: ["android.hardware.health-service.gs201.rc"],
+    init_rc: ["android.hardware.health-service.zuma.rc"],
     overrides: ["charger"],
     shared_libs: [
         "libpixelhealth",
@@ -59,9 +59,9 @@ cc_binary {
 }
 
 cc_binary {
-    name: "android.hardware.health-service.gs201_recovery",
-    defaults: ["android.hardware.health-service.gs201-defaults"],
+    name: "android.hardware.health-service.zuma_recovery",
+    defaults: ["android.hardware.health-service.zuma-defaults"],
     recovery: true,
-    init_rc: ["android.hardware.health-service.gs201_recovery.rc"],
+    init_rc: ["android.hardware.health-service.zuma_recovery.rc"],
     overrides: ["charger.recovery"],
 }

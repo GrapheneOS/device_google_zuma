@@ -27,38 +27,38 @@
 package {
     // See: http://go/android-license-faq
     // A large-scale-change added 'default_applicable_licenses' to import
-    // all of the 'license_kinds' from "device_google_gs201_license"
+    // all of the 'license_kinds' from "device_google_zuma_license"
     // to get the below license kinds:
     //   SPDX-license-identifier-Apache-2.0
-    default_applicable_licenses: ["device_google_gs201_license"],
+    default_applicable_licenses: ["device_google_zuma_license"],
 }
 
 genrule {
-    name: "gen_fstab.gs201",
-    srcs: ["fstab.gs201.in"],
-    out: ["fstab.gs201"],
+    name: "gen_fstab.zuma",
+    srcs: ["fstab.zuma.in"],
+    out: ["fstab.zuma"],
     cmd: "sed -e s/@fileencryption@/::inlinecrypt_optimized+wrappedkey_v0/" +
         " -e s/@metadata_encryption@/:wrappedkey_v0/ $(in) > $(out)",
 }
 
 genrule {
-    name: "gen_fstab.gs201-fips",
-    srcs: ["fstab.gs201.in"],
-    out: ["fstab.gs201-fips"],
+    name: "gen_fstab.zuma-fips",
+    srcs: ["fstab.zuma.in"],
+    out: ["fstab.zuma-fips"],
     cmd: "sed -e s/@fileencryption@/aes-256-xts/" +
         " -e s/@metadata_encryption@/aes-256-xts/ $(in) > $(out)",
 }
 
 prebuilt_etc {
-    name: "fstab.gs201",
-    src: ":gen_fstab.gs201",
+    name: "fstab.zuma",
+    src: ":gen_fstab.zuma",
     vendor: true,
     vendor_ramdisk_available: true,
 }
 
 prebuilt_etc {
-    name: "fstab.gs201-fips",
-    src: ":gen_fstab.gs201-fips",
+    name: "fstab.zuma-fips",
+    src: ":gen_fstab.zuma-fips",
     vendor: true,
     vendor_ramdisk_available: true,
 }

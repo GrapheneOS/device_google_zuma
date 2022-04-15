@@ -14,8 +14,8 @@
 # limitations under the License.
 #
 
--include vendor/google_devices/gs201/proprietary/telephony/device-vendor.mk
-include device/google/gs201/device.mk
+-include vendor/google_devices/zuma/proprietary/telephony/device-vendor.mk
+include device/google/zuma/device.mk
 
 # Telephony
 PRODUCT_COPY_FILES += \
@@ -30,7 +30,7 @@ PRODUCT_COPY_FILES += \
 
 # Set system properties identifying the chipset
 PRODUCT_VENDOR_PROPERTIES += ro.soc.manufacturer=Google
-PRODUCT_VENDOR_PROPERTIES += ro.soc.model=GS201
+PRODUCT_VENDOR_PROPERTIES += ro.soc.model=ZUMA
 
 PRODUCT_PRODUCT_PROPERTIES += \
     persist.vendor.testing_battery_profile=2

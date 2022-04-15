@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-LOCAL_WIFI_PATH := device/google/gs201/wifi/qcom
+LOCAL_WIFI_PATH := device/google/zuma/wifi/qcom
 
 # wlan flags
 BOARD_WLAN_DEVICE := qcwcn

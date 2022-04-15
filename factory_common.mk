@@ -14,8 +14,8 @@
 # limitations under the License.
 #
 
-$(call inherit-product, device/google/gs201/aosp_common.mk)
-$(call inherit-product-if-exists, vendor/google_devices/gs201/factory/pixel/device-factory.mk)
+$(call inherit-product, device/google/zuma/aosp_common.mk)
+$(call inherit-product-if-exists, vendor/google_devices/zuma/factory/pixel/device-factory.mk)
 
 PRODUCT_PROPERTY_OVERRIDES += service.adb.root=1 \
                               ro.vendor.factory=1
@@ -61,10 +61,10 @@ BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 PRODUCT_SET_DEBUGFS_RESTRICTIONS := false
 
 # Disable Bluetooth as default in factory build
-DEVICE_PACKAGE_OVERLAYS += device/google/gs201/overlay-factory
+DEVICE_PACKAGE_OVERLAYS += device/google/zuma/overlay-factory
 
 PRODUCT_COPY_FILES += \
-    device/google/gs201/conf/init.factory.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.factory.rc
+    device/google/zuma/conf/init.factory.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.factory.rc
 
 BOARD_SEPOLICY_DIRS += hardware/google/pixel-sepolicy/factory_boost
 

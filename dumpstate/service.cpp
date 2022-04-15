@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#define LOG_TAG "android.hardware.dumpstate@1.0-service.gs201"
+#define LOG_TAG "android.hardware.dumpstate@1.0-service.zuma"
 
 #include <hidl/HidlSupport.h>
 #include <hidl/HidlTransportSupport.h>

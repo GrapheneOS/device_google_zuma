@@ -15,7 +15,7 @@
 -->
 <!-- Pixel specific EuiccSupportPixel overlays -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.euiccpixel.overlay.gs201"
+    package="com.google.euiccpixel.overlay.zuma"
     android:versionCode="1"
     android:versionName="1.0">
     <application android:hasCode="false" />

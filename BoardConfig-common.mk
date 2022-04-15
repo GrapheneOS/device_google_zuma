@@ -20,11 +20,11 @@ include build/make/target/board/BoardConfigPixelCommon.mk
 PRODUCT_FULL_TREBLE_OVERRIDE := true
 
 # HACK : To fix up after bring up multimedia devices.
-TARGET_SOC := gs201
+TARGET_SOC := zuma
 
 TARGET_SOC_NAME := google
 
-USES_DEVICE_GOOGLE_GS201 := true
+USES_DEVICE_GOOGLE_ZUMA := true
 
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-2a
@@ -56,12 +56,12 @@ endif
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
 BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
-TARGET_RECOVERY_WIPE := device/google/gs201/conf/recovery.wipe
+TARGET_RECOVERY_WIPE := device/google/zuma/conf/recovery.wipe
 
 # This is the fstab file that will be included in the recovery image.  Note that
 # recovery doesn't care about the encryption settings, so it doesn't matter
 # whether we use the normal or the fips fstab here.
-TARGET_RECOVERY_FSTAB_GENRULE := gen_fstab.gs201
+TARGET_RECOVERY_FSTAB_GENRULE := gen_fstab.zuma
 
 TARGET_RECOVERY_PIXEL_FORMAT := ABGR_8888
 TARGET_RECOVERY_UI_MARGIN_HEIGHT := 165
@@ -99,7 +99,7 @@ endif
 BOARD_EMULATOR_COMMON_MODULES := liblight
 
 OVERRIDE_RS_DRIVER := libRSDriverArm.so
-BOARD_EGL_CFG := device/google/gs201/conf/egl.cfg
+BOARD_EGL_CFG := device/google/zuma/conf/egl.cfg
 #BOARD_USES_HGL := true
 USE_OPENGL_RENDERER := true
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
@@ -254,7 +254,7 @@ HWC_SUPPORT_COLOR_TRANSFORM := true
 BOARD_USES_EXYNOS_AFBC_FEATURE := true
 #BOARD_USES_HDRUI_GLES_CONVERSION := true
 
-BOARD_LIBACRYL_DEFAULT_COMPOSITOR := fimg2d_gs201
+BOARD_LIBACRYL_DEFAULT_COMPOSITOR := fimg2d_zuma
 BOARD_LIBACRYL_G2D_HDR_PLUGIN := libacryl_hdr_plugin
 
 # HWCServices
@@ -303,7 +303,7 @@ BOARD_USES_METADATA_PARTITION := true
 #BOARD_USES_FIMGAPI_V5X := true
 
 # SECCOMP Policy
-BOARD_SECCOMP_POLICY = device/google/gs201/seccomp_policy
+BOARD_SECCOMP_POLICY = device/google/zuma/seccomp_policy
 
 #CURL
 BOARD_USES_CURL := true
@@ -396,7 +396,7 @@ BOARD_VENDOR_KERNEL_MODULES := $(KERNEL_MODULES)
 # Using BUILD_COPY_HEADERS
 BUILD_BROKEN_USES_BUILD_COPY_HEADERS := true
 
-include device/google/gs201-sepolicy/gs201-sepolicy.mk
+include device/google/zuma-sepolicy/zuma-sepolicy.mk
 
 # Battery options
 BOARD_KERNEL_CMDLINE += at24.write_timeout=100

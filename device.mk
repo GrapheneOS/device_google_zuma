@@ -16,7 +16,7 @@
 
 include device/google/gs-common/device.mk
 
-TARGET_BOARD_PLATFORM := gs201
+TARGET_BOARD_PLATFORM := zuma
 
 AB_OTA_POSTINSTALL_CONFIG += \
 	RUN_POSTINSTALL_system=true \
@@ -42,11 +42,11 @@ PRODUCT_SOONG_NAMESPACES += \
 	hardware/google/av \
 	hardware/google/gchips \
 	hardware/google/graphics/common \
-	hardware/google/graphics/gs201 \
+	hardware/google/graphics/zuma \
 	hardware/google/interfaces \
 	hardware/google/pixel \
-	device/google/gs201 \
-	device/google/gs201/powerstats \
+	device/google/zuma \
+	device/google/zuma/powerstats \
 	vendor/google/whitechapel/tools \
 	vendor/google/interfaces \
 	vendor/google_devices/common/proprietary/confirmatioui_hal \
@@ -80,7 +80,7 @@ PRODUCT_PROPERTY_OVERRIDES += log.tag.ShannonQNS-xcap=DEBUG
 PRODUCT_PROPERTY_OVERRIDES += log.tag.ShannonQNS-HC=DEBUG
 
 # Modem userdebug
-include device/google/gs201/modem/userdebug.mk
+include device/google/zuma/modem/userdebug.mk
 endif
 
 ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
@@ -225,27 +225,27 @@ PRODUCT_VENDOR_PROPERTIES += \
 
 # Device Manifest, Device Compatibility Matrix for Treble
 DEVICE_MANIFEST_FILE := \
-	device/google/gs201/manifest.xml
+	device/google/zuma/manifest.xml
 
 ifneq (,$(filter aosp_%,$(TARGET_PRODUCT)))
 DEVICE_MANIFEST_FILE += \
-	device/google/gs201/manifest_media_aosp.xml
+	device/google/zuma/manifest_media_aosp.xml
 
 PRODUCT_COPY_FILES += \
-	device/google/gs201/media_codecs_aosp_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml
+	device/google/zuma/media_codecs_aosp_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml
 else
 DEVICE_MANIFEST_FILE += \
-	device/google/gs201/manifest_media.xml
+	device/google/zuma/manifest_media.xml
 
 PRODUCT_COPY_FILES += \
-	device/google/gs201/media_codecs_bo_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml \
-	device/google/gs201/media_codecs_aosp_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_aosp_c2.xml
+	device/google/zuma/media_codecs_bo_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml \
+	device/google/zuma/media_codecs_aosp_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_aosp_c2.xml
 endif
 
 DEVICE_MATRIX_FILE := \
-	device/google/gs201/compatibility_matrix.xml
+	device/google/zuma/compatibility_matrix.xml
 
-DEVICE_PACKAGE_OVERLAYS += device/google/gs201/overlay
+DEVICE_PACKAGE_OVERLAYS += device/google/zuma/overlay
 
 # This will be updated to 33 (Android T) for shipping
 PRODUCT_SHIPPING_API_LEVEL := 32
@@ -260,27 +260,27 @@ PRODUCT_ENFORCE_PRODUCT_PARTITION_INTERFACE := true
 # Init files
 PRODUCT_COPY_FILES += \
 	$(LOCAL_KERNEL):kernel \
-	device/google/gs201/conf/init.gs201.usb.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.gs201.usb.rc \
-	device/google/gs201/conf/ueventd.gs201.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc
+	device/google/zuma/conf/init.zuma.usb.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.zuma.usb.rc \
+	device/google/zuma/conf/ueventd.zuma.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc
 
 PRODUCT_COPY_FILES += \
-	device/google/gs201/conf/init.gs201.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.gs201.rc
+	device/google/zuma/conf/init.zuma.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.zuma.rc
 
 ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
 PRODUCT_COPY_FILES += \
-	device/google/gs201/conf/init.debug.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.debug.rc
+	device/google/zuma/conf/init.debug.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.debug.rc
 endif
 
 # Recovery files
 PRODUCT_COPY_FILES += \
-	device/google/gs201/conf/init.recovery.device.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.gs201.rc
+	device/google/zuma/conf/init.recovery.device.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.zuma.rc
 
 # Fstab files
 PRODUCT_PACKAGES += \
-	fstab.gs201 \
-	fstab.gs201.vendor_ramdisk \
-	fstab.gs201-fips \
-	fstab.gs201-fips.vendor_ramdisk
+	fstab.zuma \
+	fstab.zuma.vendor_ramdisk \
+	fstab.zuma-fips \
+	fstab.zuma-fips.vendor_ramdisk
 
 PRODUCT_COPY_FILES += \
 	device/google/$(TARGET_BOARD_PLATFORM)/conf/fstab.persist:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.persist \
@@ -288,11 +288,11 @@ PRODUCT_COPY_FILES += \
 
 # Shell scripts
 PRODUCT_COPY_FILES += \
-	device/google/gs201/init.insmod.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.insmod.sh \
+	device/google/zuma/init.insmod.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.insmod.sh \
 
 # insmod files
 PRODUCT_COPY_FILES += \
-	device/google/gs201/init.insmod.gs201.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/init.insmod.gs201.cfg
+	device/google/zuma/init.insmod.zuma.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/init.insmod.zuma.cfg
 
 # For creating dtbo image
 PRODUCT_HOST_PACKAGES += \
@@ -368,7 +368,7 @@ PRODUCT_PACKAGES += \
 
 # Touch firmware
 #PRODUCT_COPY_FILES += \
-	device/google/gs201/firmware/touch/s6sy761.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/s6sy761.fw
+	device/google/zuma/firmware/touch/s6sy761.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/s6sy761.fw
 # Touch
 PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml
@@ -409,7 +409,7 @@ PRODUCT_PRODUCT_PROPERTIES += \
         vendor.powerhal.adpf.rate=16666666
 
 PRODUCT_COPY_FILES += \
-	device/google/gs201/task_profiles.json:$(TARGET_COPY_OUT_VENDOR)/etc/task_profiles.json
+	device/google/zuma/task_profiles.json:$(TARGET_COPY_OUT_VENDOR)/etc/task_profiles.json
 
 -include hardware/google/pixel/power-libperfmgr/aidl/device.mk
 
@@ -422,10 +422,10 @@ PRODUCT_PACKAGES += \
 
 # dumpstate HAL
 PRODUCT_PACKAGES += \
-	android.hardware.dumpstate@1.1-service.gs201
+	android.hardware.dumpstate@1.1-service.zuma
 
 # AoC support
-include device/google/gs201/aoc/device.mk
+include device/google/zuma/aoc/device.mk
 
 #
 # Audio HALs
@@ -442,11 +442,11 @@ PRODUCT_PROPERTY_OVERRIDES += aaudio.hw_burst_min_usec=2000
 
 # Calliope firmware overwrite
 #PRODUCT_COPY_FILES += \
-	device/google/gs201/firmware/calliope_dram.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_dram.bin \
-	device/google/gs201/firmware/calliope_sram.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_sram.bin \
-	device/google/gs201/firmware/calliope_dram_2.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_dram_2.bin \
-	device/google/gs201/firmware/calliope_sram_2.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_sram_2.bin \
-	device/google/gs201/firmware/calliope2.dt:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope2.dt \
+	device/google/zuma/firmware/calliope_dram.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_dram.bin \
+	device/google/zuma/firmware/calliope_sram.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_sram.bin \
+	device/google/zuma/firmware/calliope_dram_2.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_dram_2.bin \
+	device/google/zuma/firmware/calliope_sram_2.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_sram_2.bin \
+	device/google/zuma/firmware/calliope2.dt:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope2.dt \
 
 # Cannot reference variables defined in BoardConfig.mk, uncomment this if
 # BOARD_USE_OFFLOAD_AUDIO and BOARD_USE_OFFLOAD_EFFECT are true
@@ -485,31 +485,31 @@ PRODUCT_PACKAGES += \
 	VideoEditorGoogle
 
 # WideVine modules
-include device/google/gs201/widevine/device.mk
+include device/google/zuma/widevine/device.mk
 PRODUCT_PACKAGES += \
 	liboemcrypto \
 
 PANTHER_PRODUCT := %panther
 CHEETAH_PRODUCT := %cheetah
-CLOUDRIPPER_PRODUCT := %cloudripper
+RIPCURRENT_PRODUCT := %ripcurrent
 ifneq (,$(filter $(PANTHER_PRODUCT), $(TARGET_PRODUCT)))
         LOCAL_TARGET_PRODUCT := panther
 else ifneq (,$(filter $(CHEETAH_PRODUCT), $(TARGET_PRODUCT)))
         LOCAL_TARGET_PRODUCT := cheetah
-else ifneq (,$(filter $(CLOUDRIPPER_PRODUCT), $(TARGET_PRODUCT)))
-        LOCAL_TARGET_PRODUCT := cloudripper
+else ifneq (,$(filter $(RIPCURRENT_PRODUCT), $(TARGET_PRODUCT)))
+        LOCAL_TARGET_PRODUCT := ripcurrent
 else
-        # WAR: continue defaulting to slider build on gs201 to not
+        # WAR: continue defaulting to slider build on zuma to not
         # break dev targets such as ravenclaw
         LOCAL_TARGET_PRODUCT := slider
 endif
 
-$(call soong_config_set,google3a_config,soc,gs201)
+$(call soong_config_set,google3a_config,soc,zuma)
 $(call soong_config_set,google3a_config,gcam_awb,true)
 $(call soong_config_set,google3a_config,ghawb_truetone,true)
 
 ifneq ($(wildcard vendor/google/services/LyricCameraHAL/src),)
-$(call soong_config_set,lyric,soc,gs201)
+$(call soong_config_set,lyric,soc,zuma)
 $(call soong_config_set,lyric,use_lyric_camera_hal,true)
 # lyric::tuning_product is set in device-specific makefiles,
 # such as device/google/${DEVICE}/device-${DEVICE}.mk
@@ -561,10 +561,10 @@ PRODUCT_PACKAGES_DEBUG += \
 
 # Copy Camera HFD Setfiles
 #PRODUCT_COPY_FILES += \
-	device/google/gs201/firmware/camera/libhfd/default_configuration.hfd.cfg.json:$(TARGET_COPY_OUT_VENDOR)/firmware/default_configuration.hfd.cfg.json \
-	device/google/gs201/firmware/camera/libhfd/pp_cfg.json:$(TARGET_COPY_OUT_VENDOR)/firmware/pp_cfg.json \
-	device/google/gs201/firmware/camera/libhfd/tracker_cfg.json:$(TARGET_COPY_OUT_VENDOR)/firmware/tracker_cfg.json \
-	device/google/gs201/firmware/camera/libhfd/WithLightFixNoBN.SDNNmodel:$(TARGET_COPY_OUT_VENDOR)/firmware/WithLightFixNoBN.SDNNmodel
+	device/google/zuma/firmware/camera/libhfd/default_configuration.hfd.cfg.json:$(TARGET_COPY_OUT_VENDOR)/firmware/default_configuration.hfd.cfg.json \
+	device/google/zuma/firmware/camera/libhfd/pp_cfg.json:$(TARGET_COPY_OUT_VENDOR)/firmware/pp_cfg.json \
+	device/google/zuma/firmware/camera/libhfd/tracker_cfg.json:$(TARGET_COPY_OUT_VENDOR)/firmware/tracker_cfg.json \
+	device/google/zuma/firmware/camera/libhfd/WithLightFixNoBN.SDNNmodel:$(TARGET_COPY_OUT_VENDOR)/firmware/WithLightFixNoBN.SDNNmodel
 
 # WiFi
 PRODUCT_COPY_FILES += \
@@ -646,7 +646,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	persist.sys.sf.native_mode=2 \
 	persist.sys.sf.color_mode=9
 PRODUCT_COPY_FILES += \
-	device/google/gs201/display/display_colordata_cal0.pb:$(TARGET_COPY_OUT_VENDOR)/etc/display_colordata_cal0.pb
+	device/google/zuma/display/display_colordata_cal0.pb:$(TARGET_COPY_OUT_VENDOR)/etc/display_colordata_cal0.pb
 
 # limit DPP downscale ratio
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.hwc.dpp.downscale=2
@@ -667,7 +667,7 @@ PRODUCT_CHARACTERISTICS := nosdcard
 
 # WIFI COEX
 PRODUCT_COPY_FILES += \
-	device/google/gs201/wifi/coex_table.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/coex_table.xml
+	device/google/zuma/wifi/coex_table.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/coex_table.xml
 
 PRODUCT_PACKAGES += hostapd
 PRODUCT_PACKAGES += wpa_supplicant
@@ -684,14 +684,14 @@ endif
 ## VIDEO
 ####################################
 
-$(call soong_config_set,bigo,soc,gs201)
+$(call soong_config_set,bigo,soc,zuma)
 
 # 1. Codec 2.0
 # exynos service
 PRODUCT_SOONG_NAMESPACES += vendor/samsung_slsi/codec2
 
 PRODUCT_COPY_FILES += \
-	device/google/gs201/media_codecs_performance_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance_c2.xml \
+	device/google/zuma/media_codecs_performance_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance_c2.xml \
 
 PRODUCT_PACKAGES += \
 	samsung.hardware.media.c2@1.0-service \
@@ -723,8 +723,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # 2. OpenMAX IL
 PRODUCT_COPY_FILES += \
-	device/google/gs201/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
-	device/google/gs201/media_codecs_performance.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance.xml
+	device/google/zuma/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
+	device/google/zuma/media_codecs_performance.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance.xml
 ####################################
 
 # Telephony
@@ -813,7 +813,7 @@ PRODUCT_PRODUCT_PROPERTIES += \
 	ro.postinstall.fstab.prefix=/product
 
 PRODUCT_COPY_FILES += \
-	device/google/gs201/conf/fstab.postinstall:$(TARGET_COPY_OUT_PRODUCT)/etc/fstab.postinstall
+	device/google/zuma/conf/fstab.postinstall:$(TARGET_COPY_OUT_PRODUCT)/etc/fstab.postinstall
 
 # fastbootd
 PRODUCT_PACKAGES += \
@@ -855,8 +855,8 @@ PRODUCT_PACKAGES += ShannonRcs
 
 # Boot Control HAL
 PRODUCT_PACKAGES += \
-	android.hardware.boot@1.2-impl-gs201 \
-	android.hardware.boot@1.2-service-gs201
+	android.hardware.boot@1.2-impl-zuma \
+	android.hardware.boot@1.2-service-zuma
 
 # Exynos RIL and telephony
 # Multi SIM(DSDS)
@@ -870,19 +870,19 @@ SUPPORT_NR_DS := true
 USE_RADIO_HAL_2_0 := true
 
 #$(call inherit-product, vendor/google_devices/telephony/common/device-vendor.mk)
-#$(call inherit-product, vendor/google_devices/gs201/proprietary/device-vendor.mk)
+#$(call inherit-product, vendor/google_devices/zuma/proprietary/device-vendor.mk)
 
 ifneq ($(BOARD_WITHOUT_RADIO),true)
 $(call inherit-product-if-exists, vendor/samsung_slsi/telephony/$(BOARD_USES_SHARED_VENDOR_TELEPHONY)/common/device-vendor.mk)
 endif
 
 #GPS HAL
-include device/google/gs201/gnss/device-gnss.mk
-BOARD_VENDOR_SEPOLICY_DIRS += device/google/gs201-sepolicy/gps
+include device/google/zuma/gnss/device-gnss.mk
+BOARD_VENDOR_SEPOLICY_DIRS += device/google/zuma-sepolicy/gps
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 #$(call inherit-product, hardware/google_devices/exynos5/exynos5.mk)
-#$(call inherit-product-if-exists, hardware/google_devices/gs201/gs201.mk)
+#$(call inherit-product-if-exists, hardware/google_devices/zuma/zuma.mk)
 #$(call inherit-product-if-exists, vendor/google_devices/common/exynos-vendor.mk)
 #$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4375/device-bcm.mk)
 $(call inherit-product-if-exists, vendor/google/sensors/usf/android/usf_efw_product.mk)
@@ -890,8 +890,8 @@ $(call inherit-product-if-exists, vendor/google/services/LyricCameraHAL/src/buil
 $(call inherit-product-if-exists, vendor/google/camera/devices/whi/device-vendor.mk)
 
 PRODUCT_COPY_FILES += \
-	device/google/gs201/default-permissions.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions.xml \
-	device/google/gs201/component-overrides.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sysconfig/component-overrides.xml \
+	device/google/zuma/default-permissions.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions.xml \
+	device/google/zuma/component-overrides.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sysconfig/component-overrides.xml \
 	frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml \
 
 # modem_svc_sit daemon
@@ -902,10 +902,10 @@ PRODUCT_PACKAGES += modem_logging_control
 
 # modem logging configs
 PRODUCT_COPY_FILES += \
-	device/google/gs201/radio/config/logging.conf:$(TARGET_COPY_OUT_VENDOR)/etc/modem/logging.conf \
-	device/google/gs201/radio/config/default.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default.cfg \
-	device/google/gs201/radio/config/default.nprf:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default.nprf \
-	device/google/gs201/radio/config/default_metrics.xml:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default_metrics.xml
+	device/google/zuma/radio/config/logging.conf:$(TARGET_COPY_OUT_VENDOR)/etc/modem/logging.conf \
+	device/google/zuma/radio/config/default.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default.cfg \
+	device/google/zuma/radio/config/default.nprf:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default.nprf \
+	device/google/zuma/radio/config/default_metrics.xml:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default_metrics.xml
 
 # ARM NN files
 ARM_COMPUTE_CL_ENABLE := 1
@@ -918,8 +918,8 @@ PRODUCT_PACKAGES_DEBUG += \
 	$(NULL)
 
 PRODUCT_PACKAGES += \
-	android.hardware.health-service.gs201 \
-	android.hardware.health-service.gs201_recovery \
+	android.hardware.health-service.zuma \
+	android.hardware.health-service.zuma_recovery \
 
 # Audio
 # Audio HAL Server & Default Implementations
@@ -1032,7 +1032,7 @@ include hardware/google/pixel/thermal/device.mk
 PRODUCT_PROPERTY_OVERRIDES += persist.vendor.enable.thermal.genl=true
 
 ## TPU packages
-include device/google/gs201/edgetpu/edgetpu.mk
+include device/google/zuma/edgetpu/edgetpu.mk
 
 # Connectivity Thermal Power Manager
 PRODUCT_PACKAGES += \
@@ -1085,7 +1085,7 @@ PRODUCT_PACKAGES_DEBUG += BatteryStatsViewer
 # Install product specific framework compatibility matrix
 # (TODO: b/169535506) This includes the FCM for system_ext and product partition.
 # It must be split into the FCM of each partition.
-DEVICE_PRODUCT_COMPATIBILITY_MATRIX_FILE := device/google/gs201/device_framework_matrix_product.xml
+DEVICE_PRODUCT_COMPATIBILITY_MATRIX_FILE := device/google/zuma/device_framework_matrix_product.xml
 
 # Keymint configuration
 PRODUCT_COPY_FILES += \

@@ -1,4 +1,4 @@
-import /vendor/etc/init/hw/init.gs201.usb.rc
+import /vendor/etc/init/hw/init.zuma.usb.rc
 import android.hardware.drm@1.2-service.widevine.rc
 import init.exynos.sensorhub.rc
 
@@ -845,7 +845,7 @@ on  property:persist.sys.test_harness=1 && property:persist.vendor.testing_batte
     setprop persist.vendor.charge.start.level 0
     setprop vendor.battery.defender.disable 1
 
-service insmod_sh_common /vendor/bin/init.insmod.sh /vendor/etc/init.insmod.gs201.cfg
+service insmod_sh_common /vendor/bin/init.insmod.sh /vendor/etc/init.insmod.zuma.cfg
     class main
     user root
     group root system
