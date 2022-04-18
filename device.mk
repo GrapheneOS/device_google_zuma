@@ -489,18 +489,11 @@ include device/google/zuma/widevine/device.mk
 PRODUCT_PACKAGES += \
 	liboemcrypto \
 
-PANTHER_PRODUCT := %panther
-CHEETAH_PRODUCT := %cheetah
 RIPCURRENT_PRODUCT := %ripcurrent
-ifneq (,$(filter $(PANTHER_PRODUCT), $(TARGET_PRODUCT)))
-        LOCAL_TARGET_PRODUCT := panther
-else ifneq (,$(filter $(CHEETAH_PRODUCT), $(TARGET_PRODUCT)))
-        LOCAL_TARGET_PRODUCT := cheetah
-else ifneq (,$(filter $(RIPCURRENT_PRODUCT), $(TARGET_PRODUCT)))
+ifneq (,$(filter $(RIPCURRENT_PRODUCT), $(TARGET_PRODUCT)))
         LOCAL_TARGET_PRODUCT := ripcurrent
 else
-        # WAR: continue defaulting to slider build on zuma to not
-        # break dev targets such as ravenclaw
+        # WAR: continue defaulting to slider build on zuma
         LOCAL_TARGET_PRODUCT := slider
 endif
 
