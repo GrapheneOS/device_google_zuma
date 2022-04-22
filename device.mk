@@ -51,7 +51,8 @@ PRODUCT_SOONG_NAMESPACES += \
 	vendor/google/interfaces \
 	vendor/google_devices/common/proprietary/confirmatioui_hal \
 	vendor/google_nos/host/android \
-	vendor/google_nos/test/system-test-harness
+	vendor/google_nos/test/system-test-harness \
+	vendor/google/camera
 
 LOCAL_KERNEL := $(TARGET_KERNEL_DIR)/Image.lz4
 
@@ -500,14 +501,14 @@ $(call soong_config_set,google3a_config,soc,zuma)
 $(call soong_config_set,google3a_config,gcam_awb,true)
 $(call soong_config_set,google3a_config,ghawb_truetone,true)
 
-# ifneq ($(wildcard vendor/google/services/LyricCameraHAL/src),)
-# $(call soong_config_set,lyric,soc,zuma)
-# $(call soong_config_set,lyric,use_lyric_camera_hal,true)
+ifneq ($(wildcard vendor/google/services/LyricCameraHAL/src),)
+$(call soong_config_set,lyric,soc,zuma)
+$(call soong_config_set,lyric,use_lyric_camera_hal,true)
 # lyric::tuning_product is set in device-specific makefiles,
 # such as device/google/${DEVICE}/device-${DEVICE}.mk
 
-# $(call soong_config_set,gch,hwl_library,lyric)
-# endif
+$(call soong_config_set,gch,hwl_library,lyric)
+endif
 
 # WiFi
 PRODUCT_PACKAGES += \
