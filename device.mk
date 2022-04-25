@@ -17,6 +17,7 @@
 include device/google/gs-common/device.mk
 
 TARGET_BOARD_PLATFORM := zuma
+ALLOW_MISSING_DEPENDENCIES := true
 
 AB_OTA_POSTINSTALL_CONFIG += \
 	RUN_POSTINSTALL_system=true \
