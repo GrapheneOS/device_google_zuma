@@ -188,10 +188,7 @@ PRODUCT_PACKAGES += \
 	libGLES_mali \
 	vulkan.mali \
 	libOpenCL \
-	libgpudataproducer \
-
-PRODUCT_VENDOR_PROPERTIES += \
-	ro.hardware.vulkan=mali
+	libgpudataproducer
 
 ifeq ($(USE_SWIFTSHADER),true)
 PRODUCT_PACKAGES += \
@@ -210,10 +207,12 @@ PRODUCT_COPY_FILES += \
 
 ifeq ($(USE_SWIFTSHADER),true)
 PRODUCT_VENDOR_PROPERTIES += \
-	ro.hardware.egl = swiftshader
+	ro.hardware.egl = swiftshader \
+	ro.hardware.vulkan = pastel
 else
 PRODUCT_VENDOR_PROPERTIES += \
-	ro.hardware.egl = mali
+	ro.hardware.egl = mali \
+	ro.hardware.vulkan = mali
 endif
 
 PRODUCT_VENDOR_PROPERTIES += \
