@@ -541,7 +541,7 @@ void addWifi(std::shared_ptr<PowerStats> p) {
 }
 
 void addUfs(std::shared_ptr<PowerStats> p) {
-    p->addStateResidencyDataProvider(std::make_unique<UfsStateResidencyDataProvider>("/sys/bus/platform/devices/14700000.ufs/ufs_stats/"));
+    p->addStateResidencyDataProvider(std::make_unique<UfsStateResidencyDataProvider>("/sys/bus/platform/devices/13200000.ufs/ufs_stats/"));
 }
 
 void addPowerDomains(std::shared_ptr<PowerStats> p) {
