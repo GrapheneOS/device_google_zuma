@@ -61,7 +61,7 @@ TARGET_RECOVERY_WIPE := device/google/zuma/conf/recovery.wipe
 # This is the fstab file that will be included in the recovery image.  Note that
 # recovery doesn't care about the encryption settings, so it doesn't matter
 # whether we use the normal or the fips fstab here.
-TARGET_RECOVERY_FSTAB_GENRULE := gen_fstab.zuma
+TARGET_RECOVERY_FSTAB_GENRULE := gen_fstab.zuma-sw-encrypt
 
 TARGET_RECOVERY_PIXEL_FORMAT := ABGR_8888
 TARGET_RECOVERY_UI_MARGIN_HEIGHT := 165
