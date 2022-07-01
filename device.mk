@@ -56,6 +56,9 @@ PRODUCT_SOONG_NAMESPACES += \
 
 LOCAL_KERNEL := $(TARGET_KERNEL_DIR)/Image.lz4
 
+# thermal control disable
+PRODUCT_PROPERTY_OVERRIDES += vendor.disable.thermal.control=1
+
 # OEM Unlock reporting
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	ro.oem_unlock_supported=1
@@ -163,7 +166,7 @@ endif
 
 ifeq (,$(filter aosp_%,$(TARGET_PRODUCT)))
 # Audio client implementation for RIL
-USES_GAUDIO := true
+USES_GAUDIO := false
 endif
 
 # ######################
@@ -260,7 +263,7 @@ DEVICE_PACKAGE_OVERLAYS += device/google/zuma/overlay
 PRODUCT_SHIPPING_API_LEVEL := 32
 
 # RKP VINTF
--include vendor/google_nos/host/android/hals/keymaster/aidl/strongbox/RemotelyProvisionedComponent-citadel.mk
+#-include vendor/google_nos/host/android/hals/keymaster/aidl/strongbox/RemotelyProvisionedComponent-citadel.mk
 
 # Enforce the Product interface
 PRODUCT_PRODUCT_VNDK_VERSION := current
@@ -398,7 +401,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += android.hardware.sensors@2.1-service.multihal
 
 # USB HAL
-PRODUCT_PACKAGES += \
+#PRODUCT_PACKAGES += \
 	android.hardware.usb-service
 PRODUCT_PACKAGES += \
 	android.hardware.usb.gadget-service
@@ -441,13 +444,13 @@ include device/google/zuma/aoc/device.mk
 #
 
 # Audio Configurations
-USE_LEGACY_LOCAL_AUDIO_HAL := false
-USE_XML_AUDIO_POLICY_CONF := 1
+#USE_LEGACY_LOCAL_AUDIO_HAL := false
+#USE_XML_AUDIO_POLICY_CONF := 1
 
 # Enable AAudio MMAP/NOIRQ data path.
-PRODUCT_PROPERTY_OVERRIDES += aaudio.mmap_policy=2
-PRODUCT_PROPERTY_OVERRIDES += aaudio.mmap_exclusive_policy=2
-PRODUCT_PROPERTY_OVERRIDES += aaudio.hw_burst_min_usec=2000
+#PRODUCT_PROPERTY_OVERRIDES += aaudio.mmap_policy=2
+#PRODUCT_PROPERTY_OVERRIDES += aaudio.mmap_exclusive_policy=2
+#PRODUCT_PROPERTY_OVERRIDES += aaudio.hw_burst_min_usec=2000
 
 # Calliope firmware overwrite
 #PRODUCT_COPY_FILES += \
@@ -753,9 +756,12 @@ endif
 # TODO[b/XXXX]: Re-enable Trusty and disable this when Trusty is working
 PRODUCT_PACKAGES += \
 	android.hardware.keymaster@4.1-service \
-	android.hardware.gatekeeper@1.0-service.software
+	android.hardware.gatekeeper@1.0-service.remote
+#	android.hardware.gatekeeper@1.0-service.software
+
 LOCAL_KEYMASTER_PRODUCT_PACKAGE := android.hardware.keymaster@4.1-service
-LOCAL_GATEKEEPER_PRODUCT_PACKAGE := android.hardware.gatekeeper@1.0-service.software
+#LOCAL_GATEKEEPER_PRODUCT_PACKAGE := android.hardware.gatekeeper@1.0-service.software
+LOCAL_GATEKEEPER_PRODUCT_PACKAGE := android.hardware.gatekeeper@1.0-service.remote
 
 # Trusty (KM, GK, Storage)
 #$(call inherit-product, system/core/trusty/trusty-storage.mk)
@@ -1040,8 +1046,13 @@ include device/google/gs101/telephony/pktrouter.mk
 include hardware/google/pixel/thermal/device.mk
 PRODUCT_PROPERTY_OVERRIDES += persist.vendor.enable.thermal.genl=true
 
+# To prevent rebooting due to crashing services
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    init.svc_debug.no_fatal.zygote=true \
+    persist.device_config.configuration.disable_rescue_party=true
+
 ## TPU packages
-include device/google/zuma/edgetpu/edgetpu.mk
+#include device/google/zuma/edgetpu/edgetpu.mk
 
 # Connectivity Thermal Power Manager
 PRODUCT_PACKAGES += \

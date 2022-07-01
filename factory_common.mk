@@ -18,7 +18,8 @@ $(call inherit-product, device/google/zuma/aosp_common.mk)
 $(call inherit-product-if-exists, vendor/google_devices/zuma/factory/pixel/device-factory.mk)
 
 PRODUCT_PROPERTY_OVERRIDES += service.adb.root=1 \
-                              ro.vendor.factory=1
+    vendor.disable.thermal.control=1 \
+    ro.vendor.factory=1
 
 # Factory Libraries of Audio
 PRODUCT_PACKAGES += audioroute libaudioroutelite
