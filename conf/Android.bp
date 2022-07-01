@@ -34,11 +34,19 @@ package {
 }
 
 genrule {
-    name: "gen_fstab.zuma",
+    name: "gen_fstab.zuma-hw-encrypt",
     srcs: ["fstab.zuma.in"],
     out: ["fstab.zuma"],
     cmd: "sed -e s/@fileencryption@/::inlinecrypt_optimized+wrappedkey_v0/" +
         " -e s/@metadata_encryption@/:wrappedkey_v0/ $(in) > $(out)",
+}
+
+genrule {
+    name: "gen_fstab.zuma-sw-encrypt",
+    srcs: ["fstab.zuma.in"],
+    out: ["fstab.zuma"],
+    cmd: "sed -e s/@fileencryption@/aes-256-xts/" +
+        " -e s/@metadata_encryption@// $(in) > $(out)",
 }
 
 genrule {
@@ -49,9 +57,10 @@ genrule {
         " -e s/@metadata_encryption@/aes-256-xts/ $(in) > $(out)",
 }
 
+// TODO: change below to gen_fstab.zuma-hw-encrypt once GSA is ready
 prebuilt_etc {
     name: "fstab.zuma",
-    src: ":gen_fstab.zuma",
+    src: ":gen_fstab.zuma-sw-encrypt",
     vendor: true,
     vendor_ramdisk_available: true,
 }
