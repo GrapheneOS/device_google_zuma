@@ -155,8 +155,8 @@
 /dev/st54spi             0660   secure_element secure_element
 /dev/st33spi             0660   secure_element secure_element
 
-#bigocean
-/dev/bigocean               0660   mediacodec mediadrm
+#bigwave
+/dev/bigwave             0660   mediacodec mediadrm
 
 # Trusty
 /dev/trusty-ipc-dev0     0660   system     drmrpc
