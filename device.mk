@@ -1052,7 +1052,7 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     persist.device_config.configuration.disable_rescue_party=true
 
 ## TPU packages
-#include device/google/zuma/edgetpu/edgetpu.mk
+include device/google/zuma/edgetpu/edgetpu.mk
 
 # Connectivity Thermal Power Manager
 PRODUCT_PACKAGES += \
