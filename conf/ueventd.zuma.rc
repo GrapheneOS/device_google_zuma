@@ -175,7 +175,7 @@
 /dev/block/by-name/mfg_data 0660   system     system
 
 # TPU
-/dev/janeiro            0660   system     system
+/dev/edgetpu-soc            0660   system     system
 
 # DSP
 /dev/gxp                0666   system     camera
