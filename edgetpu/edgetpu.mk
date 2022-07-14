@@ -1,7 +1,7 @@
 # Edgetpu packages
 
 # Config variables for TPU chip on device.
-$(call soong_config_set,edgetpu_config,chip,janeiro)
+$(call soong_config_set,edgetpu_config,chip,rio)
 
 # TPU logging service
 # PRODUCT_PACKAGES += \
