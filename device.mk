@@ -705,7 +705,7 @@ PRODUCT_COPY_FILES += \
 	device/google/zuma/media_codecs_performance_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance_c2.xml \
 
 PRODUCT_PACKAGES += \
-	samsung.hardware.media.c2@1.0-service \
+	samsung.hardware.media.c2@1.2-service \
 	codec2.vendor.base.policy \
 	codec2.vendor.ext.policy \
 	libExynosC2ComponentStore \
