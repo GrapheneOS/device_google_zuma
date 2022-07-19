@@ -110,11 +110,10 @@ BOARD_USES_ALIGN_RESTRICTION := false
 BOARD_USES_GRALLOC_ION_SYNC := true
 
 # This should be the same value as USE_SWIFTSHADER in device.mk
-BOARD_USES_SWIFTSHADER := true
+BOARD_USES_SWIFTSHADER := false
 
 # Gralloc4
 ifeq ($(BOARD_USES_EXYNOS_GRALLOC_VERSION),4)
-
 ifeq ($(BOARD_USES_SWIFTSHADER),true)
 $(call soong_config_set,arm_gralloc,gralloc_arm_no_external_afbc,true)
 $(call soong_config_set,arm_gralloc,mali_gpu_support_afbc_basic,false)
