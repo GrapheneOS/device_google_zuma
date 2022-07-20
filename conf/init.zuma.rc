@@ -435,7 +435,7 @@ on post-fs-data
     rm /data/vendor/gps/smd_started
     rm /data/vendor/gps/sv_cno.info
 
-    chown gps system /sys/devices/platform/10940000.spi/spi_master/spi5/spi5.0/nstandby
+    chown gps system /sys/devices/platform/111e0000.spi/spi_master/spi21/spi21.0/nstandby
     chmod 0664 /dev/ttyBCM
     chown gps system /dev/ttyBCM
     chmod 0664 /dev/bbd_control
