@@ -173,8 +173,7 @@ endif
 # GRAPHICS - GPU (begin)
 
 # Must match BOARD_USES_SWIFTSHADER in BoardConfig.mk
-#USE_SWIFTSHADER := false
-USE_SWIFTSHADER := true
+USE_SWIFTSHADER := false
 
 # HWUI
 TARGET_USES_VULKAN = true
@@ -195,17 +194,17 @@ PRODUCT_PACKAGES += \
 
 ifeq ($(USE_SWIFTSHADER),true)
 PRODUCT_PACKAGES += \
-        libEGL_angle \
-        libGLESv1_CM_angle \
-        libGLESv2_angle \
-        vulkan.pastel
+	libEGL_angle \
+	libGLESv1_CM_angle \
+	libGLESv2_angle \
+	vulkan.pastel
 
 PRODUCT_VENDOR_PROPERTIES += \
-        ro.hardware.egl=angle \
-        ro.hardware.vulkan=pastel
+	ro.hardware.egl=angle \
+	ro.hardware.vulkan=pastel
 else
 PRODUCT_VENDOR_PROPERTIES += \
-        ro.hardware.vulkan=mali
+	ro.hardware.vulkan=mali
 endif
 
 
@@ -217,14 +216,6 @@ PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.software.vulkan.deqp.level-2021-03-01.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.vulkan.deqp.level.xml \
 	frameworks/native/data/etc/android.software.opengles.deqp.level-2021-03-01.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.opengles.deqp.level.xml
 
-#ifeq ($(USE_SWIFTSHADER),true)
-#PRODUCT_VENDOR_PROPERTIES += \
-#	ro.hardware.egl = swiftshader \
-#	ro.hardware.vulkan = pastel
-#else
-#PRODUCT_VENDOR_PROPERTIES += \
-#	ro.hardware.egl = mali \
-#	ro.hardware.vulkan = mali
 #endif
 
 PRODUCT_VENDOR_PROPERTIES += \
