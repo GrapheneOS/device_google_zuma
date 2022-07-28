@@ -365,10 +365,10 @@ on post-fs-data
     mkdir /mnt/vendor/modem_userdata/replay 0775 radio system
 
     # Write display MIPI frequency from Modem
-    chown system system /sys/devices/platform/1c2c0000.drmdsim/hs_clock
-    chown system system /sys/devices/platform/1c2d0000.drmdsim/hs_clock
-    chmod 0664 /sys/devices/platform/1c2c0000.drmdsim/hs_clock
-    chmod 0664 /sys/devices/platform/1c2d0000.drmdsim/hs_clock
+    chown system system /sys/devices/platform/19440000.drmdsim/hs_clock
+    chown system system /sys/devices/platform/19450000.drmdsim/hs_clock
+    chmod 0664 /sys/devices/platform/19440000.drmdsim/hs_clock
+    chmod 0664 /sys/devices/platform/19450000.drmdsim/hs_clock
 
     # IPSEC PIDDIR for VoWiFi
     mkdir /data/vendor/misc 0771 root system
@@ -569,10 +569,8 @@ on fs
     chown system system /sys/class/dqe0/atc/gain_limit
     chown system system /sys/class/dqe0/atc/lt_calc_ab_shift
 
-    chown system system /sys/devices/platform/1c240000.drmdecon/early_wakeup
-    chmod 0660 /sys/devices/platform/1c240000.drmdecon/early_wakeup
-    chown system system /sys/devices/platform/1c242000.drmdecon/early_wakeup
-    chmod 0660 /sys/devices/platform/1c242000.drmdecon/early_wakeup
+    chown system system /sys/devices/platform/19470000.drmdecon/early_wakeup
+    chmod 0660 /sys/devices/platform/19470000.drmdecon/early_wakeup
 
 # Copy DRM Key
 #    copy /system/app/wv.keys /factory/wv.keys
@@ -860,7 +858,8 @@ on post-fs-data
 service storageproxyd /vendor/bin/storageproxyd -d /dev/trusty-ipc-dev0 \
         -r /dev/sg1 -p /data/vendor/ss -t ufs
     class early_hal
-    user root
+    user system
+    group system
 
 # Write build info to kdebuginfo
 on property:ro.build.fingerprint=*
