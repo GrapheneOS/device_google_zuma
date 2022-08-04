@@ -1103,3 +1103,6 @@ DEVICE_PRODUCT_COMPATIBILITY_MATRIX_FILE := device/google/zuma/device_framework_
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.device_id_attestation.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.device_id_attestation.xml \
     frameworks/native/data/etc/android.hardware.device_unique_attestation.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.device_unique_attestation.xml
+
+# Hardware Info Collection
+include hardware/google/pixel/HardwareInfo/HardwareInfo.mk
