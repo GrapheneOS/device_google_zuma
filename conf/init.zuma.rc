@@ -399,7 +399,7 @@ on post-fs-data
     mkdir /data/vendor/edgetpu/cache 0770 system system
 
     # Compatibility path for TPU
-    symlink /dev/janeiro /dev/edgetpu
+    symlink /dev/edgetpu-soc /dev/edgetpu
 
 
 on zygote-start
