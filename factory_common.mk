@@ -84,3 +84,7 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 # PixelLogger for RF testing
 PRODUCT_PACKAGES_DEBUG += \
     PixelLogger \
+
+# ModemDiagnosticSystem for desense tool
+PRODUCT_PACKAGES += \
+    ModemDiagnosticSystem \
