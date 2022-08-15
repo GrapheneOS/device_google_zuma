@@ -781,10 +781,6 @@ PRODUCT_PACKAGES_DEBUG += trusty-ut-ctrl \
 
 include device/google/gs101/confirmationui/confirmationui.mk
 
-# Trusty Secure DPU Daemon
-PRODUCT_PACKAGES += \
-	securedpud.slider
-
 # Trusty Metrics Daemon
 #PRODUCT_SOONG_NAMESPACES += \
 #	vendor/google/trusty/common
