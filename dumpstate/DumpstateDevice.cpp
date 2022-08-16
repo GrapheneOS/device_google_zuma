@@ -365,7 +365,14 @@ void DumpstateDevice::dumpPowerSection(int fd) {
         if (!stat("/sys/kernel/debug/tcpm", &buffer)) {
             RunCommandToFd(fd, "TCPM logs", {"/vendor/bin/sh", "-c", "cat /sys/kernel/debug/tcpm/*"});
         } else {
-            RunCommandToFd(fd, "TCPM logs", {"/vendor/bin/sh", "-c", "cat /sys/kernel/debug/usb/tcpm*"});
+            RunCommandToFd(fd, "TCPM logs", {"/vendor/bin/sh", "-c",
+                                             "for f in /sys/kernel/debug/usb/tcpm*; do "
+                                                 "if [ -d $f ]; then "
+                                                     "cat $f/log; "
+                                                 "else "
+                                                     "cat $f; "
+                                                 "fi; "
+                                             "done"});
         }
     }
 
