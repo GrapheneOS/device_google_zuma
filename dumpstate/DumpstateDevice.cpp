@@ -370,7 +370,7 @@ void DumpstateDevice::dumpPowerSection(int fd) {
     }
 
     RunCommandToFd(fd, "TCPC", {"/vendor/bin/sh", "-c",
-		       "for f in /sys/devices/platform/10d60000.hsi2c/i2c-*/i2c-max77759tcpc;"
+		       "for f in /sys/devices/platform/10cb0000.hsi2c/i2c-*/*-0025;"
 		       "do echo \"registers:\"; cat $f/registers;"
 		       "echo \"frs:\"; cat $f/frs;"
 		       "echo \"auto_discharge:\"; cat $f/auto_discharge;"
