@@ -189,6 +189,7 @@ BOARD_PERSISTIMAGE_FILE_SYSTEM_TYPE := f2fs
 # Video Codec
 ########################
 # 1. Exynos C2
+BOARD_USE_CODEC2_HIDL_1_2 := true
 BOARD_USE_CSC_FILTER := false
 BOARD_USE_DEC_SW_CSC := true
 BOARD_USE_ENC_SW_CSC := true

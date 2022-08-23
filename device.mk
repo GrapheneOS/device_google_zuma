@@ -705,7 +705,7 @@ PRODUCT_COPY_FILES += \
 	device/google/zuma/media_codecs_performance_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance_c2.xml \
 
 PRODUCT_PACKAGES += \
-	samsung.hardware.media.c2@1.0-service \
+	samsung.hardware.media.c2@1.2-service \
 	codec2.vendor.base.policy \
 	codec2.vendor.ext.policy \
 	libExynosC2ComponentStore \
@@ -723,6 +723,7 @@ PRODUCT_PACKAGES += \
 	libExynosC2Vp9Enc
 
 PRODUCT_PROPERTY_OVERRIDES += \
+       debug.stagefright.c2-poolmask=458752 \
        debug.c2.use_dmabufheaps=1 \
        media.c2.dmabuf.padding=512 \
        debug.stagefright.ccodec_delayed_params=1 \
