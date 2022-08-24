@@ -1150,8 +1150,8 @@ void DumpstateDevice::dumpModem(int fd, int fdModem)
             RunCommandToFd(fd, "MKDIR GXP COREDUMP", {"/vendor/bin/mkdir", "-p", gxpCoredumpOutputDir}, CommandOptions::WithTimeout(2).Build());
 
             // Copy GXP coredumps and crashinfo to the output directory.
-            dumpLogs(fd, gxpCoredumpInputDir + "/coredump", gxpCoredumpOutputDir, maxGxpDebugDumps, "coredump_gxp_platform");
-            dumpLogs(fd, gxpCoredumpInputDir, gxpCoredumpOutputDir, maxGxpDebugDumps, "crashinfo_gxp_platform");
+            dumpLogs(fd, gxpCoredumpInputDir + "/coredump", gxpCoredumpOutputDir, maxGxpDebugDumps, "coredump_gxp_");
+            dumpLogs(fd, gxpCoredumpInputDir, gxpCoredumpOutputDir, maxGxpDebugDumps, "crashinfo_gxp_");
         }
 
         dumpLogs(fd, extendedLogDir, modemLogAllDir, maxFileNum, EXTENDED_LOG_PREFIX);
