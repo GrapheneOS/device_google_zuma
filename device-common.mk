@@ -42,3 +42,10 @@ PRODUCT_PRODUCT_PROPERTIES += \
 
 # ZramWriteback
 -include hardware/google/pixel/mm/device_gki.mk
+
+# Indicate that the bootloader supports the MTE developer option switch
+# (MISC_MEMTAG_MODE_MEMTAG_ONCE), with the exception of _fullmte products that
+# force enable MTE.
+ifeq (,$(filter %_fullmte,$(TARGET_PRODUCT)))
+PRODUCT_PRODUCT_PROPERTIES += ro.arm64.memtag.bootctl_supported=1
+endif
