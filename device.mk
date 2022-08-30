@@ -393,7 +393,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += android.hardware.sensors@2.1-service.multihal
 
 # USB HAL
-#PRODUCT_PACKAGES += \
+PRODUCT_PACKAGES += \
 	android.hardware.usb-service
 PRODUCT_PACKAGES += \
 	android.hardware.usb.gadget-service
