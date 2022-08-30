@@ -60,10 +60,9 @@ genrule {
         " -e s/@metadata_encryption@/aes-256-xts/ $(in) > $(out)",
 }
 
-// TODO: change below to gen_fstab.zuma-hw-encrypt once GSA is ready
 prebuilt_etc {
     name: "fstab.zuma",
-    src: ":gen_fstab.zuma-sw-encrypt",
+    src: ":gen_fstab.zuma-hw-encrypt",
     vendor: true,
     vendor_ramdisk_available: true,
 }
