@@ -761,20 +761,9 @@ PRODUCT_PACKAGES += \
 	libopenvx-opencl
 endif
 
-# TODO[b/XXXX]: Re-enable Trusty and disable this when Trusty is working
-PRODUCT_PACKAGES += \
-	android.hardware.keymaster@4.1-service \
-	android.hardware.gatekeeper@1.0-service.remote
-#	android.hardware.gatekeeper@1.0-service.software
-
-LOCAL_KEYMASTER_PRODUCT_PACKAGE := android.hardware.keymaster@4.1-service
-#LOCAL_GATEKEEPER_PRODUCT_PACKAGE := android.hardware.gatekeeper@1.0-service.software
-LOCAL_GATEKEEPER_PRODUCT_PACKAGE := android.hardware.gatekeeper@1.0-service.remote
-
 # Trusty (KM, GK, Storage)
-#$(call inherit-product, system/core/trusty/trusty-storage.mk)
-#$(call inherit-product, system/core/trusty/trusty-base.mk)
-
+$(call inherit-product, system/core/trusty/trusty-storage.mk)
+$(call inherit-product, system/core/trusty/trusty-base.mk)
 
 # Trusty unit test tool
 PRODUCT_PACKAGES_DEBUG += trusty-ut-ctrl \
@@ -1119,6 +1108,9 @@ DEVICE_PRODUCT_COMPATIBILITY_MATRIX_FILE := device/google/zuma/device_framework_
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.device_id_attestation.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.device_id_attestation.xml \
     frameworks/native/data/etc/android.hardware.device_unique_attestation.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.device_unique_attestation.xml
+
+# Call deleteAllKeys if vold detects a factory reset
+PRODUCT_VENDOR_PROPERTIES += ro.crypto.metadata_init_delete_all_keys.enabled?=true
 
 # Hardware Info Collection
 include hardware/google/pixel/HardwareInfo/HardwareInfo.mk
