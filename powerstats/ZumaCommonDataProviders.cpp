@@ -104,7 +104,8 @@ void addPlaceholderEnergyConsumers(std::shared_ptr<PowerStats> p) {
 void addAoC(std::shared_ptr<PowerStats> p) {
     // AoC clock is synced from "libaoc.c"
     static const uint64_t AOC_CLOCK = 24576;
-    std::string prefix = "/sys/devices/platform/19000000.aoc/control/";
+    std::string base = "/sys/devices/platform/17000000.aoc/";
+    std::string prefix = base + "control/";
 
     // Add AoC cores (a32, ff1, hf0, and hf1)
     std::vector<std::pair<std::string, std::string>> coreIds = {
@@ -154,7 +155,7 @@ void addAoC(std::shared_ptr<PowerStats> p) {
             generateGenericStateResidencyConfigs(restartCountConfig, restartCountHeaders),
             "AoC-Count", "");
     p->addStateResidencyDataProvider(std::make_unique<GenericStateResidencyDataProvider>(
-            "/sys/devices/platform/19000000.aoc/restart_count", cfgs));
+            base + "restart_count", cfgs));
 }
 
 void addDvfsStats(std::shared_ptr<PowerStats> p) {
@@ -384,7 +385,7 @@ void addGPU(std::shared_ptr<PowerStats> p) {
 
     p->addEnergyConsumer(PowerStatsEnergyConsumer::createMeterAndAttrConsumer(p,
             EnergyConsumerType::OTHER, "GPU", {"S8S_VDD_G3D_L2"},
-            {{UID_TIME_IN_STATE, "/sys/devices/platform/28000000.mali/uid_time_in_state"}},
+            {{UID_TIME_IN_STATE, "/sys/devices/platform/1f000000.mali/uid_time_in_state"}},
             stateCoeffs));
 
     p->addStateResidencyDataProvider(std::make_unique<DevfreqStateResidencyDataProvider>("GPU",
@@ -483,7 +484,7 @@ void addPCIe(std::shared_ptr<PowerStats> p) {
     };
 
     p->addStateResidencyDataProvider(std::make_unique<GenericStateResidencyDataProvider>(
-            "/sys/devices/platform/11920000.pcie/power_stats", pcieModemCfgs));
+            "/sys/devices/platform/12100000.pcie/power_stats", pcieModemCfgs));
 
     // Add PCIe - WiFi
     const std::vector<GenericStateResidencyDataProvider::PowerEntityConfig> pcieWifiCfgs = {
@@ -492,7 +493,7 @@ void addPCIe(std::shared_ptr<PowerStats> p) {
     };
 
     p->addStateResidencyDataProvider(std::make_unique<GenericStateResidencyDataProvider>(
-            "/sys/devices/platform/14520000.pcie/power_stats", pcieWifiCfgs));
+            "/sys/devices/platform/13120000.pcie/power_stats", pcieWifiCfgs));
 }
 
 void addWifi(std::shared_ptr<PowerStats> p) {
@@ -536,12 +537,13 @@ void addWifi(std::shared_ptr<PowerStats> p) {
                 "WIFI-PCIE"}
     };
 
-    p->addStateResidencyDataProvider(std::make_unique<GenericStateResidencyDataProvider>("/sys/wifi/power_stats",
-            cfgs));
+    p->addStateResidencyDataProvider(std::make_unique<GenericStateResidencyDataProvider>(
+            "/sys/wifi/power_stats", cfgs));
 }
 
 void addUfs(std::shared_ptr<PowerStats> p) {
-    p->addStateResidencyDataProvider(std::make_unique<UfsStateResidencyDataProvider>("/sys/bus/platform/devices/13200000.ufs/ufs_stats/"));
+    p->addStateResidencyDataProvider(std::make_unique<UfsStateResidencyDataProvider>(
+            "/sys/bus/platform/devices/13200000.ufs/ufs_stats/"));
 }
 
 void addPowerDomains(std::shared_ptr<PowerStats> p) {
@@ -644,9 +646,7 @@ void addZumaCommonDataProviders(std::shared_ptr<PowerStats> p) {
     setEnergyMeter(p);
 
     addPixelStateResidencyDataProvider(p);
-    // TODO(b/220032540): Re-enable AoC reporting when AoC long latency issue is fixed or
-    // the timeout mechanism is merged.
-    //addAoC(p);
+    addAoC(p);
     addDvfsStats(p);
     addSoC(p);
     addCPUclusters(p);
