@@ -151,6 +151,9 @@
 # NFC
 /dev/st21nfc             0660   nfc    nfc
 
+# UWB
+/dev/uci                 0660   uwb    uwb
+
 # SecureElement
 /dev/st54j_se            0660   secure_element secure_element
 /dev/st54spi             0660   secure_element secure_element
