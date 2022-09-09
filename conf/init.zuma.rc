@@ -318,6 +318,11 @@ on init
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu6_memlat@17000010/mem_latency/ratio_ceil 3200
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu7_memlat@17000010/mem_latency/ratio_ceil 3200
 
+on post-fs
+    # Ensure device is ready and start storageproxyd
+    wait /dev/sg1
+    start storageproxyd
+
 on late-fs
     # Wait for keymaster HALs
     exec_start wait_for_keymaster
