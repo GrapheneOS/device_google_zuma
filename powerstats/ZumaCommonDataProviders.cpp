@@ -367,6 +367,7 @@ void addCPUclusters(std::shared_ptr<PowerStats> p) {
 void addGPU(std::shared_ptr<PowerStats> p) {
     // Add gpu energy consumer
     std::map<std::string, int32_t> stateCoeffs;
+    std::string path = "/sys/devices/platform/1f000000.mali";
 
     // TODO (b/197721618): Measuring the GPU power numbers
     stateCoeffs = {
@@ -385,11 +386,11 @@ void addGPU(std::shared_ptr<PowerStats> p) {
 
     p->addEnergyConsumer(PowerStatsEnergyConsumer::createMeterAndAttrConsumer(p,
             EnergyConsumerType::OTHER, "GPU", {"S8S_VDD_G3D_L2"},
-            {{UID_TIME_IN_STATE, "/sys/devices/platform/1f000000.mali/uid_time_in_state"}},
+            {{UID_TIME_IN_STATE, path + "/uid_time_in_state"}},
             stateCoeffs));
 
     p->addStateResidencyDataProvider(std::make_unique<DevfreqStateResidencyDataProvider>("GPU",
-            "/sys/devices/platform/28000000.mali"));
+            path));
 }
 
 void addMobileRadio(std::shared_ptr<PowerStats> p)
