@@ -241,7 +241,7 @@ on init
     chown radio system /sys/devices/platform/cp-tm1/cp_temp
 
     # Loading common kernel modules in background
-    start insmod_sh_common
+    start init_display
 
     # Charge stats (write 0)
     chown system system /sys/class/power_supply/battery/charge_stats
@@ -788,9 +788,6 @@ on property:sys.boot_completed=1
     chown system system /sys/devices/platform/19000000.aoc/control/udfps_get_disp_freq
     chmod 440 /sys/devices/platform/19000000.aoc/control/udfps_get_disp_freq
 
-    #enable GPU power optimization
-    write /sys/devices/platform/28000000.mali/ifpo 1
-
 # IMS WiFi Calling
     service charonservice /system/vendor/bin/charon
     class main
@@ -836,7 +833,7 @@ on  property:persist.sys.test_harness=1 && property:persist.vendor.testing_batte
     setprop persist.vendor.charge.start.level 0
     setprop vendor.battery.defender.disable 1
 
-service insmod_sh_common /vendor/bin/init.insmod.sh /vendor/etc/init.insmod.zuma.cfg
+service init_display /vendor/bin/init.display.sh
     class main
     user root
     group root system
