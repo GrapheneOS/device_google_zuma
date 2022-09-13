@@ -292,11 +292,9 @@ PRODUCT_COPY_FILES += \
 
 # Shell scripts
 PRODUCT_COPY_FILES += \
-	device/google/zuma/init.insmod.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.insmod.sh \
+	device/google/zuma/init.display.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.display.sh
 
-# insmod files
-PRODUCT_COPY_FILES += \
-	device/google/zuma/init.insmod.zuma.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/init.insmod.zuma.cfg
+include device/google/gs-common/insmod/insmod.mk
 
 # For creating dtbo image
 PRODUCT_HOST_PACKAGES += \
