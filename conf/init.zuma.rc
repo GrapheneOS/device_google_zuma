@@ -1096,6 +1096,10 @@ on property:ro.boot.mode=charger && property:init.svc.vendor.charger=running
     # Enable UFS powersaving in Off Mode Charger
     write /dev/sys/block/bootdevice/clkgate_enable 1
 
+# AOC in off-mode charging
+on property:ro.boot.mode=charger && property:init.svc.vendor.charger=running
+    setprop vendor.aocd 1
+
 # MTE
 on property:persist.device_config.runtime_native_boot.bootloader_override=force_on
     # Per-core mode overrides.
