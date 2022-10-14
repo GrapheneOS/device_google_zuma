@@ -56,7 +56,8 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.set_display_power_timer
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.use_content_detection_for_refresh_rate=true
 
 # Disable dimming in factory
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.display.brightness.dimming.usage=2
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.display.0.brightness.dimming.usage=2
+
 
 # factory should always has SELinux permissive
 BOARD_BOOTCONFIG += androidboot.selinux=permissive
