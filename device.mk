@@ -561,7 +561,6 @@ $(call soong_config_set,edgetpu_config,chip,rio)
 # A/B support
 PRODUCT_PACKAGES += \
 	otapreopt_script \
-	cppreopts.sh \
 	update_engine \
 	update_engine_sideload \
 	update_verifier
