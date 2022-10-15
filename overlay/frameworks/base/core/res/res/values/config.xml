@@ -328,4 +328,7 @@
 
     <!-- Whether to enable usb state update via udc sysfs. -->
     <bool name="config_enableUdcSysfsUsbStateUpdate">true</bool>
+
+    <!-- Whether device supports increased touch sensitvity -->
+    <bool name="config_supportGloveMode">true</bool>
 </resources>
