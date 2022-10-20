@@ -16,6 +16,12 @@
 
 include device/google/gs-common/device.mk
 include device/google/gs-common/gs_watchdogd/watchdog.mk
+include device/google/gs-common/ramdump/ramdump.mk
+include device/google/gs-common/soc/soc.mk
+include device/google/gs-common/modem/modem.mk
+include device/google/gs-common/aoc/aoc.mk
+include device/google/gs-common/trusty/trusty.mk
+include device/google/gs-common/storage/storage.mk
 
 TARGET_BOARD_PLATFORM := zuma
 ALLOW_MISSING_DEPENDENCIES := true
@@ -258,7 +264,7 @@ DEVICE_PACKAGE_OVERLAYS += device/google/zuma/overlay
 PRODUCT_SHIPPING_API_LEVEL := 33
 
 # RKP VINTF
-#-include vendor/google_nos/host/android/hals/keymaster/aidl/strongbox/RemotelyProvisionedComponent-citadel.mk
+-include vendor/google_nos/host/android/hals/keymaster/aidl/strongbox/RemotelyProvisionedComponent-citadel.mk
 
 # Enforce the Product interface
 PRODUCT_PRODUCT_VNDK_VERSION := current
@@ -427,7 +433,7 @@ PRODUCT_PACKAGES += \
 
 # dumpstate HAL
 PRODUCT_PACKAGES += \
-	android.hardware.dumpstate@1.1-service.zuma
+	android.hardware.dumpstate-service.zuma
 
 # AoC support
 include device/google/zuma/aoc/device.mk
