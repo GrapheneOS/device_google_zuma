@@ -471,6 +471,8 @@ on early-boot
     chown system system /dev/sys/block/bootdevice/slowio_unmap_cnt
     chown system system /dev/sys/block/bootdevice/slowio_sync_cnt
 
+    write /sys/devices/platform/1f000000.mali/power_policy always_on
+
 on boot
 
     # Allow to access debugfs for system:system
