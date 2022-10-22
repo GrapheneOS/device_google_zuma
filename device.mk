@@ -435,9 +435,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	android.hardware.dumpstate-service.zuma
 
-# AoC support
-include device/google/zuma/aoc/device.mk
-
 #
 # Audio HALs
 #
