@@ -782,6 +782,7 @@ include device/google/gs101/confirmationui/confirmationui.mk
 #PRODUCT_PACKAGES += \
 #	trusty_metricsd
 
+$(call soong_config_set,google_displaycolor,displaycolor_platform,zuma)
 PRODUCT_PACKAGES += \
 	android.hardware.composer.hwc3-service.pixel \
 	libdisplaycolor
