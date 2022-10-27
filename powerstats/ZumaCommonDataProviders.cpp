@@ -535,6 +535,10 @@ void addDevfreq(std::shared_ptr<PowerStats> p) {
             "/sys/devices/system/cpu/cpufreq/policy8/stats"));
 
     p->addStateResidencyDataProvider(std::make_unique<DevfreqStateResidencyDataProvider>(
+            "MIF",
+            "/sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif"));
+
+    p->addStateResidencyDataProvider(std::make_unique<DevfreqStateResidencyDataProvider>(
             "INT",
             "/sys/devices/platform/17000020.devfreq_int/devfreq/17000020.devfreq_int"));
 
@@ -559,8 +563,16 @@ void addDevfreq(std::shared_ptr<PowerStats> p) {
             "/sys/devices/platform/17000070.devfreq_mfc/devfreq/17000070.devfreq_mfc"));
 
     p->addStateResidencyDataProvider(std::make_unique<DevfreqStateResidencyDataProvider>(
-            "BO",
-            "/sys/devices/platform/17000080.devfreq_bo/devfreq/17000080.devfreq_bo"));
+            "BW",
+            "/sys/devices/platform/17000080.devfreq_bw/devfreq/17000080.devfreq_bw"));
+
+    p->addStateResidencyDataProvider(std::make_unique<DevfreqStateResidencyDataProvider>(
+            "DSU",
+            "/sys/devices/platform/17000090.devfreq_dsu/devfreq/17000090.devfreq_dsu"));
+
+    p->addStateResidencyDataProvider(std::make_unique<DevfreqStateResidencyDataProvider>(
+            "BCI",
+            "/sys/devices/platform/170000a0.devfreq_bci/devfreq/170000a0.devfreq_bci"));
 }
 
 void addTPU(std::shared_ptr<PowerStats> p) {

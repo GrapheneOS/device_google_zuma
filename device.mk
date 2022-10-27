@@ -444,9 +444,9 @@ PRODUCT_PACKAGES += \
 #USE_XML_AUDIO_POLICY_CONF := 1
 
 # Enable AAudio MMAP/NOIRQ data path.
-#PRODUCT_PROPERTY_OVERRIDES += aaudio.mmap_policy=2
-#PRODUCT_PROPERTY_OVERRIDES += aaudio.mmap_exclusive_policy=2
-#PRODUCT_PROPERTY_OVERRIDES += aaudio.hw_burst_min_usec=2000
+PRODUCT_PROPERTY_OVERRIDES += aaudio.mmap_policy=2
+PRODUCT_PROPERTY_OVERRIDES += aaudio.mmap_exclusive_policy=2
+PRODUCT_PROPERTY_OVERRIDES += aaudio.hw_burst_min_usec=2000
 
 # Calliope firmware overwrite
 #PRODUCT_COPY_FILES += \
