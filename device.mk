@@ -22,6 +22,7 @@ include device/google/gs-common/modem/modem.mk
 include device/google/gs-common/aoc/aoc.mk
 include device/google/gs-common/trusty/trusty.mk
 include device/google/gs-common/storage/storage.mk
+include device/google/gs-common/gps/brcm/device.mk
 
 TARGET_BOARD_PLATFORM := zuma
 ALLOW_MISSING_DEPENDENCIES := true
@@ -884,9 +885,8 @@ ifneq ($(BOARD_WITHOUT_RADIO),true)
 $(call inherit-product-if-exists, vendor/samsung_slsi/telephony/$(BOARD_USES_SHARED_VENDOR_TELEPHONY)/common/device-vendor.mk)
 endif
 
-#GPS HAL
+#GPS conf
 include device/google/zuma/gnss/device-gnss.mk
-BOARD_VENDOR_SEPOLICY_DIRS += device/google/zuma-sepolicy/gps
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 #$(call inherit-product, hardware/google_devices/exynos5/exynos5.mk)
