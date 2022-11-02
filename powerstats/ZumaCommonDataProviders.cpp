@@ -349,8 +349,19 @@ void addCPUclusters(std::shared_ptr<PowerStats> p) {
     };
 
     std::vector<GenericStateResidencyDataProvider::PowerEntityConfig> cfgs;
-    for (std::string name : {"CORE00", "CORE01", "CORE02", "CORE03", "CORE10", "CORE11",
-                                "CORE20", "CORE21", "CLUSTER0", "CLUSTER1", "CLUSTER2"}) {
+    for (std::string name : {
+            "CORE00",
+            "CORE01",
+            "CORE02",
+            "CORE03",
+            "CORE10",
+            "CORE11",
+            "CORE12",
+            "CORE13",
+            "CORE21",
+            "CLUSTER0",
+            "CLUSTER1",
+            "CLUSTER2"}) {
         cfgs.emplace_back(generateGenericStateResidencyConfigs(cpuStateConfig, cpuStateHeaders),
             name, name);
     }
