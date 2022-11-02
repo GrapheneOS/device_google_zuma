@@ -568,10 +568,24 @@ void addPowerDomains(std::shared_ptr<PowerStats> p) {
     };
 
     std::vector<GenericStateResidencyDataProvider::PowerEntityConfig> cfgs;
-    for (std::string name : {"pd-aur", "pd-tpu", "pd-bo", "pd-tnr", "pd-gdc", "pd-mcsc", "pd-itp",
-                                "pd-ipp", "pd-g3aa", "pd-dns", "pd-pdp", "pd-csis",
-                                "pd-mfc", "pd-g2d", "pd-disp", "pd-dpu", "pd-hsi0",
-                                "pd-g3d", "pd-embedded_g3d", "pd-eh"}) {
+    for (std::string name : {
+            "pd-tpu",
+            "pd-ispfe",
+            "pd-eh",
+            "pd-aur",
+            "pd-yuvp",
+            "pd-tnr",
+            "pd-rgbp",
+            "pd-mfc",
+            "pd-mcsc",
+            "pd-gse",
+            "pd-gdc",
+            "pd-g2d",
+            "pd-dpuf1",
+            "pd-dpuf0",
+            "pd-dpub",
+            "pd-embedded_g3d",
+            "pd-g3d"}) {
         cfgs.emplace_back(generateGenericStateResidencyConfigs(cpuStateConfig, cpuStateHeaders),
             name, name + ":");
     }
