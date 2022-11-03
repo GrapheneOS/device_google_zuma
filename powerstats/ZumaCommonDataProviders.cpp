@@ -239,12 +239,14 @@ void addDvfsStats(std::shared_ptr<PowerStats> p) {
     }});
 
     cfgs.push_back({"TPU", {
+        std::make_pair("1119MHz", "1119000"),
         std::make_pair("1066MHz", "1066000"),
+        std::make_pair("967MHz", "967000"),
         std::make_pair("845MHz", "845000"),
+        std::make_pair("712MHz", "712000"),
         std::make_pair("627MHz", "627000"),
-        std::make_pair("401MHz", "401000"),
+        std::make_pair("455MHz", "455000"),
         std::make_pair("226MHz", "226000"),
-        std::make_pair("0MHz", "0"),
     }});
 
     p->addStateResidencyDataProvider(std::make_unique<DvfsStateResidencyDataProvider>(
@@ -347,8 +349,19 @@ void addCPUclusters(std::shared_ptr<PowerStats> p) {
     };
 
     std::vector<GenericStateResidencyDataProvider::PowerEntityConfig> cfgs;
-    for (std::string name : {"CORE00", "CORE01", "CORE02", "CORE03", "CORE10", "CORE11",
-                                "CORE20", "CORE21", "CLUSTER0", "CLUSTER1", "CLUSTER2"}) {
+    for (std::string name : {
+            "CORE00",
+            "CORE01",
+            "CORE02",
+            "CORE03",
+            "CORE10",
+            "CORE11",
+            "CORE12",
+            "CORE13",
+            "CORE21",
+            "CLUSTER0",
+            "CLUSTER1",
+            "CLUSTER2"}) {
         cfgs.emplace_back(generateGenericStateResidencyConfigs(cpuStateConfig, cpuStateHeaders),
             name, name);
     }
@@ -568,10 +581,24 @@ void addPowerDomains(std::shared_ptr<PowerStats> p) {
     };
 
     std::vector<GenericStateResidencyDataProvider::PowerEntityConfig> cfgs;
-    for (std::string name : {"pd-aur", "pd-tpu", "pd-bo", "pd-tnr", "pd-gdc", "pd-mcsc", "pd-itp",
-                                "pd-ipp", "pd-g3aa", "pd-dns", "pd-pdp", "pd-csis",
-                                "pd-mfc", "pd-g2d", "pd-disp", "pd-dpu", "pd-hsi0",
-                                "pd-g3d", "pd-embedded_g3d", "pd-eh"}) {
+    for (std::string name : {
+            "pd-tpu",
+            "pd-ispfe",
+            "pd-eh",
+            "pd-aur",
+            "pd-yuvp",
+            "pd-tnr",
+            "pd-rgbp",
+            "pd-mfc",
+            "pd-mcsc",
+            "pd-gse",
+            "pd-gdc",
+            "pd-g2d",
+            "pd-dpuf1",
+            "pd-dpuf0",
+            "pd-dpub",
+            "pd-embedded_g3d",
+            "pd-g3d"}) {
         cfgs.emplace_back(generateGenericStateResidencyConfigs(cpuStateConfig, cpuStateHeaders),
             name, name + ":");
     }

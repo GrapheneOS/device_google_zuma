@@ -609,38 +609,6 @@ service abox /vendor/bin/main_abox 17c50000.abox
     group audioserver
     seclabel u:r:abox:s0
 
-# GPS
-service lhd /vendor/bin/hw/lhd /vendor/etc/gnss/lhd.conf
-    class main
-    user gps
-    group system inet net_raw sdcard_rw
-    ioprio be 0
-
-service gpsd /vendor/bin/hw/gpsd -c /vendor/etc/gnss/gps.xml
-    class main
-    user gps
-    group system gps radio inet wakelock sdcard_rw net_raw
-    ioprio be 0
-
-service scd /vendor/bin/hw/scd /vendor/etc/gnss/scd.conf
-    class main
-    user gps
-    group system inet net_raw wakelock
-    ioprio be 0
-
-service gnss_service /vendor/bin/hw/android.hardware.gnss@2.1-service-brcm
-    class hal
-    user gps
-    group system gps radio
-    ioprio be 0
-    priority -1
-
-# disable gps service if no gps h/w
-on property:vendor.ril.cbd.svc=0
-    stop gpsd
-    stop lhd
-    stop scd
-
 # on userdebug and eng builds, enable kgdb on the serial console
 on property:ro.debuggable=1
     write /sys/module/kgdboc/parameters/kgdboc ttyFIQ1
@@ -973,16 +941,6 @@ on post-fs-data && property:ro.vendor.factory=1
     chmod 666 /sys/class/backlight/panel0-backlight/local_hbm_max_timeout
     chmod 666 /sys/class/backlight/panel0-backlight/local_hbm_mode
     chmod 666 /sys/class/backlight/panel0-backlight/hbm_mode
-
-# Persistent Soft Max Freq overrides
-on property:persist.vendor.softmaxfreq.cl0=*
-    write /sys/devices/platform/exynos-acme/freq_qos_max "0 ${persist.vendor.softmaxfreq.cl0}"
-
-on property:persist.vendor.softmaxfreq.cl1=*
-    write /sys/devices/platform/exynos-acme/freq_qos_max "4 ${persist.vendor.softmaxfreq.cl1}"
-
-on property:persist.vendor.softmaxfreq.cl2=*
-    write /sys/devices/platform/exynos-acme/freq_qos_max "6 ${persist.vendor.softmaxfreq.cl2}"
 
 # UFS
 on property:ro.boot.mode=charger && property:init.svc.vendor.charger=running
