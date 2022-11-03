@@ -540,7 +540,7 @@ void Dumpstate::dumpThermalSection(int fd) {
 
 // Dump items related to touch
 void Dumpstate::dumpTouchSection(int fd) {
-    const char stm_cmd_path[4][50] = {"/sys/class/spi_master/spi11/spi11.0",
+    const char stm_cmd_path[4][50] = {"/sys/class/spi_master/spi20/spi20.0",
                                       "/proc/fts/driver_test",
                                       "/sys/class/spi_master/spi6/spi6.0",
                                       "/proc/fts_ext/driver_test"};
