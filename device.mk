@@ -22,7 +22,9 @@ include device/google/gs-common/modem/modem.mk
 include device/google/gs-common/aoc/aoc.mk
 include device/google/gs-common/trusty/trusty.mk
 include device/google/gs-common/storage/storage.mk
+ifneq ($(BOARD_WITHOUT_RADIO),true)
 include device/google/gs-common/gps/brcm/device.mk
+endif
 
 TARGET_BOARD_PLATFORM := zuma
 ALLOW_MISSING_DEPENDENCIES := true
@@ -890,7 +892,9 @@ $(call inherit-product-if-exists, vendor/samsung_slsi/telephony/$(BOARD_USES_SHA
 endif
 
 #GPS conf
+ifneq ($(BOARD_WITHOUT_RADIO),true)
 include device/google/zuma/gnss/device-gnss.mk
+endif
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 #$(call inherit-product, hardware/google_devices/exynos5/exynos5.mk)
@@ -906,6 +910,7 @@ PRODUCT_COPY_FILES += \
 	device/google/zuma/component-overrides.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sysconfig/component-overrides.xml \
 	frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml \
 
+ifneq ($(BOARD_WITHOUT_RADIO),true)
 # modem_svc_sit daemon
 PRODUCT_PACKAGES += modem_svc_sit
 
@@ -918,6 +923,7 @@ PRODUCT_COPY_FILES += \
 	device/google/zuma/radio/config/default.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default.cfg \
 	device/google/zuma/radio/config/default.nprf:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default.nprf \
 	device/google/zuma/radio/config/default_metrics.xml:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default_metrics.xml
+endif
 
 # ARM NN files
 ARM_COMPUTE_CL_ENABLE := 1
@@ -1087,7 +1093,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
 include hardware/google/pixel/common/pixel-common-device.mk
 
 # Pixel Logger
+ifneq ($(BOARD_WITHOUT_RADIO),true)
 include hardware/google/pixel/PixelLogger/PixelLogger.mk
+else
+BOARD_SEPOLICY_DIRS += hardware/google/pixel-sepolicy/logger_app
+endif
 
 # sscoredump
 include hardware/google/pixel/sscoredump/device.mk
