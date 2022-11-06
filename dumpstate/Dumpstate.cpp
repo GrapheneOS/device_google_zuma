@@ -449,6 +449,8 @@ void Dumpstate::dumpPowerSection(int fd) {
         RunCommandToFd(fd, "Battery EEPROM", {"/vendor/bin/sh", "-c", "xxd /sys/devices/platform/10da0000.hsi2c/i2c-6/6-0050/eeprom"});
     } else if (!stat("/sys/devices/platform/10da0000.hsi2c/i2c-7/7-0050/eeprom", &buffer)) {
         RunCommandToFd(fd, "Battery EEPROM", {"/vendor/bin/sh", "-c", "xxd /sys/devices/platform/10da0000.hsi2c/i2c-7/7-0050/eeprom"});
+    } else if (!stat("/sys/devices/platform/10c90000.hsi2c/i2c-7/7-0050/eeprom", &buffer)) {
+        RunCommandToFd(fd, "Battery EEPROM", {"/vendor/bin/sh", "-c", "xxd /sys/devices/platform/10c90000.hsi2c/i2c-7/7-0050/eeprom"});
     }
 
     DumpFileToFd(fd, "Charger Stats", "/sys/class/power_supply/battery/charge_details");

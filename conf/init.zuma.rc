@@ -237,6 +237,7 @@ on init
     chown system system /sys/devices/platform/10970000.hsi2c/i2c-5/5-0050/eeprom
     chown system system /sys/devices/platform/10970000.hsi2c/i2c-4/4-0050/eeprom
     chown system system /sys/devices/platform/10da0000.hsi2c/i2c-6/6-0050/eeprom
+    chown system system /sys/devices/platform/10c90000.hsi2c/i2c-7/7-0050/eeprom
     chown system system /dev/battery_history
     chmod 0644 /dev/battery_history
 
@@ -616,16 +617,21 @@ on property:ro.debuggable=1
 
 # Touch
 on property:vendor.device.modules.ready=1
-    chown system system /sys/class/spi_master/spi0/spi0.0/synaptics_tcm.0/sysfs/get_raw_data
-    chown system system /sys/class/spi_master/spi0/spi0.0/synaptics_tcm.0/sysfs/force_active
-    chown system system /sys/class/spi_master/spi11/spi11.0/stm_fts_cmd
-    chown system system /sys/class/spi_master/spi11/spi11.0/glove_mode
-    chown system system /sys/class/spi_master/spi6/spi6.0/stm_fts_cmd
-    chown system system /sys/class/spi_master/spi6/spi6.0/glove_mode
+    chown system system /sys/class/spi_master/spi20/spi20.0/stm_fts_cmd
+    chown system system /sys/class/spi_master/spi20/spi20.0/glove_mode
     chown system system /sys/devices/virtual/sec/tsp/fw_version
     chown system system /sys/devices/virtual/sec/tsp/cmd
     chown system system /sys/devices/virtual/sec/tsp/cmd_result
     chown system system /sys/devices/virtual/sec/tsp/status
+    chown system system /sys/devices/virtual/goog_touch_interface/gti.0/force_active
+    chown system system /sys/devices/virtual/goog_touch_interface/gti.0/fw_ver
+    chown system system /sys/devices/virtual/goog_touch_interface/gti.0/ms_base
+    chown system system /sys/devices/virtual/goog_touch_interface/gti.0/ms_diff
+    chown system system /sys/devices/virtual/goog_touch_interface/gti.0/ms_raw
+    chown system system /sys/devices/virtual/goog_touch_interface/gti.0/self_test
+    chown system system /sys/devices/virtual/goog_touch_interface/gti.0/ss_base
+    chown system system /sys/devices/virtual/goog_touch_interface/gti.0/ss_diff
+    chown system system /sys/devices/virtual/goog_touch_interface/gti.0/ss_raw
     # Allow access to touch
     chown system input /dev/touch_offload
     chmod 660 /dev/touch_offload
