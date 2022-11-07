@@ -803,6 +803,9 @@ on property:sys.boot_completed=1
     chown system system /sys/devices/platform/17000000.aoc/control/udfps_get_disp_freq
     chmod 440 /sys/devices/platform/17000000.aoc/control/udfps_get_disp_freq
 
+    # write serialno to battery path for pairing
+    write /sys/class/power_supply/battery/dev_sn ${ro.boot.serialno}
+
 # IMS WiFi Calling
     service charonservice /system/vendor/bin/charon
     class main
