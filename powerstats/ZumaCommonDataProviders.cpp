@@ -392,23 +392,22 @@ void addGPU(std::shared_ptr<PowerStats> p) {
     std::map<std::string, int32_t> stateCoeffs;
     std::string path = "/sys/devices/platform/1f000000.mali";
 
-    // TODO (b/197721618): Measuring the GPU power numbers
     stateCoeffs = {
-        {"151000",  642},
-        {"202000",  890},
-        {"251000", 1102},
+        {"150000",  637},
         {"302000", 1308},
-        {"351000", 1522},
-        {"400000", 1772},
-        {"471000", 2105},
-        {"510000", 2292},
-        {"572000", 2528},
-        {"701000", 3127},
-        {"762000", 3452},
-        {"848000", 4044}};
+        {"337000", 1461},
+        {"376000", 1650},
+        {"419000", 1861},
+        {"467000", 2086},
+        {"521000", 2334},
+        {"580000", 2558},
+        {"649000", 2886},
+        {"723000", 3244},
+        {"807000", 3762},
+        {"890000", 4333}};
 
     p->addEnergyConsumer(PowerStatsEnergyConsumer::createMeterAndAttrConsumer(p,
-            EnergyConsumerType::OTHER, "GPU", {"S8S_VDD_G3D_L2"},
+            EnergyConsumerType::OTHER, "GPU", {"S2S_VDD_G3D", "S8S_VDD_G3D_L2"},
             {{UID_TIME_IN_STATE, path + "/uid_time_in_state"}},
             stateCoeffs));
 
