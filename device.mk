@@ -1050,8 +1050,12 @@ include device/google/gs101/telephony/pktrouter.mk
 include hardware/google/pixel/thermal/device.mk
 PRODUCT_PROPERTY_OVERRIDES += persist.vendor.enable.thermal.genl=true
 
-## TPU packages
-include device/google/zuma/edgetpu/edgetpu.mk
+# EdgeTPU
+include device/google/gs-common/edgetpu/edgetpu.mk
+# Config variables for TPU chip on device.
+$(call soong_config_set,edgetpu_config,chip,rio)
+# TPU firmware
+PRODUCT_PACKAGES += edgetpu-rio.fw
 
 # Connectivity Thermal Power Manager
 PRODUCT_PACKAGES += \
