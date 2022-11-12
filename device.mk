@@ -901,7 +901,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 #$(call inherit-product-if-exists, hardware/google_devices/zuma/zuma.mk)
 #$(call inherit-product-if-exists, vendor/google_devices/common/exynos-vendor.mk)
 #$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4375/device-bcm.mk)
-$(call inherit-product-if-exists, vendor/google/sensors/usf/android/usf_efw_product.mk)
+include device/google/gs-common/sensors/sensors.mk
 $(call inherit-product-if-exists, vendor/google/services/LyricCameraHAL/src/build/device-vendor.mk)
 $(call inherit-product-if-exists, vendor/google/camera/devices/whi/device-vendor.mk)
 
@@ -946,7 +946,7 @@ PRODUCT_PACKAGES += \
 	android.hardware.audio@7.1-impl \
 	android.hardware.audio.effect@7.0-impl \
 	android.hardware.soundtrigger@2.3-impl \
-	vendor.google.whitechapel.audio.audioext@3.0-impl \
+	vendor.google.whitechapel.audio.audioext@4.0-impl \
 	android.hardware.bluetooth.audio-impl \
 
 #
