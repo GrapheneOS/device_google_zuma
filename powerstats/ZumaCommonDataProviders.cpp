@@ -595,6 +595,7 @@ void addPowerDomains(std::shared_ptr<PowerStats> p) {
             "pd-tpu",
             "pd-ispfe",
             "pd-eh",
+            "pd-bw",
             "pd-aur",
             "pd-yuvp",
             "pd-tnr",
