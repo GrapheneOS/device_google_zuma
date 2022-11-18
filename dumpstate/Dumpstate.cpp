@@ -226,7 +226,6 @@ Dumpstate::Dumpstate()
         { "Devfreq", [this](int fd) { dumpDevfreqSection(fd); } },
         { "cpu", [this](int fd) { dumpCpuSection(fd); } },
         { "power", [this](int fd) { dumpPowerSection(fd); } },
-        { "thermal", [this](int fd) { dumpThermalSection(fd); } },
         { "touch", [this](int fd) { dumpTouchSection(fd); } },
         { "display", [this](int fd) { dumpDisplaySection(fd); } },
         { "misc", [this](int fd) { dumpMiscSection(fd); } },
@@ -507,45 +506,12 @@ void Dumpstate::dumpPowerSection(int fd) {
 
 }
 
-// Dump items related to thermal
-void Dumpstate::dumpThermalSection(int fd) {
-    RunCommandToFd(fd, "Temperatures", {"/vendor/bin/sh", "-c",
-                   "for f in /sys/class/thermal/thermal* ; do "
-                       "type=`cat $f/type` ; temp=`cat $f/temp` ; echo \"$type: $temp\" ; "
-                       "done"});
-    RunCommandToFd(fd, "Cooling Device Current State", {"/vendor/bin/sh", "-c",
-                   "for f in /sys/class/thermal/cooling* ; do "
-                       "type=`cat $f/type` ; temp=`cat $f/cur_state` ; echo \"$type: $temp\" ; "
-                       "done"});
-    RunCommandToFd(fd, "Cooling Device User Vote State", {"/vendor/bin/sh", "-c",
-                   "for f in /sys/class/thermal/cooling* ; do "
-                   "if [ ! -f $f/user_vote ]; then continue; fi; "
-                   "type=`cat $f/type` ; temp=`cat $f/user_vote` ; echo \"$type: $temp\" ; "
-                   "done"});
-    RunCommandToFd(fd, "Cooling Device Time in State", {"/vendor/bin/sh", "-c", "for f in /sys/class/thermal/cooling* ; "
-                   "do type=`cat $f/type` ; temp=`cat $f/stats/time_in_state_ms` ; echo \"$type:\n$temp\" ; done"});
-    RunCommandToFd(fd, "Cooling Device Trans Table", {"/vendor/bin/sh", "-c", "for f in /sys/class/thermal/cooling* ; "
-                   "do type=`cat $f/type` ; temp=`cat $f/stats/trans_table` ; echo \"$type:\n$temp\" ; done"});
-    RunCommandToFd(fd, "Cooling Device State2Power Table", {"/vendor/bin/sh", "-c",
-                   "for f in /sys/class/thermal/cooling* ; do "
-                   "if [ ! -f $f/state2power_table ]; then continue; fi; "
-                   "type=`cat $f/type` ; state2power_table=`cat $f/state2power_table` ; echo \"$type: $state2power_table\" ; "
-                   "done"});
-    DumpFileToFd(fd, "TMU state:", "/sys/module/gs_thermal/parameters/tmu_reg_dump_state");
-    DumpFileToFd(fd, "TMU current temperature:", "/sys/module/gs_thermal/parameters/tmu_reg_dump_current_temp");
-    DumpFileToFd(fd, "TMU_TOP rise thresholds:", "/sys/module/gs_thermal/parameters/tmu_top_reg_dump_rise_thres");
-    DumpFileToFd(fd, "TMU_TOP fall thresholds:", "/sys/module/gs_thermal/parameters/tmu_top_reg_dump_fall_thres");
-    DumpFileToFd(fd, "TMU_SUB rise thresholds:", "/sys/module/gs_thermal/parameters/tmu_sub_reg_dump_rise_thres");
-    DumpFileToFd(fd, "TMU_SUB fall thresholds:", "/sys/module/gs_thermal/parameters/tmu_sub_reg_dump_fall_thres");
-}
-
 // Dump items related to touch
 void Dumpstate::dumpTouchSection(int fd) {
     const char stm_cmd_path[4][50] = {"/sys/class/spi_master/spi20/spi20.0",
                                       "/proc/fts/driver_test",
                                       "/sys/class/spi_master/spi6/spi6.0",
                                       "/proc/fts_ext/driver_test"};
-    const char syna_cmd_path[] = "/sys/class/spi_master/spi0/spi0.0/synaptics_tcm.0/sysfs";
     const char focaltech_cmd_path[] = "/proc/focaltech_touch";
     const char gti0_cmd_path[] = "/sys/devices/virtual/goog_touch_interface/gti.0";
     char cmd[256];
@@ -601,35 +567,6 @@ void Dumpstate::dumpTouchSection(int fd) {
 
         // Disable: force touch active
         snprintf(cmd, sizeof(cmd), "echo 20 > %s/force_active", focaltech_cmd_path);
-        RunCommandToFd(fd, "Disable Force Touch Active", {"/vendor/bin/sh", "-c", cmd});
-    }
-
-    if (!access(syna_cmd_path, R_OK)) {
-        // Enable: force touch active
-        snprintf(cmd, sizeof(cmd), "echo 21 > %s/force_active", syna_cmd_path);
-        RunCommandToFd(fd, "Enable Force Touch Active", {"/vendor/bin/sh", "-c", cmd});
-
-        // Touch Firmware Information
-        snprintf(cmd, sizeof(cmd), "%s/info", syna_cmd_path);
-        DumpFileToFd(fd, "Touch Firmware Information", cmd);
-
-        // Get Raw Data - Delta
-        snprintf(cmd, sizeof(cmd),
-                 "echo 12 > %s/get_raw_data && cat %s/get_raw_data", syna_cmd_path, syna_cmd_path);
-        RunCommandToFd(fd, "Get Raw Data - Delta", {"/vendor/bin/sh", "-c", cmd});
-
-        // Get Raw Data - Raw
-        snprintf(cmd, sizeof(cmd),
-                 "echo 13 > %s/get_raw_data && cat %s/get_raw_data", syna_cmd_path, syna_cmd_path);
-        RunCommandToFd(fd, "Get Raw Data - Raw", {"/vendor/bin/sh", "-c", cmd});
-
-        // Get Raw Data - Baseline
-        snprintf(cmd, sizeof(cmd),
-                 "echo 14 > %s/get_raw_data && cat %s/get_raw_data", syna_cmd_path, syna_cmd_path);
-        RunCommandToFd(fd, "Get Raw Data - Baseline", {"/vendor/bin/sh", "-c", cmd});
-
-        // Disable: force touch active
-        snprintf(cmd, sizeof(cmd), "echo 20 > %s/force_active", syna_cmd_path);
         RunCommandToFd(fd, "Disable Force Touch Active", {"/vendor/bin/sh", "-c", cmd});
     }
 
