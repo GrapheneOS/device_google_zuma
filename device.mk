@@ -69,9 +69,6 @@ PRODUCT_SOONG_NAMESPACES += \
 
 LOCAL_KERNEL := $(TARGET_KERNEL_DIR)/Image.lz4
 
-# thermal control disable
-PRODUCT_PROPERTY_OVERRIDES += vendor.disable.thermal.control=1
-
 # OEM Unlock reporting
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	ro.oem_unlock_supported=1
@@ -1051,6 +1048,7 @@ include device/google/gs101/telephony/pktrouter.mk
 # Thermal HAL
 include hardware/google/pixel/thermal/device.mk
 PRODUCT_PROPERTY_OVERRIDES += persist.vendor.enable.thermal.genl=true
+$(call soong_config_set,thermal_hal_feature,pid,apply_2_0)
 
 # EdgeTPU
 include device/google/gs-common/edgetpu/edgetpu.mk
