@@ -151,7 +151,6 @@ on early-boot
     setprop vendor.usb.functions.ready 1
 
 on boot
-    write /config/usb_gadget/g1/bcdDevice 0x0510
     # Use USB Gadget HAL
     setprop sys.usb.configfs 2
 
@@ -175,7 +174,6 @@ on charger
     write /config/usb_gadget/g1/configs/b.1/MaxPower 0x384
     write /config/usb_gadget/g1/os_desc/b_vendor_code 0x1
     write /config/usb_gadget/g1/os_desc/qw_sign "MSFT100"
-    write /config/usb_gadget/g1/bcdDevice 0x0510
     mkdir /config/usb_gadget/g1/functions/midi.gs5
     symlink /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1
     setprop sys.usb.controller "11210000.dwc3"
