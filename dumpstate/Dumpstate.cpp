@@ -383,6 +383,9 @@ void Dumpstate::dumpPowerSection(int fd) {
     DumpFileToFd(fd, "POGO Transport", "/dev/logbuffer_pogo_transport");
     DumpFileToFd(fd, "PPS-google_cpm", "/dev/logbuffer_cpm");
     DumpFileToFd(fd, "PPS-dc", "/dev/logbuffer_pca9468");
+    if (!stat("/dev/logbuffer_wc68", &buffer)) {
+        DumpFileToFd(fd, "WC68", "/dev/logbuffer_wc68");
+    }
 
     DumpFileToFd(fd, "Battery Health", "/sys/class/power_supply/battery/health_index_stats");
     DumpFileToFd(fd, "BMS", "/dev/logbuffer_ssoc");
