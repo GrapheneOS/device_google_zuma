@@ -864,6 +864,11 @@ PRODUCT_PACKAGES_DEBUG += \
 
 PRODUCT_PACKAGES += ShannonRcs
 
+# ImsMedia
+PRODUCT_PACKAGES += \
+	ImsMediaService \
+	libimsmedia
+
 # Boot Control HAL
 PRODUCT_PACKAGES += \
 	android.hardware.boot@1.2-impl-zuma \
