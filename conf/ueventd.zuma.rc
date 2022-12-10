@@ -156,9 +156,7 @@
 /dev/uci                 0660   uwb    uwb
 
 # SecureElement
-/dev/st54j_se            0660   secure_element secure_element
 /dev/st54spi             0660   secure_element secure_element
-/dev/st33spi             0660   secure_element secure_element
 
 #bigwave
 /dev/bigwave             0660   mediacodec mediadrm
