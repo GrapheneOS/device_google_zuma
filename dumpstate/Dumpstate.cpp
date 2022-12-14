@@ -221,7 +221,6 @@ void endSection(int fd, const std::string &sectionName, timepoint_t startTime) {
 
 Dumpstate::Dumpstate()
   : mTextSections{
-        { "wlan", [this](int fd) { dumpWlanSection(fd); } },
         { "memory", [this](int fd) { dumpMemorySection(fd); } },
         { "Devfreq", [this](int fd) { dumpDevfreqSection(fd); } },
         { "cpu", [this](int fd) { dumpCpuSection(fd); } },
@@ -295,15 +294,6 @@ void Dumpstate::dumpTextSection(int fd, const std::string &sectionName) {
     ::android::base::WriteStringToFd(dumpFiles, fd);
     ::android::base::WriteStringToFd("\nNote: sections with attachments (e.g. modem) are"
                                    "not avalable from the command line.\n", fd);
-}
-
-// Dump items related to wlan
-void Dumpstate::dumpWlanSection(int fd) {
-    RunCommandToFd(fd, "WLAN Debug Dump", {"/vendor/bin/sh", "-c",
-                   "cat /sys/wifi/dump_start"});
-
-    // Dump firmware symbol table for firmware log decryption
-    DumpFileToFd(fd, "WLAN FW Log Symbol Table", "/vendor/firmware/Data.msc");
 }
 
 // Dump items related to power and battery
