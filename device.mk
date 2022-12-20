@@ -76,6 +76,9 @@ PRODUCT_SOONG_NAMESPACES += \
 
 LOCAL_KERNEL := $(TARGET_KERNEL_DIR)/Image.lz4
 
+# Set the environment variable to switch the Keymint HAL service to Rust
+TRUSTY_KEYMINT_IMPL := rust
+
 # OEM Unlock reporting
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	ro.oem_unlock_supported=1
