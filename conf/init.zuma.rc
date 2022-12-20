@@ -315,15 +315,15 @@ on init
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu6_memlat@17000010/polling_interval 10
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu7_memlat@17000010/polling_interval 10
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu8_memlat@17000010/polling_interval 10
-    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu0_memlat@17000010/mem_latency/ratio_ceil 400
-    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu1_memlat@17000010/mem_latency/ratio_ceil 400
-    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu2_memlat@17000010/mem_latency/ratio_ceil 400
-    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu3_memlat@17000010/mem_latency/ratio_ceil 400
-    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu4_memlat@17000010/mem_latency/ratio_ceil 2700
-    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu5_memlat@17000010/mem_latency/ratio_ceil 2700
-    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu6_memlat@17000010/mem_latency/ratio_ceil 3200
-    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu7_memlat@17000010/mem_latency/ratio_ceil 3200
-    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu8_memlat@17000010/mem_latency/ratio_ceil 3200
+    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu0_memlat@17000010/mem_latency/ratio_ceil 1800
+    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu1_memlat@17000010/mem_latency/ratio_ceil 1800
+    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu2_memlat@17000010/mem_latency/ratio_ceil 1800
+    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu3_memlat@17000010/mem_latency/ratio_ceil 1800
+    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu4_memlat@17000010/mem_latency/ratio_ceil 3700
+    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu5_memlat@17000010/mem_latency/ratio_ceil 3700
+    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu6_memlat@17000010/mem_latency/ratio_ceil 3700
+    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu7_memlat@17000010/mem_latency/ratio_ceil 3700
+    write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu8_memlat@17000010/mem_latency/ratio_ceil 3400
 
 on post-fs
     # Ensure device is ready and start storageproxyd
