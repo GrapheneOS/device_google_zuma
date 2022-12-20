@@ -698,6 +698,7 @@ void addZumaCommonDataProviders(std::shared_ptr<PowerStats> p) {
     addSoC(p);
     addGNSS(p);
     addMobileRadio(p);
+    addNFC(p);
     addPCIe(p);
     addWifi(p);
     addTPU(p);
@@ -708,7 +709,7 @@ void addZumaCommonDataProviders(std::shared_ptr<PowerStats> p) {
     addGPU(p);
 }
 
-void addNFC(std::shared_ptr<PowerStats> p, const std::string& path) {
+void addNFC(std::shared_ptr<PowerStats> p) {
     const GenericStateResidencyDataProvider::StateResidencyConfig nfcStateConfig = {
         .entryCountSupported = true,
         .entryCountPrefix = "Cumulative count:",
@@ -728,5 +729,5 @@ void addNFC(std::shared_ptr<PowerStats> p, const std::string& path) {
             "NFC", "NFC subsystem");
 
     p->addStateResidencyDataProvider(std::make_unique<GenericStateResidencyDataProvider>(
-            path, cfgs));
+            "/sys/devices/platform/10c80000.hsi2c/i2c-6/6-0008/power_stats", cfgs));
 }
