@@ -27,7 +27,7 @@ void addDvfsStats(std::shared_ptr<PowerStats> p);
 void addGNSS(std::shared_ptr<PowerStats> p);
 void addGPU(std::shared_ptr<PowerStats> p);
 void addMobileRadio(std::shared_ptr<PowerStats> p);
-void addNFC(std::shared_ptr<PowerStats> p, const std::string& path);
+void addNFC(std::shared_ptr<PowerStats> p);
 void addPCIe(std::shared_ptr<PowerStats> p);
 void addPixelStateResidencyDataProvider(std::shared_ptr<PowerStats> p);
 void addPowerDomains(std::shared_ptr<PowerStats> p);
