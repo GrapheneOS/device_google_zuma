@@ -414,6 +414,9 @@ on post-fs-data
     # Compatibility path for TPU
     symlink /dev/edgetpu-soc /dev/edgetpu
 
+    # STOPSHIP b/243479923
+    write /sys/power/wake_lock zuma_suspendresume_b243479923
+
 on zygote-start
     # For PixelLogger configuration file.
     chmod 0771 /data/vendor/wifi
