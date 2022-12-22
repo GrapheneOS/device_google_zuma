@@ -865,6 +865,14 @@ PRODUCT_PACKAGES_DEBUG += \
 
 PRODUCT_PACKAGES += ShannonRcs
 
+#ImsMediaAoc library
+FEATURE_TYPE := oem_audio
+SOONG_CONFIG_NAMESPACES += audio_lib
+SOONG_CONFIG_audio_lib += \
+        audio_type
+
+SOONG_CONFIG_audio_lib_audio_type := $(FEATURE_TYPE)
+
 # ImsMedia
 PRODUCT_PACKAGES += \
 	ImsMediaService \
