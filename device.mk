@@ -907,18 +907,6 @@ ifneq ($(BOARD_WITHOUT_RADIO),true)
 # modem_svc_sit daemon
 PRODUCT_PACKAGES += modem_svc_sit
 
-# modem_ml_svc_sit daemon
-PRODUCT_PACKAGES += modem_ml_svc_sit
-
-# modem ML models configs
-ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
-PRODUCT_COPY_FILES += \
-	device/google/zuma/modem_ml/modem_ml_models_userdebug.conf:$(TARGET_COPY_OUT_VENDOR)/etc/modem_ml_models.conf
-else
-PRODUCT_COPY_FILES += \
-	device/google/zuma/modem_ml/modem_ml_models_user.conf:$(TARGET_COPY_OUT_VENDOR)/etc/modem_ml_models.conf
-endif
-
 # modem logging binary/configs
 PRODUCT_PACKAGES += modem_logging_control
 
