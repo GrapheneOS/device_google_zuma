@@ -20,14 +20,15 @@
     </Settings>
     <Decoders>
         <MediaCodec name="c2.exynos.h264.decoder" type="video/avc">
-            <Limit name="size" min="32x32" max="3840x2160" />
+            <Limit name="size" min="32x32" max="7680x4320" />
             <Limit name="alignment" value="2x2" />
             <Limit name="block-size" value="16x16" />
-            <Limit name="block-count" range="1-32400" />
+            <Limit name="block-count" range="1-129600" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-240000000" />
             <Limit name="performance-point-1280x720" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
+            <Limit name="performance-point-7680x4320" range="30" />
             <Limit name="concurrent-instances" max="16" />
             <Feature name="adaptive-playback" />
             <Feature name="can-swap-width-height" value="1" />
@@ -49,14 +50,15 @@
             <Feature name="low-latency" />
         </MediaCodec>
         <MediaCodec name="c2.exynos.hevc.decoder" type="video/hevc" >
-            <Limit name="size" min="64x64" max="3840x2160" />
+            <Limit name="size" min="64x64" max="7680x4320" />
             <Limit name="alignment" value="2x2" />
             <Limit name="block-size" value="16x16" />
-            <Limit name="block-count" range="1-32400" />
+            <Limit name="block-count" range="1-129600" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-240000000" />
             <Limit name="performance-point-1280x720" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
+            <Limit name="performance-point-7680x4320" range="30" />
             <Limit name="concurrent-instances" max="16" />
             <Feature name="adaptive-playback" />
             <Feature name="can-swap-width-height" value="1" />
@@ -119,14 +121,15 @@
             <Feature name="low-latency" />
         </MediaCodec>
         <MediaCodec name="c2.exynos.vp9.decoder" type="video/x-vnd.on2.vp9" >
-            <Limit name="size" min="64x64" max="3840x2176" />
+            <Limit name="size" min="64x64" max="7680x4352" />
             <Limit name="alignment" value="2x2" />
             <Limit name="block-size" value="64x64" />
-            <Limit name="block-count" range="1-2040" />
+            <Limit name="block-count" range="1-8160" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-80000000" />
             <Limit name="performance-point-1280x720" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
+            <Limit name="performance-point-7680x4320" range="30" />
             <Limit name="concurrent-instances" max="16" />
             <Feature name="adaptive-playback" />
             <Feature name="can-swap-width-height" value="1" />
