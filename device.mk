@@ -883,8 +883,8 @@ SUPPORT_MULTI_SIM := true
 SUPPORT_NR := true
 # Support 5G on both stacks
 SUPPORT_NR_DS := true
-# Using IRadio 2.0
-USE_RADIO_HAL_2_0 := true
+# Using IRadio 2.1
+USE_RADIO_HAL_2_1 := true
 
 #$(call inherit-product, vendor/google_devices/telephony/common/device-vendor.mk)
 #$(call inherit-product, vendor/google_devices/zuma/proprietary/device-vendor.mk)

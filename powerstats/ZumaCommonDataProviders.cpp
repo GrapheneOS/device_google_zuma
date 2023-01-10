@@ -17,6 +17,7 @@
 #include <PowerStatsAidl.h>
 #include <ZumaCommonDataProviders.h>
 #include <AocStateResidencyDataProvider.h>
+#include <CpupmStateResidencyDataProvider.h>
 #include <DevfreqStateResidencyDataProvider.h>
 #include <DvfsStateResidencyDataProvider.h>
 #include <UfsStateResidencyDataProvider.h>
@@ -33,6 +34,7 @@
 #include <log/log.h>
 
 using aidl::android::hardware::power::stats::AocStateResidencyDataProvider;
+using aidl::android::hardware::power::stats::CpupmStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::DevfreqStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::DvfsStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::UfsStateResidencyDataProvider;
@@ -361,15 +363,6 @@ void addCPUclusters(std::shared_ptr<PowerStats> p) {
 
     std::vector<GenericStateResidencyDataProvider::PowerEntityConfig> cfgs;
     for (std::string name : {
-            "CORE00",
-            "CORE01",
-            "CORE02",
-            "CORE03",
-            "CORE10",
-            "CORE11",
-            "CORE12",
-            "CORE13",
-            "CORE21",
             "CLUSTER0",
             "CLUSTER1",
             "CLUSTER2"}) {
@@ -379,6 +372,22 @@ void addCPUclusters(std::shared_ptr<PowerStats> p) {
 
     p->addStateResidencyDataProvider(std::make_unique<GenericStateResidencyDataProvider>(
             "/sys/devices/platform/acpm_stats/core_stats", cfgs));
+
+    CpupmStateResidencyDataProvider::Config config = {
+        .entities = {
+            std::make_pair("CPU0", "cpu0"),
+            std::make_pair("CPU1", "cpu1"),
+            std::make_pair("CPU2", "cpu2"),
+            std::make_pair("CPU3", "cpu3"),
+            std::make_pair("CPU4", "cpu4"),
+            std::make_pair("CPU5", "cpu5"),
+            std::make_pair("CPU6", "cpu6"),
+            std::make_pair("CPU7", "cpu7")},
+        .states = {
+            std::make_pair("DOWN", "[state1]")}};
+
+    p->addStateResidencyDataProvider(std::make_unique<CpupmStateResidencyDataProvider>(
+            "/sys/devices/system/cpu/cpupm/cpupm/time_in_state", config));
 
     p->addEnergyConsumer(PowerStatsEnergyConsumer::createMeterConsumer(p,
             EnergyConsumerType::CPU_CLUSTER, "CPUCL0", {"S4M_VDD_CPUCL0"}));
