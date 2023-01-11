@@ -317,12 +317,8 @@ void Dumpstate::dumpPowerSection(int fd) {
     DumpFileToFd(fd, "Power supply property gcpm", "/sys/class/power_supply/gcpm/uevent");
     DumpFileToFd(fd, "Power supply property gcpm_pps", "/sys/class/power_supply/gcpm_pps/uevent");
     DumpFileToFd(fd, "Power supply property main-charger", "/sys/class/power_supply/main-charger/uevent");
-    if (!stat("/sys/class/power_supply/pca9468-mains/uevent", &buffer)) {
-        DumpFileToFd(fd, "Power supply property pca9468-mains", "/sys/class/power_supply/pca9468-mains/uevent");
-    } else {
-        DumpFileToFd(fd, "Power supply property pca94xx-mains", "/sys/class/power_supply/pca94xx-mains/uevent");
-    }
-    DumpFileToFd(fd, "Power supply property tcpm", "/sys/class/power_supply/tcpm-source-psy-i2c-max77759tcpc/uevent");
+    DumpFileToFd(fd, "Power supply property dc-mains", "/sys/class/power_supply/dc-mains/uevent");
+    DumpFileToFd(fd, "Power supply property tcpm", "/sys/class/power_supply/tcpm-source-psy-8-0025/uevent");
     DumpFileToFd(fd, "Power supply property usb", "/sys/class/power_supply/usb/uevent");
     DumpFileToFd(fd, "Power supply property wireless", "/sys/class/power_supply/wireless/uevent");
     if (!stat("/sys/class/power_supply/maxfg", &buffer)) {
@@ -369,7 +365,6 @@ void Dumpstate::dumpPowerSection(int fd) {
 		       "echo \"contaminant_detection_status:\"; cat $f/contaminant_detection_status;  done"});
 
     DumpFileToFd(fd, "PD Engine", "/dev/logbuffer_usbpd");
-    DumpFileToFd(fd, "POGO Transport", "/dev/logbuffer_pogo_transport");
     DumpFileToFd(fd, "PPS-google_cpm", "/dev/logbuffer_cpm");
     DumpFileToFd(fd, "PPS-dc", "/dev/logbuffer_pca9468");
     if (!stat("/dev/logbuffer_wc68", &buffer)) {
@@ -397,7 +392,7 @@ void Dumpstate::dumpPowerSection(int fd) {
                         " for f in `ls bd_*` ; do echo \"$f: `cat $f`\" ; done"});
 
     if (!PropertiesHelper::IsUserBuild()) {
-        DumpFileToFd(fd, "DC_registers dump", "/sys/class/power_supply/pca94xx-mains/device/registers_dump");
+        DumpFileToFd(fd, "DC_registers dump", "/sys/class/power_supply/dc-mains/device/registers_dump");
         DumpFileToFd(fd, "max77759_chg registers dump", "/d/max77759_chg/registers");
         DumpFileToFd(fd, "max77729_pmic registers dump", "/d/max77729_pmic/registers");
         DumpFileToFd(fd, "Charging table dump", "/d/google_battery/chg_raw_profile");
