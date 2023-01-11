@@ -137,6 +137,11 @@ else
 $(call soong_config_set,vendorgraphicbuffer,gralloc_version,three)
 endif
 
+#display_unit_test
+ifeq ($(USES_DEVICE_GOOGLE_ZUMA),true)
+$(call soong_config_set,display_unit_test,soc,zuma)
+endif
+
 # Graphics
 #BOARD_USES_EXYNOS_DATASPACE_FEATURE := true
 
