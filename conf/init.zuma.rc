@@ -207,25 +207,6 @@ on init
     chown system system /dev/nanohub
     chown system system /dev/nanohub_comms
 
-    # logbuffer
-    chown system system /dev/logbuffer_maxfg
-    chown system system /dev/logbuffer_maxfg_base
-    chown system system /dev/logbuffer_maxfg_flip
-    chown system system /dev/logbuffer_maxfg_monitor
-    chown system system /dev/logbuffer_maxfg_base_monitor
-    chown system system /dev/logbuffer_maxfg_flip_monitor
-    chown system system /dev/logbuffer_maxq
-    chown system system /dev/logbuffer_google,cpm
-    chown system system /dev/logbuffer_rtx
-    chown system system /dev/logbuffer_ssoc
-    chown system system /dev/logbuffer_ttf
-    chown system system /dev/logbuffer_tcpm
-    chown system system /dev/logbuffer_usbpd
-    chown system system /dev/logbuffer_wireless
-    chown system system /dev/logbuffer_pca9468
-    chown system system /dev/logbuffer_cpm
-    chown system system /dev/logbuffer_wc68
-
     # Dump maxfg
     chown system system /sys/class/power_supply/maxfg/m5_model_state
     chown system system /sys/class/power_supply/maxfg_base/m5_model_state
@@ -331,9 +312,6 @@ on post-fs
     start storageproxyd
 
 on late-fs
-    # Wait for keymaster HALs
-    exec_start wait_for_keymaster
-
     # Start bootanimation class before mount
     start bootanim
     class_start animation
@@ -466,6 +444,20 @@ on early-boot
     chown system system /dev/sys/block/bootdevice/slowio_write_cnt
     chown system system /dev/sys/block/bootdevice/slowio_unmap_cnt
     chown system system /dev/sys/block/bootdevice/slowio_sync_cnt
+
+    # logbuffer
+    chown system system /dev/logbuffer_maxfg
+    chown system system /dev/logbuffer_maxfg_monitor
+    chown system system /dev/logbuffer_maxq
+    chown system system /dev/logbuffer_rtx
+    chown system system /dev/logbuffer_ssoc
+    chown system system /dev/logbuffer_ttf
+    chown system system /dev/logbuffer_tcpm
+    chown system system /dev/logbuffer_usbpd
+    chown system system /dev/logbuffer_wireless
+    chown system system /dev/logbuffer_pca9468
+    chown system system /dev/logbuffer_cpm
+    chown system system /dev/logbuffer_wc68
 
 on boot
 

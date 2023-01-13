@@ -83,7 +83,7 @@ static MonitorFfs monitorFfs(kGadgetName);
 
 #define SPEED_PATH UDC_PATH "current_speed"
 
-#define BIG_CORE "6"
+#define BIG_CORE "8"
 #define MEDIUM_CORE "4"
 
 struct UsbGadget : public IUsbGadget {
