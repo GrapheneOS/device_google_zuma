@@ -62,6 +62,25 @@ struct BootControl : public IBootControl {
 // FIXME: most likely delete, this is only for passthrough implementations
 extern "C" IBootControl *HIDL_FETCH_IBootControl(const char *name);
 
+enum otpmgr_command : uint32_t {
+    OTP_REQ_SHIFT = 1,
+    OTP_RESP_BIT = 1,
+    OTP_CMD_write_antirbk_non_secure_ap = (7 << OTP_REQ_SHIFT),
+    OTP_CMD_write_antirbk_secure_ap = (8 << OTP_REQ_SHIFT),
+};
+
+struct otp_mgr_req_base {
+    uint32_t command;
+    uint32_t resp_payload_size;
+    uint8_t handle;
+}__packed;
+
+struct otp_mgr_rsp_base {
+    uint32_t command;
+    uint32_t resp_payload_size;
+    int result;
+}__packed;
+
 }  // namespace implementation
 }  // namespace V1_2
 }  // namespace boot
