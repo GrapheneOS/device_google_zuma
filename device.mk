@@ -136,6 +136,10 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
 	persist.vendor.ril.camp_on_earlier=1
 
+# Enable SET_SCREEN_STATE request
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.vendor.ril.enable_set_screen_state=1
+
 # Set supported Bluetooth profiles to enabled
 PRODUCT_PRODUCT_PROPERTIES += \
 	bluetooth.profile.asha.central.enabled=true \
