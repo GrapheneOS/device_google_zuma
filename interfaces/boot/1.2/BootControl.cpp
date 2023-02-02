@@ -24,6 +24,7 @@
 #include <cutils/properties.h>
 #include <libboot_control/libboot_control.h>
 #include <log/log.h>
+#include <trusty/tipc.h>
 
 #include "DevInfo.h"
 #include "GptUtils.h"
@@ -174,6 +175,76 @@ static void DevInfoInitSlot(devinfo_ab_slot_data_t &slot_data) {
     slot_data.fastboot_ok = 0;
 }
 
+static int blow_otp_AR(bool secure) {
+    static const char *dev_name = "/dev/trusty-ipc-dev0";
+    static const char *otp_name = "com.android.trusty.otp_manager.tidl";
+    int fd = 1, ret = 0;
+    uint32_t cmd = secure? OTP_CMD_write_antirbk_secure_ap : OTP_CMD_write_antirbk_non_secure_ap;
+    fd = tipc_connect(dev_name, otp_name);
+    if (fd < 0) {
+        ALOGI("Failed to connect to OTP_MGR ns TA - is it missing?\n");
+        ret = -1;
+        return ret;
+    }
+
+    struct otp_mgr_req_base req = {
+        .command = cmd,
+        .resp_payload_size = 0,
+    };
+    struct iovec iov[] = {
+        {
+            .iov_base = &req,
+            .iov_len = sizeof(req),
+        },
+    };
+
+    int rc = tipc_send(fd, iov, 1, NULL, 0);
+    if (rc != sizeof(req)) {
+        ALOGI("Send fail! %x\n", rc);
+        return rc;
+    }
+
+    struct otp_mgr_rsp_base resp;
+    rc = read(fd, &resp, sizeof(resp));
+    if (rc < 0) {
+        ALOGI("Read fail! %x\n", rc);
+        return rc;
+    }
+
+    if (rc < sizeof(resp)) {
+        ALOGI("Not enough data! %x\n", rc);
+        return -EIO;
+    }
+
+    if (resp.command != (cmd | OTP_RESP_BIT)) {
+        ALOGI("Wrong command! %x\n", resp.command);
+        return -EINVAL;
+    }
+
+    if (resp.result != 0) {
+        fprintf(stderr, "AR writing error! %x\n", resp.result);
+        return -EINVAL;
+    }
+
+    tipc_close(fd);
+    return 0;
+}
+
+static bool blowAR() {
+    int ret = blow_otp_AR(true);
+    if (ret) {
+        ALOGI("Blow secure anti-rollback OTP failed");
+        return false;
+    }
+
+    ret = blow_otp_AR(false);
+    if (ret) {
+        ALOGI("Blow non-secure anti-rollback OTP failed");
+        return false;
+    }
+
+    return true;
+}
 }  // namespace
 
 // Methods from ::android::hardware::boot::V1_0::IBootControl follow.
@@ -211,7 +282,17 @@ Return<void> BootControl::markBootSuccessful(markBootSuccessful_cb _hidl_cb) {
         ret = setSlotFlag(getCurrentSlot(), AB_ATTR_SUCCESSFUL);
     }
 
-    !ret ? _hidl_cb({false, "Failed to set successful flag"}) : _hidl_cb({true, ""});
+    if (!ret) {
+        _hidl_cb({false, "Failed to set successful flag"});
+        return Void();
+    }
+
+    if (!blowAR()) {
+        ALOGE("Failed to blow anti-rollback counter");
+        // Ignore the error, since ABL will re-trigger it on reboot
+    }
+
+    _hidl_cb({true, ""});
     return Void();
 }
 

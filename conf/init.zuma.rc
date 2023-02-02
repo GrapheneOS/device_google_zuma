@@ -306,6 +306,16 @@ on init
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu7_memlat@17000010/mem_latency/ratio_ceil 3700
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu8_memlat@17000010/mem_latency/ratio_ceil 3400
 
+    # Give pixelstats group access to PCIe link statistics counters
+    chown system system /sys/devices/platform/12100000.pcie/link_stats/complete_timeout_irqs
+    chown system system /sys/devices/platform/12100000.pcie/link_stats/link_down_irqs
+    chown system system /sys/devices/platform/12100000.pcie/link_stats/link_recovery_failures
+    chown system system /sys/devices/platform/12100000.pcie/link_stats/link_up_failures
+    chown system system /sys/devices/platform/13120000.pcie/link_stats/complete_timeout_irqs
+    chown system system /sys/devices/platform/13120000.pcie/link_stats/link_down_irqs
+    chown system system /sys/devices/platform/13120000.pcie/link_stats/link_recovery_failures
+    chown system system /sys/devices/platform/13120000.pcie/link_stats/link_up_failures
+
 on post-fs
     # Ensure device is ready and start storageproxyd
     wait /dev/sg1
@@ -458,6 +468,8 @@ on early-boot
     chown system system /dev/logbuffer_pca9468
     chown system system /dev/logbuffer_cpm
     chown system system /dev/logbuffer_wc68
+    chown system system /dev/logbuffer_pcie0
+    chown system system /dev/logbuffer_pcie1
 
 on boot
 
