@@ -20,6 +20,10 @@ on post-fs
     chown root system /sys/devices/platform/10d50000.hsi2c/i2c-6/i2c-max77759tcpc/usb_limit_sink_enable
     chown root system /sys/devices/platform/10d50000.hsi2c/i2c-5/i2c-max77759tcpc/usb_limit_source_enable
     chown root system /sys/devices/platform/10d50000.hsi2c/i2c-6/i2c-max77759tcpc/usb_limit_source_enable
+    chown root system /sys/devices/platform/110f0000.drmdp/drm-displayport/hpd
+    chown root system /sys/devices/platform/110f0000.drmdp/drm-displayport/orientation
+    chown root system /sys/devices/platform/110f0000.drmdp/drm-displayport/pin_assignment
+    chown root system /sys/devices/platform/110f0000.drmdp/drm-displayport/link_status
     chown root system /sys/devices/platform/11110000.usb/dwc3_exynos_otg_b_sess
     chown root system /sys/devices/platform/11110000.usb/dwc3_exynos_otg_id
     chown root system /sys/devices/platform/11110000.usb/usb_data_enabled
@@ -42,4 +46,8 @@ on post-fs
     chmod 664 /sys/devices/platform/10d50000.hsi2c/i2c-6/i2c-max77759tcpc/usb_limit_sink_enable
     chmod 664 /sys/devices/platform/10d50000.hsi2c/i2c-5/i2c-max77759tcpc/usb_limit_source_enable
     chmod 664 /sys/devices/platform/10d50000.hsi2c/i2c-6/i2c-max77759tcpc/usb_limit_source_enable
+    chmod 664 /sys/devices/platform/110f0000.drmdp/drm-displayport/hpd
+    chmod 664 /sys/devices/platform/110f0000.drmdp/drm-displayport/orientation
+    chmod 664 /sys/devices/platform/110f0000.drmdp/drm-displayport/pin_assignment
+    chmod 664 /sys/devices/platform/110f0000.drmdp/drm-displayport/link_status
     chmod 664 /sys/devices/platform/google,pogo/enable_usb
