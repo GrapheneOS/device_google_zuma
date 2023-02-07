@@ -9,6 +9,13 @@ sh_binary {
     sub_dir: "dump",
 }
 
+sh_binary {
+    name: "dump_power.sh",
+    src: "dump_power.sh",
+    vendor: true,
+    sub_dir: "dump",
+}
+
 cc_binary {
     name: "android.hardware.dumpstate-service.zuma",
     srcs: [
