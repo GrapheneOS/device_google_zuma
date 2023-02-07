@@ -37,7 +37,7 @@ genrule {
     name: "gen_fstab.zuma-hw-encrypt",
     srcs: ["fstab.zuma.in"],
     out: ["fstab.zuma"],
-    cmd: "sed -e s/@fileencryption@/fileencryption=::inlinecrypt_optimized+wrappedkey_v0/" +
+    cmd: "sed -e s/@fileencryption@/fileencryption=:aes-256-hctr2:inlinecrypt_optimized+wrappedkey_v0/" +
         " -e s/@inlinecrypt@/inlinecrypt/ " +
         " -e s/@metadata_encryption@/metadata_encryption=:wrappedkey_v0/ $(in) > $(out)",
 }
@@ -46,7 +46,7 @@ genrule {
     name: "gen_fstab.zuma-sw-encrypt",
     srcs: ["fstab.zuma.in"],
     out: ["fstab.zuma"],
-    cmd: "sed -e s/@fileencryption@/fileencryption=aes-256-xts/" +
+    cmd: "sed -e s/@fileencryption@/fileencryption=aes-256-xts:aes-256-hctr2/" +
         " -e s/@inlinecrypt@// " +
         " -e s/@metadata_encryption@/metadata_encryption=/ $(in) > $(out)",
 }
