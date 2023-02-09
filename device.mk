@@ -1145,3 +1145,8 @@ include hardware/google/pixel/HardwareInfo/HardwareInfo.mk
 
 # UFS: the script is used to select the corresponding firmware to run FFU.
 PRODUCT_PACKAGES_DEBUG += ufs_firmware_update.sh
+
+# RIL extension service
+ifeq (,$(filter aosp_% factory_%,$(TARGET_PRODUCT)))
+include device/google/gs-common/pixel_ril/ril.mk
+endif
