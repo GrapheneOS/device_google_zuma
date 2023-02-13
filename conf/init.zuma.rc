@@ -847,6 +847,8 @@ on post-fs-data
     symlink /mnt/vendor/persist/ss /data/vendor/ss/persist
     chown root system /data/vendor/ss/persist
     chmod 0770 /data/vendor/ss/persist
+    symlink /dev/block/platform/13200000\.ufs/by-name/trusty_persist /data/vendor/ss/persist/0
+    chown system system /data/vendor/ss/persist/0
 
     restart storageproxyd
 
