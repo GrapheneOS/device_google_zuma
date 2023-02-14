@@ -213,7 +213,6 @@ Dumpstate::Dumpstate()
         { "memory", [this](int fd) { dumpMemorySection(fd); } },
         { "Devfreq", [this](int fd) { dumpDevfreqSection(fd); } },
         { "display", [this](int fd) { dumpDisplaySection(fd); } },
-        { "led", [this](int fd) { dumpLEDSection(fd); } },
     },
   mLogSections{
         { "modem", [this](int fd, const std::string &destDir) { dumpModemLogs(fd, destDir); } },
@@ -367,21 +366,6 @@ void Dumpstate::dumpDisplaySection(int fd) {
                            "for f in $(ls /data/vendor/log/hwc/*_hwc_debug*.dump); do "
                            "echo $f ; cat $f ; done"},
                            CommandOptions::WithTimeout(2).Build());
-    }
-}
-
-// Dump items related to LED
-void Dumpstate::dumpLEDSection(int fd) {
-    struct stat buffer;
-
-    if (!PropertiesHelper::IsUserBuild()) {
-        if (!stat("/sys/class/leds/green", &buffer)) {
-            DumpFileToFd(fd, "Green LED Brightness", "/sys/class/leds/green/brightness");
-            DumpFileToFd(fd, "Green LED Max Brightness", "/sys/class/leds/green/max_brightness");
-        }
-        if (!stat("/mnt/vendor/persist/led/led_calibration_LUT.txt", &buffer)) {
-            DumpFileToFd(fd, "LED Calibration Data", "/mnt/vendor/persist/led/led_calibration_LUT.txt");
-        }
     }
 }
 
