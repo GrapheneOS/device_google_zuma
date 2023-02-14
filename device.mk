@@ -24,6 +24,7 @@ include device/google/gs-common/trusty/trusty.mk
 include device/google/gs-common/pcie/pcie.mk
 include device/google/gs-common/storage/storage.mk
 include device/google/gs-common/thermal/thermal.mk
+include device/google/gs-common/performance/perf.mk
 
 include device/google/zuma/dumpstate/item.mk
 
