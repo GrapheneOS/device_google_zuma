@@ -55,7 +55,6 @@ class Dumpstate : public BnDumpstateDevice {
     void dumpDevfreqSection(int fd);
     void dumpMemorySection(int fd);
     void dumpDisplaySection(int fd);
-    void dumpLEDSection(int fd);
 
     void dumpLogSection(int fd, int fdModem);
 
