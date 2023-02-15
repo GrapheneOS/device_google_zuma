@@ -210,7 +210,6 @@ void endSection(int fd, const std::string &sectionName, timepoint_t startTime) {
 
 Dumpstate::Dumpstate()
   : mTextSections{
-        { "memory", [this](int fd) { dumpMemorySection(fd); } },
         { "display", [this](int fd) { dumpDisplaySection(fd); } },
     },
   mLogSections{
@@ -279,17 +278,6 @@ void Dumpstate::dumpTextSection(int fd, const std::string &sectionName) {
     ::android::base::WriteStringToFd(dumpFiles, fd);
     ::android::base::WriteStringToFd("\nNote: sections with attachments (e.g. modem) are"
                                    "not avalable from the command line.\n", fd);
-}
-
-// Dump items related to memory
-void Dumpstate::dumpMemorySection(int fd) {
-    RunCommandToFd(fd, "CMA info", {"/vendor/bin/sh", "-c",
-                       "for d in $(ls -d /d/cma/*); do "
-                         "echo --- $d;"
-                         "echo --- count; cat $d/count; "
-                         "echo --- used; cat $d/used; "
-                         "echo --- bitmap; cat $d/bitmap; "
-                       "done"});
 }
 
 // Dump items related to display
