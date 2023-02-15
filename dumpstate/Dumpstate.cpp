@@ -213,7 +213,6 @@ Dumpstate::Dumpstate()
         { "memory", [this](int fd) { dumpMemorySection(fd); } },
         { "Devfreq", [this](int fd) { dumpDevfreqSection(fd); } },
         { "display", [this](int fd) { dumpDisplaySection(fd); } },
-        { "led", [this](int fd) { dumpLEDSection(fd); } },
     },
   mLogSections{
         { "modem", [this](int fd, const std::string &destDir) { dumpModemLogs(fd, destDir); } },
@@ -306,18 +305,6 @@ void Dumpstate::dumpDevfreqSection(int fd) {
 
 // Dump items related to memory
 void Dumpstate::dumpMemorySection(int fd) {
-    RunCommandToFd(fd, "ION HEAPS", {"/vendor/bin/sh", "-c",
-                   "for d in $(ls -d /d/ion/*); do "
-                       "if [ -f $d ]; then "
-                           "echo --- $d; cat $d; "
-                       "else "
-                           "for f in $(ls $d); do "
-                               "echo --- $d/$f; cat $d/$f; "
-                               "done; "
-                        "fi; "
-                        "done"});
-    DumpFileToFd(fd, "dmabuf info", "/d/dma_buf/bufinfo");
-    DumpFileToFd(fd, "Page Pinner - longterm pin", "/sys/kernel/debug/page_pinner/buffer");
     RunCommandToFd(fd, "CMA info", {"/vendor/bin/sh", "-c",
                        "for d in $(ls -d /d/cma/*); do "
                          "echo --- $d;"
@@ -367,21 +354,6 @@ void Dumpstate::dumpDisplaySection(int fd) {
                            "for f in $(ls /data/vendor/log/hwc/*_hwc_debug*.dump); do "
                            "echo $f ; cat $f ; done"},
                            CommandOptions::WithTimeout(2).Build());
-    }
-}
-
-// Dump items related to LED
-void Dumpstate::dumpLEDSection(int fd) {
-    struct stat buffer;
-
-    if (!PropertiesHelper::IsUserBuild()) {
-        if (!stat("/sys/class/leds/green", &buffer)) {
-            DumpFileToFd(fd, "Green LED Brightness", "/sys/class/leds/green/brightness");
-            DumpFileToFd(fd, "Green LED Max Brightness", "/sys/class/leds/green/max_brightness");
-        }
-        if (!stat("/mnt/vendor/persist/led/led_calibration_LUT.txt", &buffer)) {
-            DumpFileToFd(fd, "LED Calibration Data", "/mnt/vendor/persist/led/led_calibration_LUT.txt");
-        }
     }
 }
 

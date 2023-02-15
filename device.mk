@@ -536,7 +536,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES_DEBUG += \
 	f2fs_io \
 	check_f2fs \
-	f2fsstat \
 	f2fs.fibmap \
 	dump.f2fs
 
@@ -871,6 +870,14 @@ PRODUCT_PACKAGES_DEBUG += \
 	TestRcsApp
 
 PRODUCT_PACKAGES += ShannonRcs
+
+#ImsMediaAoc library
+FEATURE_TYPE := oem_audio
+SOONG_CONFIG_NAMESPACES += audio_lib
+SOONG_CONFIG_audio_lib += \
+        audio_type
+
+SOONG_CONFIG_audio_lib_audio_type := $(FEATURE_TYPE)
 
 # ImsMedia
 PRODUCT_PACKAGES += \

@@ -387,8 +387,11 @@ void addCPUclusters(std::shared_ptr<PowerStats> p) {
         .states = {
             std::make_pair("DOWN", "[state1]")}};
 
+    CpupmStateResidencyDataProvider::SleepConfig sleepConfig = {"LPM:", "SLEEP", "total_time_ns:"};
+
     p->addStateResidencyDataProvider(std::make_unique<CpupmStateResidencyDataProvider>(
-            "/sys/devices/system/cpu/cpupm/cpupm/time_in_state", config));
+            "/sys/devices/system/cpu/cpupm/cpupm/time_in_state", config,
+            "/sys/devices/platform/acpm_stats/soc_stats", sleepConfig));
 
     p->addEnergyConsumer(PowerStatsEnergyConsumer::createMeterConsumer(p,
             EnergyConsumerType::CPU_CLUSTER, "CPUCL0", {"S4M_VDD_CPUCL0"}));
