@@ -210,8 +210,6 @@ void endSection(int fd, const std::string &sectionName, timepoint_t startTime) {
 
 Dumpstate::Dumpstate()
   : mTextSections{
-        { "memory", [this](int fd) { dumpMemorySection(fd); } },
-        { "Devfreq", [this](int fd) { dumpDevfreqSection(fd); } },
         { "display", [this](int fd) { dumpDisplaySection(fd); } },
     },
   mLogSections{
@@ -280,38 +278,6 @@ void Dumpstate::dumpTextSection(int fd, const std::string &sectionName) {
     ::android::base::WriteStringToFd(dumpFiles, fd);
     ::android::base::WriteStringToFd("\nNote: sections with attachments (e.g. modem) are"
                                    "not avalable from the command line.\n", fd);
-}
-
-// Dump items related to Devfreq & BTS
-void Dumpstate::dumpDevfreqSection(int fd) {
-    DumpFileToFd(fd, "MIF DVFS",
-                 "/sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/time_in_state");
-    DumpFileToFd(fd, "INT DVFS",
-                 "/sys/devices/platform/17000020.devfreq_int/devfreq/17000020.devfreq_int/time_in_state");
-    DumpFileToFd(fd, "INTCAM DVFS",
-                 "/sys/devices/platform/17000030.devfreq_intcam/devfreq/17000030.devfreq_intcam/time_in_state");
-    DumpFileToFd(fd, "DISP DVFS",
-                 "/sys/devices/platform/17000040.devfreq_disp/devfreq/17000040.devfreq_disp/time_in_state");
-    DumpFileToFd(fd, "CAM DVFS",
-                 "/sys/devices/platform/17000050.devfreq_cam/devfreq/17000050.devfreq_cam/time_in_state");
-    DumpFileToFd(fd, "TNR DVFS",
-                 "/sys/devices/platform/17000060.devfreq_tnr/devfreq/17000060.devfreq_tnr/time_in_state");
-    DumpFileToFd(fd, "MFC DVFS",
-                 "/sys/devices/platform/17000070.devfreq_mfc/devfreq/17000070.devfreq_mfc/time_in_state");
-    DumpFileToFd(fd, "BO DVFS",
-                 "/sys/devices/platform/17000080.devfreq_bo/devfreq/17000080.devfreq_bo/time_in_state");
-    DumpFileToFd(fd, "BTS stats", "/sys/devices/platform/exynos-bts/bts_stats");
-}
-
-// Dump items related to memory
-void Dumpstate::dumpMemorySection(int fd) {
-    RunCommandToFd(fd, "CMA info", {"/vendor/bin/sh", "-c",
-                       "for d in $(ls -d /d/cma/*); do "
-                         "echo --- $d;"
-                         "echo --- count; cat $d/count; "
-                         "echo --- used; cat $d/used; "
-                         "echo --- bitmap; cat $d/bitmap; "
-                       "done"});
 }
 
 // Dump items related to display
