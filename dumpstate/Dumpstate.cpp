@@ -481,6 +481,7 @@ ndk::ScopedAStatus Dumpstate::dumpstateBoard(const std::vector<::ndk::ScopedFile
                                              int64_t in_timeoutMillis) {
     // Unused arguments.
     (void) in_timeoutMillis;
+    (void) in_mode;
 
     if (in_fds.size() < 1) {
         ALOGE("no FDs\n");
@@ -493,17 +494,6 @@ ndk::ScopedAStatus Dumpstate::dumpstateBoard(const std::vector<::ndk::ScopedFile
         ALOGE("invalid FD: %d\n", fd);
         return ndk::ScopedAStatus::fromExceptionCodeWithMessage(EX_ILLEGAL_ARGUMENT,
                                                                 "Invalid file descriptor");
-    }
-
-    if (in_mode == IDumpstateDevice::DumpstateMode::WEAR) {
-        // We aren't a Wear device.
-        ALOGE("Unsupported mode: %d\n", in_mode);
-        return ndk::ScopedAStatus::fromServiceSpecificErrorWithMessage(ERROR_UNSUPPORTED_MODE,
-                                                                           "Unsupported mode");
-    } else if (in_mode < IDumpstateDevice::DumpstateMode::FULL || in_mode > IDumpstateDevice::DumpstateMode::PROTO) {
-        ALOGE("Invalid mode: %d\n", in_mode);
-        return ndk::ScopedAStatus::fromExceptionCodeWithMessage(EX_ILLEGAL_ARGUMENT,
-                                                                    "Invalid mode");
     }
 
     if (in_fds.size() < 2) {
