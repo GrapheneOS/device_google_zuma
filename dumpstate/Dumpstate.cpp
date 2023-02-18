@@ -24,12 +24,11 @@
 #include <android-base/unique_fd.h>
 #include <log/log.h>
 #include <sys/stat.h>
-
+#include <dump/pixel_dump.h>
 #include "Dumpstate.h"
 
 #include "DumpstateUtil.h"
 
-#define MODEM_LOG_DIRECTORY "/data/vendor/radio/logs/always-on"
 #define MODEM_EXTENDED_LOG_DIRECTORY "/data/vendor/radio/extended_logs"
 #define RIL_LOG_DIRECTORY "/data/vendor/radio"
 #define RIL_LOG_DIRECTORY_PROPERTY "persist.vendor.ril.log.base_dir"
@@ -39,9 +38,6 @@
 #define MODEM_LOGGING_STATUS_PROPERTY "vendor.sys.modem.logging.status"
 #define MODEM_LOGGING_NUMBER_BUGREPORT_PROPERTY "persist.vendor.sys.modem.logging.br_num"
 #define MODEM_LOGGING_PATH_PROPERTY "vendor.sys.modem.logging.log_path"
-#define GPS_LOG_DIRECTORY "/data/vendor/gps/logs"
-#define GPS_LOG_NUMBER_PROPERTY "persist.vendor.gps.aol.log_num"
-#define GPS_LOGGING_STATUS_PROPERTY "vendor.gps.aol.enabled"
 
 #define TCPDUMP_LOG_DIRECTORY "/data/vendor/tcpdump_logger/logs"
 #define TCPDUMP_NUMBER_BUGREPORT "persist.vendor.tcpdump.log.br_num"
@@ -59,8 +55,6 @@ namespace android {
 namespace hardware {
 namespace dumpstate {
 
-#define GPS_LOG_PREFIX "gl-"
-#define GPS_MCU_LOG_PREFIX "esw-"
 #define MODEM_LOG_PREFIX "sbuff_"
 #define EXTENDED_LOG_PREFIX "extended_log_"
 #define RIL_LOG_PREFIX "rild.log."
@@ -216,7 +210,6 @@ Dumpstate::Dumpstate()
         { "modem", [this](int fd, const std::string &destDir) { dumpModemLogs(fd, destDir); } },
         { "radio", [this](int fd, const std::string &destDir) { dumpRadioLogs(fd, destDir); } },
         { "camera", [this](int fd, const std::string &destDir) { dumpCameraLogs(fd, destDir); } },
-        { "gps", [this](int fd, const std::string &destDir) { dumpGpsLogs(fd, destDir); } },
         { "gxp", [this](int fd, const std::string &destDir) { dumpGxpLogs(fd, destDir); } },
   } {
 }
@@ -341,26 +334,6 @@ void Dumpstate::dumpRadioLogs(int fd, const std::string &destDir) {
     dumpNetmgrLogs(destDir);
 }
 
-void Dumpstate::dumpGpsLogs(int fd, const std::string &destDir) {
-    bool gpsLogEnabled = ::android::base::GetBoolProperty(GPS_LOGGING_STATUS_PROPERTY, false);
-    if (!gpsLogEnabled) {
-        ALOGD("gps logging is not running\n");
-        return;
-    }
-    const std::string gpsLogDir = GPS_LOG_DIRECTORY;
-    const std::string gpsTmpLogDir = gpsLogDir + "/.tmp";
-    const std::string gpsDestDir = destDir + "/gps";
-
-    int maxFileNum = ::android::base::GetIntProperty(GPS_LOG_NUMBER_PROPERTY, 20);
-
-    RunCommandToFd(fd, "MKDIR GPS LOG", {"/vendor/bin/mkdir", "-p", gpsDestDir.c_str()},
-                   CommandOptions::WithTimeout(2).Build());
-
-    dumpLogs(fd, gpsTmpLogDir, gpsDestDir, 1, GPS_LOG_PREFIX);
-    dumpLogs(fd, gpsLogDir, gpsDestDir, 3, GPS_MCU_LOG_PREFIX);
-    dumpLogs(fd, gpsLogDir, gpsDestDir, maxFileNum, GPS_LOG_PREFIX);
-}
-
 void Dumpstate::dumpCameraLogs(int fd, const std::string &destDir) {
     bool cameraLogsEnabled = ::android::base::GetBoolProperty(
             "vendor.camera.debug.camera_performance_analyzer.attach_to_bugreport", true);
@@ -437,6 +410,8 @@ void Dumpstate::dumpLogSection(int fd, int fd_bin)
     }
     endSection(fd, sectionName, startTime);
 
+    dumpTextSection(fd, kAllSections);
+
     // Dump all module logs
     if (!PropertiesHelper::IsUserBuild()) {
         for (const auto &section : mLogSections) {
@@ -502,8 +477,6 @@ ndk::ScopedAStatus Dumpstate::dumpstateBoard(const std::vector<::ndk::ScopedFile
           int fd_bin = in_fds[1].get();
           dumpLogSection(fd, fd_bin);
     }
-
-    dumpTextSection(fd, kAllSections);
 
     return ndk::ScopedAStatus::ok();
 }
