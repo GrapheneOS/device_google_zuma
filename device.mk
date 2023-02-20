@@ -1152,6 +1152,10 @@ PRODUCT_COPY_FILES += \
 # Call deleteAllKeys if vold detects a factory reset
 PRODUCT_VENDOR_PROPERTIES += ro.crypto.metadata_init_delete_all_keys.enabled?=true
 
+# Use HCTR2 for filenames encryption on adoptable storage.
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.crypto.volume.options=aes-256-xts:aes-256-hctr2
+
 # Hardware Info Collection
 include hardware/google/pixel/HardwareInfo/HardwareInfo.mk
 
