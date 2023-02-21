@@ -627,10 +627,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.earlyGl.sf.duration=16600000
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.earlyGl.app.duration=16600000
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.frame_rate_multiple_threshold=120
 
-# b/258342843: Temporary turn off DSP Saliency and ESP.
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += camera.debug.saliency.use_dsp=0
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.camera.debug.enable_video_sw_denoise=0
-
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.enable_layer_caching=true
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.set_idle_timer_ms?=80
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.set_touch_timer_ms=200
@@ -1151,6 +1147,10 @@ PRODUCT_COPY_FILES += \
 
 # Call deleteAllKeys if vold detects a factory reset
 PRODUCT_VENDOR_PROPERTIES += ro.crypto.metadata_init_delete_all_keys.enabled?=true
+
+# Use HCTR2 for filenames encryption on adoptable storage.
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.crypto.volume.options=aes-256-xts:aes-256-hctr2
 
 # Hardware Info Collection
 include hardware/google/pixel/HardwareInfo/HardwareInfo.mk
