@@ -30,7 +30,7 @@ include device/google/gs-common/soc/freq.mk
 include device/google/zuma/dumpstate/item.mk
 
 ifneq ($(BOARD_WITHOUT_RADIO),true)
-include device/google/gs-common/gps/brcm/device.mk
+include device/google/gs-common/gps/brcm/device_v2.mk
 endif
 
 TARGET_BOARD_PLATFORM := zuma
