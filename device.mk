@@ -26,11 +26,12 @@ include device/google/gs-common/storage/storage.mk
 include device/google/gs-common/thermal/thermal.mk
 include device/google/gs-common/performance/perf.mk
 include device/google/gs-common/soc/freq.mk
+include device/google/gs-common/gps/dump/log.mk
 
 include device/google/zuma/dumpstate/item.mk
 
 ifneq ($(BOARD_WITHOUT_RADIO),true)
-include device/google/gs-common/gps/brcm/device.mk
+include device/google/gs-common/gps/brcm/device_v2.mk
 endif
 
 TARGET_BOARD_PLATFORM := zuma
@@ -141,6 +142,18 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # Enable SET_SCREEN_STATE request
 PRODUCT_PROPERTY_OVERRIDES += \
 	persist.vendor.ril.enable_set_screen_state=1
+
+# Set the Bluetooth Class of Device
+# Service Field: 0x5A -> 90
+#    Bit 14: LE audio
+#    Bit 17: Networking
+#    Bit 19: Capturing
+#    Bit 20: Object Transfer
+#    Bit 22: Telephony
+# MAJOR_CLASS: 0x42 -> 66 (Phone)
+# MINOR_CLASS: 0x0C -> 12 (Smart Phone)
+PRODUCT_PRODUCT_PROPERTIES += \
+    bluetooth.device.class_of_device=90,66,12
 
 # Set supported Bluetooth profiles to enabled
 PRODUCT_PRODUCT_PROPERTIES += \
@@ -868,6 +881,7 @@ PRODUCT_PACKAGES_DEBUG += \
 
 PRODUCT_PACKAGES += ShannonRcs
 
+ifeq (,$(filter aosp_% factory_%,$(TARGET_PRODUCT)))
 #ImsMediaAoc library
 FEATURE_TYPE := oem_audio
 SOONG_CONFIG_NAMESPACES += audio_lib
@@ -875,6 +889,7 @@ SOONG_CONFIG_audio_lib += \
         audio_type
 
 SOONG_CONFIG_audio_lib_audio_type := $(FEATURE_TYPE)
+endif
 
 # ImsMedia
 PRODUCT_PACKAGES += \
