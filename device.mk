@@ -238,6 +238,12 @@ PRODUCT_VENDOR_PROPERTIES += \
 	ro.hardware.vulkan=mali
 endif
 
+# Mali Configuration Properties
+# b/221255664 prevents setting PROTECTED_MAX_CORE_COUNT=2
+PRODUCT_VENDOR_PROPERTIES += \
+      	vendor.mali.protected_max_core_count=1 \
+	vendor.mali.protected_tls_max=67108864 \
+	vendor.mali.platform_agt_frequency_khz=24576
 
 PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.opengles.aep.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.opengles.aep.xml \
