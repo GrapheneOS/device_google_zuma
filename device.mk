@@ -1184,3 +1184,6 @@ PRODUCT_PACKAGES_DEBUG += ufs_firmware_update.sh
 ifeq (,$(filter aosp_% factory_%,$(TARGET_PRODUCT)))
 include device/google/gs-common/pixel_ril/ril.mk
 endif
+
+# Touch service
+include hardware/google/pixel/input/twoshay.mk
