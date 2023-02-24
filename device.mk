@@ -27,6 +27,7 @@ include device/google/gs-common/thermal/thermal.mk
 include device/google/gs-common/performance/perf.mk
 include device/google/gs-common/soc/freq.mk
 include device/google/gs-common/gps/dump/log.mk
+include device/google/gs-common/display/dump.mk
 
 include device/google/zuma/dumpstate/item.mk
 
