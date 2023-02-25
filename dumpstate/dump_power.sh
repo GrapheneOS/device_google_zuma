@@ -325,3 +325,87 @@ do
   echo "$a=$val"
 done
 
+echo "\n------ IRQ Duration Counts ------"
+echo "Source\t\t\t\tlt_5ms_cnt\tbt_5ms_to_10ms_cnt\tgt_10ms_cnt\tCode\tCurrent Threshold (uA)\tCurrent Reading (uA)"
+
+lt=`cat /sys/devices/virtual/pmic/mitigation/irq_dur_cnt/less_than_5ms_count`
+bt=`cat /sys/devices/virtual/pmic/mitigation/irq_dur_cnt/between_5ms_to_10ms_count`
+gt=`cat /sys/devices/virtual/pmic/mitigation/irq_dur_cnt/greater_than_10ms_count`
+lpf_cur_m=`cat /sys/devices/platform/acpm_mfd_bus@15500000/i2c-0/0-001f/s2mpg14-meter/s2mpg14-odpm/iio:device0/lpf_current`
+lpf_cur_s=`cat /sys/devices/platform/acpm_mfd_bus@15510000/i2c-1/1-002f/s2mpg15-meter/s2mpg15-odpm/iio:device1/lpf_current`
+
+lpf_cur_main=(${lpf_cur_m/\\n/;})
+lpf_cur_sub=(${lpf_cur_s/\\n/;})
+
+IFS_PRE=$IFS
+IFS=$'\n'
+lt_a=($lt)
+bt_a=($bt)
+gt_a=($gt)
+IFS=$IFS_PRE
+
+
+for f in `ls /sys/devices/virtual/pmic/mitigation/main_pwrwarn/*`
+do
+  count=`cat $f`
+  a=${f/\/sys\/devices\/virtual\/pmic\/mitigation\/main_pwrwarn\//}
+  s=${a/main_pwrwarn_threshold/}
+  arr=(${count//=/ })
+  code=${arr[0]}
+  threshold=${arr[1]}
+  main_array[$s]="$code\t$threshold"
+done
+
+i=1
+main_current=()
+for f in "${main_array[@]}"
+do
+  idx=$i
+  idx2=$idx+1
+  main_current+=(${lpf_cur_main[$idx2]})
+  i=$i+2
+done
+
+for f in `ls /sys/devices/virtual/pmic/mitigation/sub_pwrwarn/*`
+do
+  count=`cat $f`
+  a=${f/\/sys\/devices\/virtual\/pmic\/mitigation\/sub_pwrwarn\//}
+  s=${a/sub_pwrwarn_threshold/}
+  arr=(${count//=/ })
+  code=${arr[0]};
+  threshold=${arr[1]};
+  sub_array[$s]="$code\t$threshold"
+done
+i=1
+sub_current=()
+for f in "${sub_array[@]}"
+do
+  idx=$i
+  idx2=$idx+1
+  sub_current+=(${lpf_cur_sub[$idx2]})
+  i=$i+2
+done
+
+rows=${#lt_a[@]}
+for i in `seq 0 $rows`
+do
+  n="${lt_a[i]%:*}"
+  l="${lt_a[i]#*": "}"
+  b="${bt_a[i]#*": "}"
+  g="${gt_a[i]#*": "}"
+  if [ $i -lt 9 ]
+  then
+    echo "$n     \t\t$l\t\t$b\t\t\t$g"
+  elif [ $i -ge 9 ] && [ $i -lt 21 ]
+  then
+    j=$i-9
+    thresh="${main_array[j]}"
+    current="${main_current[j]}"
+    echo "$n     \t$l\t\t$b\t\t\t$g\t\t$thresh      \t\t$current"
+  else
+    j=$i-21
+    thresh="${sub_array[j]}"
+    current="${sub_current[j]}"
+    echo "$n     \t$l\t\t$b\t\t\t$g\t\t$thresh      \t\t$current"
+  fi
+done
