@@ -355,6 +355,10 @@ on init
     # Big Core: sync more performance is prohibitively bad
     write /sys/devices/system/cpu/cpu8/mte_tcf_preferred asymm
 
+    # Change GSA log group for dumpstate
+    chown root system /sys/devices/platform/16490000.gsa-ns/log_main
+    chown root system /sys/devices/platform/16490000.gsa-ns/log_intermediate
+
 on post-fs
     # Ensure device is ready and start storageproxyd
     wait /dev/sg1
