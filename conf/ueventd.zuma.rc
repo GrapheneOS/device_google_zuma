@@ -163,8 +163,9 @@
 /dev/bigwave             0660   mediacodec mediadrm
 
 # Trusty
-/dev/trusty-ipc-dev0     0660   system     drmrpc
-/dev/trusty-log0         0660   system     system
+/dev/trusty-ipc-dev0                                     0660   system     drmrpc
+/dev/trusty-log0                                         0660   system     system
+/dev/block/platform/13200000\.ufs/by-name/trusty_persist 0660   system     system
 
 # RPMB
 /dev/sg1                 0660   system     system
