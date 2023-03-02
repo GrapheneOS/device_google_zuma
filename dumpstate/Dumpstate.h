@@ -60,7 +60,6 @@ class Dumpstate : public BnDumpstateDevice {
     void dumpModemLogs(int fd, const std::string &destDir);
     void dumpRadioLogs(int fd, const std::string &destDir);
     void dumpCameraLogs(int fd, const std::string &destDir);
-    void dumpGxpLogs(int fd, const std::string &destDir);
 
     // Hybrid and binary sections that require an additional file descriptor
     void dumpRilLogs(int fd, std::string destDir);
