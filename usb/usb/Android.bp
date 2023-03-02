@@ -47,6 +47,7 @@ cc_binary {
         "android.hardware.thermal-V1-ndk",
         "android.hardware.usb.gadget@1.0",
         "android.hardware.usb-V1-ndk",
+        "android.hardware.usb.gadget-V1-ndk",
         "libcutils",
         "android.frameworks.stats-V1-ndk",
         "pixelatoms-cpp",
@@ -54,7 +55,7 @@ cc_binary {
 
     ],
     static_libs: [
-        "libpixelusb",
+        "libpixelusb-aidl",
         "libpixelstats",
         "libthermalutils",
     ],
