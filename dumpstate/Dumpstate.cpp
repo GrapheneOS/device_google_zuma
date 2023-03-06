@@ -29,7 +29,6 @@
 
 #include "DumpstateUtil.h"
 
-#define MODEM_EXTENDED_LOG_DIRECTORY "/data/vendor/radio/extended_logs"
 #define RIL_LOG_DIRECTORY "/data/vendor/radio"
 #define RIL_LOG_DIRECTORY_PROPERTY "persist.vendor.ril.log.base_dir"
 #define RIL_LOG_NUMBER_PROPERTY "persist.vendor.ril.log.num_file"
@@ -56,7 +55,6 @@ namespace hardware {
 namespace dumpstate {
 
 #define MODEM_LOG_PREFIX "sbuff_"
-#define EXTENDED_LOG_PREFIX "extended_log_"
 #define RIL_LOG_PREFIX "rild.log."
 #define BUFSIZE 65536
 #define TCPDUMP_LOG_PREFIX "tcpdump"
@@ -169,19 +167,6 @@ void dumpNetmgrLogs(std::string destDir) {
     }
 }
 
-/** Dumps last synced NV data into bugreports */
-void dumpModemEFS(std::string destDir) {
-    const std::string EFS_DIRECTORY = "/mnt/vendor/efs/";
-    const std::vector <std::string> nv_files
-        {
-            EFS_DIRECTORY+"nv_normal.bin",
-            EFS_DIRECTORY+"nv_protected.bin",
-        };
-    for (const auto& logFile : nv_files) {
-        copyFile(logFile, destDir + "/" + basename(logFile.c_str()));
-    }
-}
-
 timepoint_t startSection(int fd, const std::string &sectionName) {
     ::android::base::WriteStringToFd(
             "\n"
@@ -207,7 +192,6 @@ Dumpstate::Dumpstate()
         { "display", [this](int fd) { dumpDisplaySection(fd); } },
     },
   mLogSections{
-        { "modem", [this](int fd, const std::string &destDir) { dumpModemLogs(fd, destDir); } },
         { "radio", [this](int fd, const std::string &destDir) { dumpRadioLogs(fd, destDir); } },
         { "camera", [this](int fd, const std::string &destDir) { dumpCameraLogs(fd, destDir); } },
   } {
@@ -299,13 +283,6 @@ void Dumpstate::dumpDisplaySection(int fd) {
     DumpFileToFd(fd, "Primary panel extra info", "/sys/devices/platform/exynos-drm/primary-panel/panel_extinfo");
     DumpFileToFd(fd, "Secondary panel name", "/sys/devices/platform/exynos-drm/secondary-panel/panel_name");
     DumpFileToFd(fd, "Secondary panel extra info", "/sys/devices/platform/exynos-drm/secondary-panel/panel_extinfo");
-}
-
-void Dumpstate::dumpModemLogs(int fd, const std::string &destDir) {
-    std::string extendedLogDir = MODEM_EXTENDED_LOG_DIRECTORY;
-
-    dumpLogs(fd, extendedLogDir, destDir, 20, EXTENDED_LOG_PREFIX);
-    dumpModemEFS(destDir);
 }
 
 void Dumpstate::dumpRadioLogs(int fd, const std::string &destDir) {
