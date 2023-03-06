@@ -29,12 +29,6 @@
 
 #include "DumpstateUtil.h"
 
-#define MODEM_LOGGING_PERSIST_PROPERTY "persist.vendor.sys.modem.logging.enable"
-#define MODEM_LOGGING_PROPERTY "vendor.sys.modem.logging.enable"
-#define MODEM_LOGGING_STATUS_PROPERTY "vendor.sys.modem.logging.status"
-#define MODEM_LOGGING_NUMBER_BUGREPORT_PROPERTY "persist.vendor.sys.modem.logging.br_num"
-#define MODEM_LOGGING_PATH_PROPERTY "vendor.sys.modem.logging.log_path"
-
 #define TCPDUMP_LOG_DIRECTORY "/data/vendor/tcpdump_logger/logs"
 #define TCPDUMP_NUMBER_BUGREPORT "persist.vendor.tcpdump.log.br_num"
 #define TCPDUMP_PERSIST_PROPERTY "persist.vendor.tcpdump.log.alwayson"
@@ -51,7 +45,6 @@ namespace android {
 namespace hardware {
 namespace dumpstate {
 
-#define MODEM_LOG_PREFIX "sbuff_"
 #define BUFSIZE 65536
 #define TCPDUMP_LOG_PREFIX "tcpdump"
 
@@ -192,7 +185,7 @@ void Dumpstate::dumpTextSection(int fd, const std::string &sectionName) {
         dumpFiles = dumpFiles + " " + bin;
         if (dumpAll || sectionName == bin) {
             auto startTime = startSection(fd, bin);
-            RunCommandToFd(fd, "/vendor/bin/dump/"+bin, {"/vendor/bin/dump/"+bin});
+            RunCommandToFd(fd, "/vendor/bin/dump/"+bin, {"/vendor/bin/dump/"+bin}, CommandOptions::WithTimeout(15).Build());
             endSection(fd, bin, startTime);
             if (!dumpAll) {
                 return;
@@ -230,38 +223,6 @@ void Dumpstate::dumpLogSection(int fd, int fd_bin)
     const std::string logAllDir = logDir + "/all_logs";
 
     RunCommandToFd(fd, "MKDIR LOG", {"/vendor/bin/mkdir", "-p", logAllDir.c_str()}, CommandOptions::WithTimeout(2).Build());
-
-    static const std::string sectionName = "modem DM log";
-    auto startTime = startSection(fd, sectionName);
-    bool modemLogEnabled = ::android::base::GetBoolProperty(MODEM_LOGGING_PERSIST_PROPERTY, false);
-    if (modemLogEnabled && ::android::base::GetProperty(MODEM_LOGGING_PATH_PROPERTY, "") == MODEM_LOG_DIRECTORY) {
-        bool modemLogStarted = ::android::base::GetBoolProperty(MODEM_LOGGING_STATUS_PROPERTY, false);
-        int maxFileNum = ::android::base::GetIntProperty(MODEM_LOGGING_NUMBER_BUGREPORT_PROPERTY, 100);
-
-        if (modemLogStarted) {
-            ::android::base::SetProperty(MODEM_LOGGING_PROPERTY, "false");
-            ALOGD("Stopping modem logging...\n");
-        } else {
-            ALOGD("modem logging is not running\n");
-        }
-
-        for (int i = 0; i < 15; i++) {
-            if (!::android::base::GetBoolProperty(MODEM_LOGGING_STATUS_PROPERTY, false)) {
-                ALOGD("modem logging stopped\n");
-                sleep(1);
-                break;
-            }
-            sleep(1);
-        }
-
-        dumpLogs(fd, logDir, logAllDir, maxFileNum, MODEM_LOG_PREFIX);
-
-        if (modemLogStarted) {
-            ALOGD("Restarting modem logging...\n");
-            ::android::base::SetProperty(MODEM_LOGGING_PROPERTY, "true");
-        }
-    }
-    endSection(fd, sectionName, startTime);
 
     dumpTextSection(fd, kAllSections);
 
