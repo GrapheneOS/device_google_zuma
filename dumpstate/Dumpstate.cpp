@@ -188,10 +188,7 @@ void endSection(int fd, const std::string &sectionName, timepoint_t startTime) {
 }
 
 Dumpstate::Dumpstate()
-  : mTextSections{
-        { "display", [this](int fd) { dumpDisplaySection(fd); } },
-    },
-  mLogSections{
+  : mLogSections{
         { "radio", [this](int fd, const std::string &destDir) { dumpRadioLogs(fd, destDir); } },
         { "camera", [this](int fd, const std::string &destDir) { dumpCameraLogs(fd, destDir); } },
   } {
@@ -202,18 +199,6 @@ Dumpstate::Dumpstate()
 void Dumpstate::dumpTextSection(int fd, const std::string &sectionName) {
     bool dumpAll = (sectionName == kAllSections);
     std::string dumpFiles;
-
-    for (const auto &section : mTextSections) {
-        if (dumpAll || sectionName == section.first) {
-            auto startTime = startSection(fd, section.first);
-            section.second(fd);
-            endSection(fd, section.first, startTime);
-
-            if (!dumpAll) {
-                return;
-            }
-        }
-    }
 
     // Execute all or designated programs under vendor/bin/dump/
     std::unique_ptr<DIR, decltype(&closedir)> dir(opendir("/vendor/bin/dump"), closedir);
@@ -248,20 +233,9 @@ void Dumpstate::dumpTextSection(int fd, const std::string &sectionName) {
     // An unsupported section was requested on the command line
     ::android::base::WriteStringToFd("Unrecognized text section: " + sectionName + "\n", fd);
     ::android::base::WriteStringToFd("Try \"" + kAllSections + "\" or one of the following:", fd);
-    for (const auto &section : mTextSections) {
-        ::android::base::WriteStringToFd(" " + section.first, fd);
-    }
     ::android::base::WriteStringToFd(dumpFiles, fd);
-    ::android::base::WriteStringToFd("\nNote: sections with attachments (e.g. modem) are"
+    ::android::base::WriteStringToFd("\nNote: sections with attachments (e.g. dump_soc) are"
                                    "not avalable from the command line.\n", fd);
-}
-
-// Dump items related to display
-void Dumpstate::dumpDisplaySection(int fd) {
-    DumpFileToFd(fd, "DECON-1 counters /sys/class/drm/card0/device/decon1/counters", "/sys/class/drm/card0/device/decon1/counters");
-    DumpFileToFd(fd, "CRTC-1 event log", "/sys/kernel/debug/dri/0/crtc-1/event");
-    DumpFileToFd(fd, "Secondary panel name", "/sys/devices/platform/exynos-drm/secondary-panel/panel_name");
-    DumpFileToFd(fd, "Secondary panel extra info", "/sys/devices/platform/exynos-drm/secondary-panel/panel_extinfo");
 }
 
 void Dumpstate::dumpRadioLogs(int fd, const std::string &destDir) {
