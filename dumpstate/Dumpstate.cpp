@@ -193,7 +193,6 @@ Dumpstate::Dumpstate()
     },
   mLogSections{
         { "radio", [this](int fd, const std::string &destDir) { dumpRadioLogs(fd, destDir); } },
-        { "camera", [this](int fd, const std::string &destDir) { dumpCameraLogs(fd, destDir); } },
   } {
 }
 
@@ -273,26 +272,6 @@ void Dumpstate::dumpRadioLogs(int fd, const std::string &destDir) {
     }
     dumpRilLogs(fd, destDir);
     dumpNetmgrLogs(destDir);
-}
-
-void Dumpstate::dumpCameraLogs(int fd, const std::string &destDir) {
-    bool cameraLogsEnabled = ::android::base::GetBoolProperty(
-            "vendor.camera.debug.camera_performance_analyzer.attach_to_bugreport", true);
-    if (!cameraLogsEnabled) {
-        return;
-    }
-
-    static const std::string kCameraLogDir = "/data/vendor/camera/profiler";
-    const std::string cameraDestDir = destDir + "/camera";
-
-    RunCommandToFd(fd, "MKDIR CAMERA LOG", {"/vendor/bin/mkdir", "-p", cameraDestDir.c_str()},
-                   CommandOptions::WithTimeout(2).Build());
-    // Attach multiple latest sessions (in case the user is running concurrent
-    // sessions or starts a new session after the one with performance issues).
-    dumpLogs(fd, kCameraLogDir, cameraDestDir, 10, "session-ended-");
-    dumpLogs(fd, kCameraLogDir, cameraDestDir, 5, "high-drop-rate-");
-    dumpLogs(fd, kCameraLogDir, cameraDestDir, 5, "watchdog-");
-    dumpLogs(fd, kCameraLogDir, cameraDestDir, 5, "camera-ended-");
 }
 
 void Dumpstate::dumpLogSection(int fd, int fd_bin)
