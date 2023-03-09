@@ -29,9 +29,6 @@
 
 #include "DumpstateUtil.h"
 
-#define RIL_LOG_DIRECTORY "/data/vendor/radio"
-#define RIL_LOG_DIRECTORY_PROPERTY "persist.vendor.ril.log.base_dir"
-#define RIL_LOG_NUMBER_PROPERTY "persist.vendor.ril.log.num_file"
 #define MODEM_LOGGING_PERSIST_PROPERTY "persist.vendor.sys.modem.logging.enable"
 #define MODEM_LOGGING_PROPERTY "vendor.sys.modem.logging.enable"
 #define MODEM_LOGGING_STATUS_PROPERTY "vendor.sys.modem.logging.status"
@@ -55,7 +52,6 @@ namespace hardware {
 namespace dumpstate {
 
 #define MODEM_LOG_PREFIX "sbuff_"
-#define RIL_LOG_PREFIX "rild.log."
 #define BUFSIZE 65536
 #define TCPDUMP_LOG_PREFIX "tcpdump"
 
@@ -107,26 +103,6 @@ void Dumpstate::dumpLogs(int fd, std::string srcDir, std::string destDir, int ma
     }
 
     free(dirent_list);
-}
-
-void Dumpstate::dumpRilLogs(int fd, std::string destDir) {
-    std::string rilLogDir =
-            ::android::base::GetProperty(RIL_LOG_DIRECTORY_PROPERTY, RIL_LOG_DIRECTORY);
-
-    int maxFileNum = ::android::base::GetIntProperty(RIL_LOG_NUMBER_PROPERTY, 50);
-
-    const std::string currentLogDir = rilLogDir + "/cur";
-    const std::string previousLogDir = rilLogDir + "/prev";
-    const std::string currentDestDir = destDir + "/cur";
-    const std::string previousDestDir = destDir + "/prev";
-
-    RunCommandToFd(fd, "MKDIR RIL CUR LOG", {"/vendor/bin/mkdir", "-p", currentDestDir.c_str()},
-                   CommandOptions::WithTimeout(2).Build());
-    RunCommandToFd(fd, "MKDIR RIL PREV LOG", {"/vendor/bin/mkdir", "-p", previousDestDir.c_str()},
-                   CommandOptions::WithTimeout(2).Build());
-
-    dumpLogs(fd, currentLogDir, currentDestDir, maxFileNum, RIL_LOG_PREFIX);
-    dumpLogs(fd, previousLogDir, previousDestDir, maxFileNum, RIL_LOG_PREFIX);
 }
 
 void copyFile(std::string srcFile, std::string destFile) {
@@ -244,7 +220,6 @@ void Dumpstate::dumpRadioLogs(int fd, const std::string &destDir) {
     if (tcpdumpEnabled) {
         dumpLogs(fd, tcpdumpLogDir, destDir, ::android::base::GetIntProperty(TCPDUMP_NUMBER_BUGREPORT, 5), TCPDUMP_LOG_PREFIX);
     }
-    dumpRilLogs(fd, destDir);
     dumpNetmgrLogs(destDir);
 }
 
