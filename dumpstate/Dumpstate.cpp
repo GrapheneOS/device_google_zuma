@@ -29,9 +29,6 @@
 
 #include "DumpstateUtil.h"
 
-#define RIL_LOG_DIRECTORY "/data/vendor/radio"
-#define RIL_LOG_DIRECTORY_PROPERTY "persist.vendor.ril.log.base_dir"
-#define RIL_LOG_NUMBER_PROPERTY "persist.vendor.ril.log.num_file"
 #define MODEM_LOGGING_PERSIST_PROPERTY "persist.vendor.sys.modem.logging.enable"
 #define MODEM_LOGGING_PROPERTY "vendor.sys.modem.logging.enable"
 #define MODEM_LOGGING_STATUS_PROPERTY "vendor.sys.modem.logging.status"
@@ -55,7 +52,6 @@ namespace hardware {
 namespace dumpstate {
 
 #define MODEM_LOG_PREFIX "sbuff_"
-#define RIL_LOG_PREFIX "rild.log."
 #define BUFSIZE 65536
 #define TCPDUMP_LOG_PREFIX "tcpdump"
 
@@ -107,26 +103,6 @@ void Dumpstate::dumpLogs(int fd, std::string srcDir, std::string destDir, int ma
     }
 
     free(dirent_list);
-}
-
-void Dumpstate::dumpRilLogs(int fd, std::string destDir) {
-    std::string rilLogDir =
-            ::android::base::GetProperty(RIL_LOG_DIRECTORY_PROPERTY, RIL_LOG_DIRECTORY);
-
-    int maxFileNum = ::android::base::GetIntProperty(RIL_LOG_NUMBER_PROPERTY, 50);
-
-    const std::string currentLogDir = rilLogDir + "/cur";
-    const std::string previousLogDir = rilLogDir + "/prev";
-    const std::string currentDestDir = destDir + "/cur";
-    const std::string previousDestDir = destDir + "/prev";
-
-    RunCommandToFd(fd, "MKDIR RIL CUR LOG", {"/vendor/bin/mkdir", "-p", currentDestDir.c_str()},
-                   CommandOptions::WithTimeout(2).Build());
-    RunCommandToFd(fd, "MKDIR RIL PREV LOG", {"/vendor/bin/mkdir", "-p", previousDestDir.c_str()},
-                   CommandOptions::WithTimeout(2).Build());
-
-    dumpLogs(fd, currentLogDir, currentDestDir, maxFileNum, RIL_LOG_PREFIX);
-    dumpLogs(fd, previousLogDir, previousDestDir, maxFileNum, RIL_LOG_PREFIX);
 }
 
 void copyFile(std::string srcFile, std::string destFile) {
@@ -188,10 +164,7 @@ void endSection(int fd, const std::string &sectionName, timepoint_t startTime) {
 }
 
 Dumpstate::Dumpstate()
-  : mTextSections{
-        { "display", [this](int fd) { dumpDisplaySection(fd); } },
-    },
-  mLogSections{
+  : mLogSections{
         { "radio", [this](int fd, const std::string &destDir) { dumpRadioLogs(fd, destDir); } },
   } {
 }
@@ -201,18 +174,6 @@ Dumpstate::Dumpstate()
 void Dumpstate::dumpTextSection(int fd, const std::string &sectionName) {
     bool dumpAll = (sectionName == kAllSections);
     std::string dumpFiles;
-
-    for (const auto &section : mTextSections) {
-        if (dumpAll || sectionName == section.first) {
-            auto startTime = startSection(fd, section.first);
-            section.second(fd);
-            endSection(fd, section.first, startTime);
-
-            if (!dumpAll) {
-                return;
-            }
-        }
-    }
 
     // Execute all or designated programs under vendor/bin/dump/
     std::unique_ptr<DIR, decltype(&closedir)> dir(opendir("/vendor/bin/dump"), closedir);
@@ -247,20 +208,9 @@ void Dumpstate::dumpTextSection(int fd, const std::string &sectionName) {
     // An unsupported section was requested on the command line
     ::android::base::WriteStringToFd("Unrecognized text section: " + sectionName + "\n", fd);
     ::android::base::WriteStringToFd("Try \"" + kAllSections + "\" or one of the following:", fd);
-    for (const auto &section : mTextSections) {
-        ::android::base::WriteStringToFd(" " + section.first, fd);
-    }
     ::android::base::WriteStringToFd(dumpFiles, fd);
-    ::android::base::WriteStringToFd("\nNote: sections with attachments (e.g. modem) are"
+    ::android::base::WriteStringToFd("\nNote: sections with attachments (e.g. dump_soc) are"
                                    "not avalable from the command line.\n", fd);
-}
-
-// Dump items related to display
-void Dumpstate::dumpDisplaySection(int fd) {
-    DumpFileToFd(fd, "DECON-1 counters /sys/class/drm/card0/device/decon1/counters", "/sys/class/drm/card0/device/decon1/counters");
-    DumpFileToFd(fd, "CRTC-1 event log", "/sys/kernel/debug/dri/0/crtc-1/event");
-    DumpFileToFd(fd, "Secondary panel name", "/sys/devices/platform/exynos-drm/secondary-panel/panel_name");
-    DumpFileToFd(fd, "Secondary panel extra info", "/sys/devices/platform/exynos-drm/secondary-panel/panel_extinfo");
 }
 
 void Dumpstate::dumpRadioLogs(int fd, const std::string &destDir) {
@@ -270,7 +220,6 @@ void Dumpstate::dumpRadioLogs(int fd, const std::string &destDir) {
     if (tcpdumpEnabled) {
         dumpLogs(fd, tcpdumpLogDir, destDir, ::android::base::GetIntProperty(TCPDUMP_NUMBER_BUGREPORT, 5), TCPDUMP_LOG_PREFIX);
     }
-    dumpRilLogs(fd, destDir);
     dumpNetmgrLogs(destDir);
 }
 
