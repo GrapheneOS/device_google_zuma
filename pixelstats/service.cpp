@@ -59,6 +59,8 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
         UFS_ERR_PATH(auto_hibern8_err_count)
     },
     .AmsRatePath = "/sys/devices/platform/audiometrics/ams_rate_read_once",
+    .ResumeLatencyMetricsPath = "/sys/kernel/metrics/resume_latency/resume_latency_metrics",
+    .LongIRQMetricsPath = "/sys/kernel/metrics/irq/long_irq_metrics",
     .ModemPcieLinkStatsPath = "/sys/devices/platform/12100000.pcie/link_stats",
     .WifiPcieLinkStatsPath = "/sys/devices/platform/13120000.pcie/link_stats"
 };
