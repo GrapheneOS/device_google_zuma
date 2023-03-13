@@ -19,7 +19,7 @@
 #include <AocStateResidencyDataProvider.h>
 #include <CpupmStateResidencyDataProvider.h>
 #include <DevfreqStateResidencyDataProvider.h>
-#include <DvfsStateResidencyDataProvider.h>
+#include <AdaptiveDvfsStateResidencyDataProvider.h>
 #include <UfsStateResidencyDataProvider.h>
 #include <dataproviders/GenericStateResidencyDataProvider.h>
 #include <dataproviders/IioEnergyMeterDataProvider.h>
@@ -33,6 +33,7 @@
 #include <android/binder_process.h>
 #include <log/log.h>
 
+using aidl::android::hardware::power::stats::AdaptiveDvfsStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::AocStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::CpupmStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::DevfreqStateResidencyDataProvider;
@@ -163,66 +164,9 @@ void addAoC(std::shared_ptr<PowerStats> p) {
 void addDvfsStats(std::shared_ptr<PowerStats> p) {
     // A constant to represent the number of nanoseconds in one millisecond
     const int NS_TO_MS = 1000000;
+    std::string path = "/sys/devices/platform/acpm_stats/fvp_stats";
 
     std::vector<DvfsStateResidencyDataProvider::Config> cfgs;
-
-    cfgs.push_back({"CL0", {
-        std::make_pair("2147MHz", "2147000"),
-        std::make_pair("2098MHz", "2098000"),
-        std::make_pair("2024MHz", "2024000"),
-        std::make_pair("1950MHz", "1950000"),
-        std::make_pair("1844MHz", "1844000"),
-        std::make_pair("1704MHz", "1704000"),
-        std::make_pair("1548MHz", "1548000"),
-        std::make_pair("1475MHz", "1475000"),
-        std::make_pair("1328MHz", "1328000"),
-        std::make_pair("1197MHz", "1197000"),
-        std::make_pair("1098MHz", "1098000"),
-        std::make_pair("975MHz", "975000"),
-        std::make_pair("820MHz", "820000"),
-        std::make_pair("615MHz", "615000"),
-        std::make_pair("324MHz", "324000"),
-    }});
-
-    cfgs.push_back({"CL1", {
-        std::make_pair("2450MHz", "2450000"),
-        std::make_pair("2352MHz", "2352000"),
-        std::make_pair("2245MHz", "2245000"),
-        std::make_pair("2130MHz", "2130000"),
-        std::make_pair("1999MHz", "1999000"),
-        std::make_pair("1836MHz", "1836000"),
-        std::make_pair("1622MHz", "1622000"),
-        std::make_pair("1549MHz", "1549000"),
-        std::make_pair("1418MHz", "1418000"),
-        std::make_pair("1328MHz", "1328000"),
-        std::make_pair("1221MHz", "1221000"),
-        std::make_pair("1082MHz", "1082000"),
-        std::make_pair("910MHz", "910000"),
-        std::make_pair("721MHz", "721000"),
-        std::make_pair("697MHz", "697000"),
-        std::make_pair("578MHz", "578000"),
-        std::make_pair("402MHz", "402000"),
-    }});
-
-    cfgs.push_back({"CL2", {
-        std::make_pair("3015MHz", "3015000"),
-        std::make_pair("2914MHz", "2914000"),
-        std::make_pair("2802MHz", "2802000"),
-        std::make_pair("2687MHz", "2687000"),
-        std::make_pair("2556MHz", "2556000"),
-        std::make_pair("2409MHz", "2409000"),
-        std::make_pair("2294MHz", "2294000"),
-        std::make_pair("2147MHz", "2147000"),
-        std::make_pair("2049MHz", "2049000"),
-        std::make_pair("1901MHz", "1901000"),
-        std::make_pair("1852MHz", "1852000"),
-        std::make_pair("1745MHz", "1745000"),
-        std::make_pair("1557MHz", "1557000"),
-        std::make_pair("1328MHz", "1328000"),
-        std::make_pair("1164MHz", "1164000"),
-        std::make_pair("893MHz", "893000"),
-        std::make_pair("500MHz", "500000"),
-    }});
 
     cfgs.push_back({"MIF", {
         std::make_pair("3744MHz", "3744000"),
@@ -261,8 +205,17 @@ void addDvfsStats(std::shared_ptr<PowerStats> p) {
         std::make_pair("178MHz", "178000"),
     }});
 
+    p->addStateResidencyDataProvider(std::make_unique<AdaptiveDvfsStateResidencyDataProvider>(
+            path, NS_TO_MS, "CL0", "/sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state"));
+
+    p->addStateResidencyDataProvider(std::make_unique<AdaptiveDvfsStateResidencyDataProvider>(
+            path, NS_TO_MS, "CL1", "/sys/devices/system/cpu/cpufreq/policy4/stats/time_in_state"));
+
+    p->addStateResidencyDataProvider(std::make_unique<AdaptiveDvfsStateResidencyDataProvider>(
+            path, NS_TO_MS, "CL2", "/sys/devices/system/cpu/cpufreq/policy8/stats/time_in_state"));
+
     p->addStateResidencyDataProvider(std::make_unique<DvfsStateResidencyDataProvider>(
-            "/sys/devices/platform/acpm_stats/fvp_stats", NS_TO_MS, cfgs));
+            path, NS_TO_MS, cfgs));
 }
 
 void addSoC(std::shared_ptr<PowerStats> p) {
