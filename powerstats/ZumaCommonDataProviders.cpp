@@ -166,24 +166,17 @@ void addDvfsStats(std::shared_ptr<PowerStats> p) {
     const int NS_TO_MS = 1000000;
     std::string path = "/sys/devices/platform/acpm_stats/fvp_stats";
 
+    std::vector<std::pair<std::string, std::string>> adpCfgs = {
+        std::make_pair("CL0", "/sys/devices/system/cpu/cpufreq/policy0/stats"),
+        std::make_pair("CL1", "/sys/devices/system/cpu/cpufreq/policy4/stats"),
+        std::make_pair("CL2", "/sys/devices/system/cpu/cpufreq/policy8/stats"),
+        std::make_pair("MIF",
+                "/sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif")};
+
+    p->addStateResidencyDataProvider(std::make_unique<AdaptiveDvfsStateResidencyDataProvider>(
+            path, NS_TO_MS, adpCfgs));
+
     std::vector<DvfsStateResidencyDataProvider::Config> cfgs;
-
-    cfgs.push_back({"MIF", {
-        std::make_pair("3744MHz", "3744000"),
-        std::make_pair("3172MHz", "3172000"),
-        std::make_pair("2730MHz", "2730000"),
-        std::make_pair("2288MHz", "2288000"),
-        std::make_pair("2028MHz", "2028000"),
-        std::make_pair("1716MHz", "1716000"),
-        std::make_pair("1539MHz", "1539000"),
-        std::make_pair("1352MHz", "1352000"),
-        std::make_pair("1014MHz", "1014000"),
-        std::make_pair("845MHz", "845000"),
-        std::make_pair("676MHz", "676000"),
-        std::make_pair("546MHz", "546000"),
-        std::make_pair("421MHz", "421000"),
-    }});
-
     cfgs.push_back({"TPU", {
         std::make_pair("1119MHz", "1119000"),
         std::make_pair("1066MHz", "1066000"),
@@ -204,15 +197,6 @@ void addDvfsStats(std::shared_ptr<PowerStats> p) {
         std::make_pair("256MHz", "256000"),
         std::make_pair("178MHz", "178000"),
     }});
-
-    p->addStateResidencyDataProvider(std::make_unique<AdaptiveDvfsStateResidencyDataProvider>(
-            path, NS_TO_MS, "CL0", "/sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state"));
-
-    p->addStateResidencyDataProvider(std::make_unique<AdaptiveDvfsStateResidencyDataProvider>(
-            path, NS_TO_MS, "CL1", "/sys/devices/system/cpu/cpufreq/policy4/stats/time_in_state"));
-
-    p->addStateResidencyDataProvider(std::make_unique<AdaptiveDvfsStateResidencyDataProvider>(
-            path, NS_TO_MS, "CL2", "/sys/devices/system/cpu/cpufreq/policy8/stats/time_in_state"));
 
     p->addStateResidencyDataProvider(std::make_unique<DvfsStateResidencyDataProvider>(
             path, NS_TO_MS, cfgs));
