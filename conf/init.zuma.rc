@@ -339,6 +339,12 @@ on init
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu6_memlat@17000010/mem_latency/stall_floor 2100
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu7_memlat@17000010/mem_latency/stall_floor 2100
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu8_memlat@17000010/mem_latency/stall_floor 0
+
+    # Add dsulat governor settings
+    write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/ratio_ceil_cl0 700
+    write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/ratio_ceil_cl1 1000
+    write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/ratio_ceil_cl2 3000
+
     # Give pixelstats group access to PCIe link statistics counters
     chown system system /sys/devices/platform/12100000.pcie/link_stats/complete_timeout_irqs
     chown system system /sys/devices/platform/12100000.pcie/link_stats/link_down_irqs
