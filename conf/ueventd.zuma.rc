@@ -200,6 +200,7 @@
 # DMA-BUF heaps
 /dev/dma_heap/crypto                   0444   system     graphics
 /dev/dma_heap/crypto-uncached          0444   system     graphics
+/dev/dma_heap/faceauth_dsp-secure      0444   system     graphics
 /dev/dma_heap/faceauth_tpu-secure      0444   system     graphics
 /dev/dma_heap/faimg-secure             0444   system     graphics
 /dev/dma_heap/famodel-secure           0444   system     graphics
