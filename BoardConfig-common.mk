@@ -40,6 +40,8 @@ BOARD_KERNEL_CMDLINE += rcupdate.rcu_expedited=1 rcu_nocbs=all
 BOARD_KERNEL_CMDLINE += stack_depot_disable=off page_pinner=on
 BOARD_KERNEL_CMDLINE += swiotlb=1024
 BOARD_BOOTCONFIG += androidboot.boot_devices=13200000.ufs
+# TODO(b/272600756): Remove the params once the driver defaults to MCU mode.
+BOARD_BOOTCONFIG += kernel.gxp.work_mode=mcu kernel.gxp.core_boot=0
 
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
