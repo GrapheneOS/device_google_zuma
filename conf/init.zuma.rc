@@ -700,6 +700,9 @@ on property:sys.boot_completed=1
     chown system system /dev/sys/fs/by-name/userdata/compr_new_inode
     chown system system /dev/sys/fs/by-name/userdata/gc_segment_mode
     chown system system /dev/sys/fs/by-name/userdata/gc_reclaimed_segments
+    chown system system /dev/sys/fs/by-name/userdata/peak_atomic_write
+    chown system system /dev/sys/fs/by-name/userdata/committed_atomic_block
+    chown system system /dev/sys/fs/by-name/userdata/revoked_atomic_block
 
     # Enable ZRAM on boot_complete
     swapon_all /vendor/etc/fstab.${ro.board.platform}
