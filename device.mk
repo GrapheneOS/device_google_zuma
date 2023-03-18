@@ -260,7 +260,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_VENDOR_PROPERTIES += \
 	ro.opengles.version=196610 \
 	graphics.gpu.profiler.support=true \
-	debug.renderengine.backend=skiaglthreaded \
+	debug.renderengine.backend=skiavkthreaded \
 
 # GRAPHICS - GPU (end)
 # ####################
