@@ -57,6 +57,7 @@
             <Limit name="concurrent-instances" max="16" />
             <Feature name="can-swap-width-height" value="1" />
             <Feature name="vq-minimum-quality"/>
+            <Feature name="encoding-statistics"/>
         </MediaCodec>
     </Encoders>
 </MediaCodecs>
