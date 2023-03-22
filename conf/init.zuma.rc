@@ -223,9 +223,6 @@ on init
     chown system system /dev/battery_history
     chmod 0644 /dev/battery_history
 
-    # Modem temperature driver
-    chown radio system /sys/devices/platform/cp-tm1/cp_temp
-
     # Loading common kernel modules in background
     start init_display
 
@@ -361,6 +358,9 @@ on late-fs
     mount_all --late
 
 on post-fs-data
+    # Modem temperature driver
+    chown radio system /sys/devices/platform/cp-tm1/cp_temp
+
     # Log data folder
     mkdir /data/vendor 0771 radio system
     mkdir /data/vendor/log 0771 radio system
