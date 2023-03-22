@@ -471,10 +471,6 @@ include hardware/google/pixel/rebalance_interrupts/rebalance_interrupts.mk
 PRODUCT_PACKAGES += \
 	android.hardware.power.stats-service.pixel
 
-# dumpstate HAL
-PRODUCT_PACKAGES += \
-	android.hardware.dumpstate-service.zuma
-
 #
 # Audio HALs
 #
