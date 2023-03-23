@@ -30,4 +30,11 @@
             <instance>default</instance>
         </interface>
     </hal>
+    <hal format="aidl">
+        <name>com.google.input.algos.gril</name>
+        <interface>
+            <name>IGrilAntennaTuningService</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
 </manifest>
