@@ -802,11 +802,11 @@ PRODUCT_PACKAGES_DEBUG += trusty-ut-ctrl \
 include device/google/gs101/confirmationui/confirmationui.mk
 
 # Trusty Metrics Daemon
-#PRODUCT_SOONG_NAMESPACES += \
-#	vendor/google/trusty/common
-#
-#PRODUCT_PACKAGES += \
-#	trusty_metricsd
+PRODUCT_SOONG_NAMESPACES += \
+	vendor/google/trusty/common
+
+PRODUCT_PACKAGES += \
+ 	trusty_metricsd
 
 $(call soong_config_set,google_displaycolor,displaycolor_platform,zuma)
 PRODUCT_PACKAGES += \
