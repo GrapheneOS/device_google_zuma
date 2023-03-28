@@ -154,6 +154,13 @@
         </interface>
     </hal>
     <hal format="aidl" optional="true">
+        <name>com.google.input.algos.gril</name>
+        <interface>
+            <name>IGrilAntennaTuningService</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="aidl" optional="true">
         <name>hardware.qorvo.uwb</name>
         <interface>
             <name>IUwbVendor</name>
