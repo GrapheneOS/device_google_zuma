@@ -218,6 +218,8 @@
 /dev/dma_heap/sensor_direct_heap       0444   system     graphics
 /dev/dma_heap/aaudio_playback_heap     0444   system     audio
 /dev/dma_heap/aaudio_capture_heap      0444   system     audio
+/dev/dma_heap/gcma_camera              0444   system     system
+/dev/dma_heap/gcma_camera-uncached     0444   system     system
 
 # Direct Charging
 /dev/logbuffer_pca9468_tcpm            0600   system     system
