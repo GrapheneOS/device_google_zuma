@@ -32,6 +32,8 @@ include device/google/gs-common/display/dump.mk
 include device/google/gs-common/gxp/dump.mk
 include device/google/gs-common/camera/dump.mk
 include device/google/gs-common/radio/dump.mk
+include device/google/gs-common/gear/dumpstate/aidl.mk
+include device/google/gs-common/umfw_stat/umfw_stat.mk
 
 include device/google/zuma/dumpstate/item.mk
 
