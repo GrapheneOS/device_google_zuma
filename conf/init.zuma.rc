@@ -254,6 +254,9 @@ on init
     # Charging policy
     chown system system /sys/class/power_supply/battery/charging_policy
 
+    # BatteryHealthData
+    chown system system /sys/class/power_supply/battery/first_usage_date
+
     # Battery Defender
     chown system system /sys/devices/platform/google,battery/power_supply/battery/bd_trickle_cnt
     chown system system /sys/devices/platform/google,battery/power_supply/battery/bd_trickle_dry_run
@@ -521,6 +524,9 @@ on boot
     # Set up kernel tracing, but disable it by default
     chmod 0222 /sys/kernel/debug/tracing/trace_marker
     write /sys/kernel/debug/tracing/tracing_on 0
+
+    # Trigger TMU to ACPM pi table update
+    write /sys/module/gs_thermal/parameters/update_acpm_pi_table 1
 
     # Change permission for A-Box firmware logs file & GPR dump
     chown audioserver system /sys/devices/platform/17c50000.abox/reset
