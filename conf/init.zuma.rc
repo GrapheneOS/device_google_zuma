@@ -360,20 +360,6 @@ on init
     chown system system /sys/devices/platform/13120000.pcie/link_stats/link_recovery_failures
     chown system system /sys/devices/platform/13120000.pcie/link_stats/link_up_failures
 
-    # Write MTE config
-    # Little Cores:
-    write /sys/devices/system/cpu/cpu0/mte_tcf_preferred sync
-    write /sys/devices/system/cpu/cpu1/mte_tcf_preferred sync
-    write /sys/devices/system/cpu/cpu2/mte_tcf_preferred sync
-    write /sys/devices/system/cpu/cpu3/mte_tcf_preferred sync
-    # Mid Cores:
-    write /sys/devices/system/cpu/cpu4/mte_tcf_preferred sync
-    write /sys/devices/system/cpu/cpu5/mte_tcf_preferred sync
-    write /sys/devices/system/cpu/cpu6/mte_tcf_preferred sync
-    write /sys/devices/system/cpu/cpu7/mte_tcf_preferred sync
-    # Big Core: sync more performance is prohibitively bad
-    write /sys/devices/system/cpu/cpu8/mte_tcf_preferred asymm
-
     # Change GSA log group for dumpstate
     chown root system /sys/devices/platform/16490000.gsa-ns/log_main
     chown root system /sys/devices/platform/16490000.gsa-ns/log_intermediate
