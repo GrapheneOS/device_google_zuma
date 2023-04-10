@@ -61,15 +61,15 @@ volatile bool destroyThread;
 volatile bool destroyDisplayPortThread;
 
 string enabledPath;
-constexpr char kHsi2cPath[] = "/sys/devices/platform/10CB0000.hsi2c";
-constexpr char kI2CPath[] = "/sys/devices/platform/10CB0000.hsi2c/i2c-";
-constexpr char kContaminantDetectionPath[] = "i2c-max77759tcpc/contaminant_detection";
+constexpr char kHsi2cPath[] = "/sys/devices/platform/10cb0000.hsi2c";
+constexpr char kI2CPath[] = "/sys/devices/platform/10cb0000.hsi2c/i2c-";
+constexpr char kContaminantDetectionPath[] = "-0025/contaminant_detection";
 constexpr char kDisplayPortDrmPath[] = "/sys/devices/platform/110f0000.drmdp/drm-displayport/";
 constexpr char kDisplayPortUsbPath[] = "/sys/class/typec/port0-partner/";
-constexpr char kStatusPath[] = "i2c-max77759tcpc/contaminant_detection_status";
-constexpr char kSinkLimitEnable[] = "i2c-max77759tcpc/usb_limit_sink_enable";
-constexpr char kSourceLimitEnable[] = "i2c-max77759tcpc/usb_limit_source_enable";
-constexpr char kSinkLimitCurrent[] = "i2c-max77759tcpc/usb_limit_sink_current";
+constexpr char kStatusPath[] = "-0025/contaminant_detection_status";
+constexpr char kSinkLimitEnable[] = "-0025/usb_limit_sink_enable";
+constexpr char kSourceLimitEnable[] = "-0025/usb_limit_source_enable";
+constexpr char kSinkLimitCurrent[] = "-0025/usb_limit_sink_current";
 constexpr char kTypecPath[] = "/sys/class/typec";
 constexpr char kDisableContatminantDetection[] = "vendor.usb.contaminantdisable";
 constexpr char kOverheatStatsPath[] = "/sys/devices/platform/google,usbc_port_cooling_dev/";
@@ -238,7 +238,7 @@ Status queryMoistureDetectionStatus(std::vector<PortStatus> *currentPortStatus) 
     (*currentPortStatus)[0].supportsEnableContaminantPresenceProtection = false;
 
     getI2cBusHelper(&path);
-    enabledPath = kI2CPath + path + "/" + kContaminantDetectionPath;
+    enabledPath = kI2CPath + path + "/" + path + kContaminantDetectionPath;
     if (!ReadFileToString(enabledPath, &enabled)) {
         ALOGE("Failed to open moisture_detection_enabled");
         return Status::ERROR;
@@ -246,7 +246,7 @@ Status queryMoistureDetectionStatus(std::vector<PortStatus> *currentPortStatus) 
 
     enabled = Trim(enabled);
     if (enabled == "1") {
-        DetectedPath = kI2CPath + path + "/" + kStatusPath;
+        DetectedPath = kI2CPath + path + "/" + path + kStatusPath;
         if (!ReadFileToString(DetectedPath, &status)) {
             ALOGE("Failed to open moisture_detected");
             return Status::ERROR;
@@ -489,9 +489,9 @@ ScopedAStatus Usb::limitPowerTransfer(const string& in_portName, bool in_limit,
     string path, sinkLimitEnablePath, currentLimitPath, sourceLimitEnablePath;
 
     getI2cBusHelper(&path);
-    sinkLimitEnablePath = kI2CPath + path + "/" + kSinkLimitEnable;
-    currentLimitPath = kI2CPath + path + "/" + kSinkLimitCurrent;
-    sourceLimitEnablePath = kI2CPath + path + "/" + kSourceLimitEnable;
+    sinkLimitEnablePath = kI2CPath + path + "/" + path + kSinkLimitEnable;
+    currentLimitPath = kI2CPath + path + "/" + path + kSinkLimitCurrent;
+    sourceLimitEnablePath = kI2CPath + path + "/" + path + kSourceLimitEnable;
 
     pthread_mutex_lock(&mLock);
     if (in_limit) {
@@ -535,7 +535,7 @@ Status queryPowerTransferStatus(std::vector<PortStatus> *currentPortStatus) {
     string limitedPath, enabled, path;
 
     getI2cBusHelper(&path);
-    limitedPath = kI2CPath + path + "/" + kSinkLimitEnable;
+    limitedPath = kI2CPath + path + "/" + path + kSinkLimitEnable;
     if (!ReadFileToString(limitedPath, &enabled)) {
         ALOGE("Failed to open limit_sink_enable");
         return Status::ERROR;
