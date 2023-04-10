@@ -35,10 +35,10 @@ namespace usb {
 namespace gadget {
 
 string enabledPath;
-constexpr char kHsi2cPath[] = "/sys/devices/platform/10d50000.hsi2c";
-constexpr char kI2CPath[] = "/sys/devices/platform/10d50000.hsi2c/i2c-";
-constexpr char kAccessoryLimitCurrent[] = "i2c-max77759tcpc/usb_limit_accessory_current";
-constexpr char kAccessoryLimitCurrentEnable[] = "i2c-max77759tcpc/usb_limit_accessory_enable";
+constexpr char kHsi2cPath[] = "/sys/devices/platform/10cb0000.hsi2c";
+constexpr char kI2CPath[] = "/sys/devices/platform/10cb0000.hsi2c/i2c-";
+constexpr char kAccessoryLimitCurrent[] = "-0025/usb_limit_accessory_current";
+constexpr char kAccessoryLimitCurrentEnable[] = "-0025/usb_limit_accessory_enable";
 
 UsbGadget::UsbGadget() : mGadgetIrqPath("") {
     if (access(OS_DESC_PATH, R_OK) != 0) {
@@ -455,8 +455,8 @@ ScopedAStatus UsbGadget::setCurrentUsbFunctions(long functions,
     mCurrentUsbFunctionsApplied = false;
 
     getI2cBusHelper(&path);
-    accessoryCurrentLimitPath = kI2CPath + path + "/" + kAccessoryLimitCurrent;
-    accessoryCurrentLimitEnablePath = kI2CPath + path + "/" + kAccessoryLimitCurrentEnable;
+    accessoryCurrentLimitPath = kI2CPath + path + "/" + path + kAccessoryLimitCurrent;
+    accessoryCurrentLimitEnablePath = kI2CPath + path + "/" + path + kAccessoryLimitCurrentEnable;
 
     // Get the gadget IRQ number before tearDownGadget()
     if (mGadgetIrqPath.empty())
