@@ -119,7 +119,7 @@ on init
     symlink /data/app /factory
 
     # Apply network parameters for high data performance.
-    write /proc/sys/net/core/rmem_default 327680
+    write /proc/sys/net/core/rmem_default 1310720
     write /proc/sys/net/core/rmem_max 8388608
     write /proc/sys/net/core/wmem_default 327680
     write /proc/sys/net/core/wmem_max 8388608
@@ -374,6 +374,9 @@ on post-fs-data
 
     # Modem SIM log folder
     mkdir /data/vendor/radio/sim 0771 radio system
+
+    # Modem OTA UECap folder
+    mkdir /data/vendor/radio/ota_uecap 0773 radio system
 
     # Unzipped modem images folder
     mkdir /data/vendor/radio/image 0771 radio system
@@ -718,6 +721,9 @@ on property:sys.boot_completed=1
 
     # Enable UFS powersaving
     write /dev/sys/block/bootdevice/clkgate_enable 1
+
+    # Cancel boot devfreq
+    write /sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/exynos_data/cancel_boot_freq 1
 
     # Setup final cpuset
     write /dev/cpuset/top-app/cpus 0-8
