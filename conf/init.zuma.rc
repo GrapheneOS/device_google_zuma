@@ -814,9 +814,6 @@ on property:sys.boot_completed=1
     # Disable GPU firmware logging
     write /sys/devices/platform/1f000000.mali/firmware_config/Log\ verbosity/cur 0
 
-#Enable SICD
-    write /sys/devices/system/cpu/cpupm/cpupm/sicd 1
-
 # IMS WiFi Calling
     service charonservice /system/vendor/bin/charon
     class main
