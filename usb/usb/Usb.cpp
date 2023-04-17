@@ -1347,7 +1347,7 @@ void Usb::shutdownDisplayPortPoll() {
 
     // Shutdown thread, make sure to rewrite hpd because file no longer exists.
     write(mDisplayPortShutdown, &flag, sizeof(flag));
-    if (pthread_create(&mDisplayPortShutdownHelper, NULL, shutdownDisplayPortPollWork, NULL)) {
+    if (pthread_create(&mDisplayPortShutdownHelper, NULL, shutdownDisplayPortPollWork, this)) {
         ALOGE("pthread creation failed %d", errno);
     }
     writeDisplayPortAttributeOverride("hpd", "0");
