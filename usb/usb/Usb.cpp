@@ -764,11 +764,6 @@ done:
     return Status::ERROR;
 }
 
-Status queryDisplayPortStatus(std::vector<PortStatus> *currentPortStatus) {
-
-    return Status::SUCCESS;
-}
-
 void queryVersionHelper(android::hardware::usb::Usb *usb,
                         std::vector<PortStatus> *currentPortStatus) {
     Status status;
@@ -1185,7 +1180,7 @@ void *displayPortPollWork(void *param) {
 
     if (usb->getDisplayPortUsbPathHelper(&displayPortUsbPath) == Status::ERROR) {
         ALOGE("usbdp: could not locate usb displayport directory");
-        goto error;
+        goto usb_path_error;
     }
     ALOGI("usbdp: displayport usb path located at %s", displayPortUsbPath.c_str());
     hpdPath = displayPortUsbPath + "hpd";
@@ -1196,21 +1191,21 @@ void *displayPortPollWork(void *param) {
     epoll_fd = epoll_create(64);
     if (epoll_fd == -1) {
         ALOGE("usbdp: epoll_create failed; errno=%d", errno);
-        goto error;
+        goto epoll_fd_error;
     }
 
     if ((hpd_fd = displayPortPollOpenFileHelper(hpdPath.c_str(), file_flags)) == -1){
-        goto error;
+        goto hpd_fd_error;
     }
     if ((pin_fd = displayPortPollOpenFileHelper(pinAssignmentPath.c_str(), file_flags)) == -1){
-        goto error;
+        goto pin_fd_error;
     }
     if ((orientation_fd = displayPortPollOpenFileHelper(orientationPath.c_str(), file_flags))
             == -1){
-        goto error;
+        goto orientation_fd_error;
     }
     if ((link_fd = displayPortPollOpenFileHelper(linkPath.c_str(), file_flags)) == -1){
-        goto error;
+        goto link_fd_error;
     }
 
     // Set epoll_event events and flags
@@ -1294,15 +1289,19 @@ void *displayPortPollWork(void *param) {
     }
 
 error:
-    ALOGI("usbdp: Exiting worker thread");
-    close(hpd_fd);
-    close(pin_fd);
-    close(orientation_fd);
     close(link_fd);
-
-    if (epoll_fd >= 0)
-        epoll_ctl(epoll_fd, EPOLL_CTL_DEL, usb->mDisplayPortShutdown, &ev_eventfd);
-        close(epoll_fd);
+link_fd_error:
+    close(orientation_fd);
+orientation_fd_error:
+    close(pin_fd);
+pin_fd_error:
+    close(hpd_fd);
+hpd_fd_error:
+    epoll_ctl(epoll_fd, EPOLL_CTL_DEL, usb->mDisplayPortShutdown, &ev_eventfd);
+    close(epoll_fd);
+epoll_fd_error:
+usb_path_error:
+    ALOGI("usbdp: Exiting worker thread");
     return NULL;
 }
 
