@@ -823,6 +823,9 @@ on property:sys.boot_completed=1
     # Disable GPU firmware logging
     write /sys/devices/platform/1f000000.mali/firmware_config/Log\ verbosity/cur 0
 
+on property:sys.boot_completed=1 && property:persist.sys.device_provisioned=1 && property:ro.boot.flash.locked=1
+    write /sys/class/power_supply/battery/first_usage_date 0
+
 # IMS WiFi Calling
     service charonservice /system/vendor/bin/charon
     class main
