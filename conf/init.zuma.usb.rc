@@ -192,3 +192,9 @@ on property:sys.usb.config=charger && property:sys.usb.configfs=1
 
 on property:ro.bootmode=usbuwb
     setprop persist.vendor.usb.usbradio.config uwb_acm
+
+on property:persist.vendor.usb.displayport.enabled=1
+    write /sys/class/typec/port0/port0.0/mode1/active "yes"
+
+on property:persist.vendor.usb.displayport.enabled=0
+    write /sys/class/typec/port0/port0.0/mode1/active "no"
