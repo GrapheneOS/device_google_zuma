@@ -196,6 +196,14 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
 	telephony.active_modems.max_count=2
 
+ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.vendor.usb.displayport.enabled=1
+else
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.vendor.usb.displayport.enabled=0
+endif
+
 USE_LASSEN_OEMHOOK := true
 
 # Use for GRIL
