@@ -503,6 +503,7 @@ on early-boot
     chown system system /dev/logbuffer_pcie0
     chown system system /dev/logbuffer_pcie1
     chown system system /dev/logbuffer_bd
+    chown system system /dev/logbuffer_cpif
 
 on boot
 
