@@ -20,6 +20,7 @@
 #include <aidl/android/hardware/usb/BnUsb.h>
 #include <aidl/android/hardware/usb/BnUsbCallback.h>
 #include <pixelusb/UsbOverheatEvent.h>
+#include <sys/eventfd.h>
 #include <utils/Log.h>
 
 #define UEVENT_MSG_LEN 2048
@@ -38,6 +39,7 @@ using ::aidl::android::hardware::usb::IUsbCallback;
 using ::aidl::android::hardware::usb::PortRole;
 using ::android::base::ReadFileToString;
 using ::android::base::WriteStringToFile;
+using ::android::base::unique_fd;
 using ::android::hardware::google::pixel::usb::UsbOverheatEvent;
 using ::android::hardware::google::pixel::usb::ZoneInfo;
 using ::android::hardware::thermal::V2_0::TemperatureType;
@@ -46,6 +48,7 @@ using ::android::sp;
 using ::ndk::ScopedAStatus;
 using ::std::shared_ptr;
 using ::std::string;
+using ::std::thread;
 
 constexpr char kGadgetName[] = "11210000.dwc3";
 #define NEW_UDC_PATH "/sys/devices/platform/11210000.usb/"
@@ -53,6 +56,9 @@ constexpr char kGadgetName[] = "11210000.dwc3";
 #define ID_PATH NEW_UDC_PATH "dwc3_exynos_otg_id"
 #define VBUS_PATH NEW_UDC_PATH "dwc3_exynos_otg_b_sess"
 #define USB_DATA_PATH NEW_UDC_PATH "usb_data_enabled"
+
+#define DISPLAYPORT_SHUTDOWN_CLEAR 0
+#define DISPLAYPORT_SHUTDOWN_SET 1
 
 struct Usb : public BnUsb {
     Usb();
@@ -70,6 +76,14 @@ struct Usb : public BnUsb {
     ScopedAStatus limitPowerTransfer(const string& in_portName, bool in_limit,
         int64_t in_transactionId) override;
     ScopedAStatus resetUsbPort(const string& in_portName, int64_t in_transactionId) override;
+
+    Status getDisplayPortUsbPathHelper(string *path);
+    Status writeDisplayPortAttributeOverride(string attribute, string value);
+    Status writeDisplayPortAttribute(string attribute, string usb_path);
+    bool determineDisplayPortRetry(string linkPath, string hpdPath);
+    void setupDisplayPortPoll();
+    void shutdownDisplayPortPollHelper();
+    void shutdownDisplayPortPoll();
 
     std::shared_ptr<::aidl::android::hardware::usb::IUsbCallback> mCallback;
     // Protects mCallback variable
@@ -89,8 +103,16 @@ struct Usb : public BnUsb {
     float mPluggedTemperatureCelsius;
     // Usb Data status
     bool mUsbDataEnabled;
+
+    // Protects writeDisplayPortToExynos(), setupDisplayPortPoll(), and
+    // shutdownDisplayPortPoll()
+    pthread_mutex_t mDisplayPortLock;
+    // eventfd to signal DisplayPort thread
+    int mDisplayPortShutdown;
   private:
     pthread_t mPoll;
+    pthread_t mDisplayPortPoll;
+    pthread_t mDisplayPortShutdownHelper;
 };
 
 } // namespace usb
