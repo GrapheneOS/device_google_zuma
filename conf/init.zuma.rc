@@ -410,8 +410,8 @@ on post-fs-data
     restorecon /sys/kernel/debug/tracing/trace_marker
 
     # ranging sensor
-    chown system system /dev/stmvl53l1_ranging
-    chmod 0660 /dev/stmvl53l1_ranging
+    chown system system /dev/ispolin_ranging
+    chmod 0660 /dev/ispolin_ranging
 
     # Factory calibration files
     chmod 0771 /mnt/vendor/persist/camera
@@ -741,19 +741,9 @@ on property:sys.boot_completed=1
     write /proc/vendor_sched/ta_uclamp_min 1
     write /proc/vendor_sched/fg_uclamp_min 0
     write /proc/vendor_sched/sys_prefer_idle 0
-    # cfs_rq clamp is using tg->uclamp setting
-    # align it with the vendor_group setting
-    write /proc/vendor_sched/bg_uclamp_max 512
-    write /dev/cpuctl/background/cpu.uclamp.max 50
-    write /proc/vendor_sched/bg_group_throttle 512
-    write /proc/vendor_sched/sysbg_uclamp_max 512
-    write /dev/cpuctl/system-background/cpu.uclamp.max 50
-    write /proc/vendor_sched/sysbg_group_throttle 512
-    write /proc/vendor_sched/dex2oat_uclamp_max 615
-    write /dev/cpuctl/dex2oat/cpu.uclamp.max 60
-    write /proc/vendor_sched/dex2oat_group_throttle 615
-    write /proc/vendor_sched/ota_uclamp_max 410
-    write /proc/vendor_sched/ota_group_throttle 410
+
+    # Set bg group throttle
+    write /proc/vendor_sched/vug_bg_group_throttle 308
 
     # Set PMU freq limit parameters
     write /sys/devices/system/cpu/cpufreq/policy0/sched_pixel/lcpi_threshold 2
@@ -918,9 +908,22 @@ on post-fs-data
     mkdir /data/vendor/bluetooth 0770 bluetooth system
 
 # ODPM
-on fs
-    chown system system /sys/devices/platform/acpm_mfd_bus@18100000/i2c-7/i2c-s2mpg12mfd/s2mpg12-meter/s2mpg12-odpm/iio\:device0/enabled_rails
-    chown system system /sys/devices/platform/acpm_mfd_bus@18110000/i2c-8/i2c-s2mpg13mfd/s2mpg13-meter/s2mpg13-odpm/iio\:device1/enabled_rails
+on early-boot && property:ro.boot.hardware.sku=GC3VE
+    write /sys/bus/iio/devices/iio:device0/enabled_rails "CH11=BUCK12S"
+on early-boot && property:ro.boot.hardware.sku=GZPF0
+    write /sys/bus/iio/devices/iio:device0/enabled_rails "CH11=BUCK12S"
+on early-boot && property:ro.boot.hardware.sku=GPJ41
+    write /sys/bus/iio/devices/iio:device0/enabled_rails "CH11=BUCK12S"
+on early-boot && property:ro.boot.hardware.sku=G9BQD
+    write /sys/bus/iio/devices/iio:device0/enabled_rails "CH11=BUCK12S"
+on early-boot && property:ro.boot.hardware.sku=GKV4X
+    write /sys/bus/iio/devices/iio:device0/enabled_rails "CH11=BUCK12S"
+on early-boot && property:ro.boot.hardware.sku=G6GPR
+    write /sys/bus/iio/devices/iio:device0/enabled_rails "CH11=BUCK12S"
+on early-boot && property:ro.boot.hardware.sku=G576D
+    write /sys/bus/iio/devices/iio:device0/enabled_rails "CH11=BUCK12S"
+on early-boot && property:ro.boot.hardware.sku=GGH2X
+    write /sys/bus/iio/devices/iio:device0/enabled_rails "CH11=BUCK12S"
 
 on post-fs-data
     mkdir /data/vendor/powerstats 0771 system system
