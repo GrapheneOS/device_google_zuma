@@ -105,9 +105,6 @@ on init
     write /sys/block/zram0/comp_algorithm lz77eh
     write /proc/sys/vm/page-cluster 0
 
-    # Adjust watermark level
-    write /proc/sys/vm/watermark_scale_factor 200
-
     # Some user code relies on ro.boot.hardware.revision
     setprop ro.boot.hardware.revision ${ro.revision}
 
@@ -718,6 +715,9 @@ on property:sys.boot_completed=1
     swapon_all /vendor/etc/fstab.${ro.board.platform}
     write /proc/sys/vm/swappiness 100
 
+    # Adjust watermark level
+    write /proc/sys/vm/watermark_scale_factor 200
+
     # Back to default VM settings
     write /proc/sys/vm/dirty_expire_centisecs 3000
     write /proc/sys/vm/dirty_background_ratio 10
@@ -1053,3 +1053,19 @@ on post-fs-data && property:ro.vendor.factory=1
 on property:ro.boot.mode=charger && property:init.svc.vendor.charger=running
     # Enable UFS powersaving in Off Mode Charger
     write /dev/sys/block/bootdevice/clkgate_enable 1
+
+# MTE
+on property:persist.device_config.runtime_native_boot.bootloader_override=force_on
+    # Per-core mode overrides.
+    # Little Cores: sync
+    write /sys/devices/system/cpu/cpu0/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu1/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu2/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu3/mte_tcf_preferred sync
+    # Mid Cores: sync
+    write /sys/devices/system/cpu/cpu4/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu5/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu6/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu7/mte_tcf_preferred sync
+    # Big Core: sync more performance is prohibitively bad
+    write /sys/devices/system/cpu/cpu8/mte_tcf_preferred asymm
