@@ -87,7 +87,7 @@ on init
     chmod 0220 /proc/vendor_sched/set_proc_group_ota
     chmod 0220 /proc/vendor_sched/prefer_idle_set
     chmod 0220 /proc/vendor_sched/prefer_idle_clear
-    chmod 0220 /proc/vendor_sched/pmu_poll_enable
+    chmod 0660 /proc/vendor_sched/pmu_poll_enable
     chmod 0220 /proc/vendor_sched/pmu_poll_time
 
     wait /dev/block/platform/${ro.boot.boot_devices}
@@ -319,6 +319,9 @@ on init
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu6_memlat@17000010/mem_latency/stall_floor 2400
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu7_memlat@17000010/mem_latency/stall_floor 2400
     write /sys/class/devfreq/gs_memlat_devfreq:devfreq_mif_cpu8_memlat@17000010/mem_latency/stall_floor 800
+
+    # Set boost_adpf_prio, -1 by default
+    write /proc/vendor_sched/boost_adpf_prio ${persist.device_config.vendor_system_native_boot.boost_adpf_prio:--1}
 
     # Add dsulat governor settings
     write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/ratio_ceil_cl0 700
