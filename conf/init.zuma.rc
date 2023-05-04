@@ -97,7 +97,7 @@ on init
     chmod 0220 /proc/vendor_sched/set_proc_group_ota
     chmod 0220 /proc/vendor_sched/prefer_idle_set
     chmod 0220 /proc/vendor_sched/prefer_idle_clear
-    chmod 0220 /proc/vendor_sched/pmu_poll_enable
+    chmod 0660 /proc/vendor_sched/pmu_poll_enable
     chmod 0220 /proc/vendor_sched/pmu_poll_time
 
     wait /dev/block/platform/${ro.boot.boot_devices}
