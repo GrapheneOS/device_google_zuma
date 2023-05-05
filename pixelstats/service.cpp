@@ -75,7 +75,13 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
             "/sys/kernel/metrics/thermal/tr_by_group/spmic/stats",
     },
     .ModemPcieLinkStatsPath = "/sys/devices/platform/12100000.pcie/link_stats",
-    .WifiPcieLinkStatsPath = "/sys/devices/platform/13120000.pcie/link_stats"
+    .WifiPcieLinkStatsPath = "/sys/devices/platform/13120000.pcie/link_stats",
+    .DisplayStatsPaths = {
+        "/sys/devices/platform/exynos-drm/primary-panel/error_count_te",
+        "/sys/devices/platform/exynos-drm/primary-panel/error_count_unknown",
+        "/sys/devices/platform/exynos-drm/secondary-panel/error_count_te",
+        "/sys/devices/platform/exynos-drm/secondary-panel/error_count_unknown",
+    }
 };
 
 const struct UeventListener::UeventPaths ueventPaths = {
