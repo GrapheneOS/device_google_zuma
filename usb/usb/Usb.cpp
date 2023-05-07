@@ -17,6 +17,7 @@
 #define LOG_TAG "android.hardware.usb.aidl-service"
 
 #include <android-base/logging.h>
+#include <android-base/parseint.h>
 #include <android-base/properties.h>
 #include <android-base/strings.h>
 #include <assert.h>
@@ -81,6 +82,7 @@ constexpr char kThermalZoneForTempReadSecondary2[] = "qi_therm";
 constexpr char kPogoUsbActive[] = "/sys/devices/platform/google,pogo/pogo_usb_active";
 constexpr char kPogoEnableUsb[] = "/sys/devices/platform/google,pogo/enable_usb";
 constexpr char kPowerSupplyUsbType[] = "/sys/class/power_supply/usb/usb_type";
+constexpr char kIrqHpdCounPath[] = "-0025/irq_hpd_count";
 constexpr int kSamplingIntervalSec = 5;
 void queryVersionHelper(android::hardware::usb::Usb *usb,
                         std::vector<PortStatus> *currentPortStatus);
@@ -420,9 +422,9 @@ Usb::Usb()
         ALOGE("pthread_condattr_destroy failed: %s", strerror(errno));
         abort();
     }
-    mDisplayPortShutdown = eventfd(0, EFD_NONBLOCK);
-    if (mDisplayPortShutdown == -1) {
-        ALOGE("mDisplayPortShutdown eventfd failed: %s", strerror(errno));
+    mDisplayPortEventPipe = eventfd(0, EFD_NONBLOCK);
+    if (mDisplayPortEventPipe == -1) {
+        ALOGE("mDisplayPortEventPipe eventfd failed: %s", strerror(errno));
         abort();
     }
 }
@@ -921,9 +923,16 @@ static void uevent_event(uint32_t /*epevents*/, struct data *payload) {
                 }
                 pthread_mutex_unlock(&payload->usb->mRoleSwitchLock);
             }
-            if (!!strncmp(cp, "DEVTYPE=typec_alternate_mode", strlen("DEVTYPE=typec_alternate_mode"))) {
-                break;
+            if (!strncmp(cp, "DRIVER=max77759tcpc", strlen("DRIVER=max77759tcpc"))
+                       && payload->usb->mDisplayPortPollRunning) {
+                uint64_t flag = DISPLAYPORT_IRQ_HPD_COUNT_CHECK;
+
+                ALOGI("usbdp: DISPLAYPORT_IRQ_HPD_COUNT_CHECK sent");
+                write(payload->usb->mDisplayPortEventPipe, &flag, sizeof(flag));
             }
+            /*if (!!strncmp(cp, "DEVTYPE=typec_alternate_mode", strlen("DEVTYPE=typec_alternate_mode"))) {
+                break;
+            }*/
         } else if (!strncmp(cp, kOverheatStatsDev, strlen(kOverheatStatsDev))) {
             ALOGV("Overheat Cooling device suez update");
             report_overheat_event(payload->usb);
@@ -1122,6 +1131,21 @@ Status Usb::writeDisplayPortAttribute(string attribute, string usb_path) {
                 return Status::SUCCESS;
             }
         }
+    } else if (!strncmp(attribute.c_str(), "irq_hpd_count", strlen("irq_hpd_count"))) {
+        uint32_t temp;
+        if (!::android::base::ParseUint(Trim(attrUsb), &temp)) {
+            ALOGE("usbdp: failed parsing irq_hpd_count:%s", attrUsb.c_str());
+            return Status::SUCCESS;
+        }
+        // Used to cache the values read from tcpci's irq_hpd_count.
+        // Update drm driver when cached value is not the same as the read value.
+        ALOGI("usbdp: mIrqHpdCountCache:%u irq_hpd_count:%u", mIrqHpdCountCache, temp);
+        if (mIrqHpdCountCache == temp) {
+            return Status::SUCCESS;
+        } else {
+            mIrqHpdCountCache = temp;
+        }
+        attrDrmPath = string(kDisplayPortDrmPath) + "irq_hpd";
     } else if (!strncmp(attribute.c_str(), "pin_assignment", strlen("pin_assignment"))) {
         size_t pos = attrUsb.find("[");
         if (pos != string::npos) {
@@ -1168,25 +1192,31 @@ void *displayPortPollWork(void *param) {
     int epoll_fd;
     struct epoll_event ev_hpd, ev_pin, ev_orientation, ev_eventfd, ev_link;
     int nevents = 0;
-    int numRetries = 0;
     int hpd_fd, pin_fd, orientation_fd, link_fd;
     int file_flags = O_RDONLY;
     int epoll_flags;
     bool orientationSet = false;
     bool pinSet = false;
-    string displayPortUsbPath;
-    string hpdPath, pinAssignmentPath, orientationPath, linkPath;
+    string displayPortUsbPath, irqHpdCountPath, hpdPath, pinAssignmentPath, orientationPath;
+    string tcpcI2cBus, linkPath;
     ::aidl::android::hardware::usb::Usb *usb = (::aidl::android::hardware::usb::Usb *)param;
 
     if (usb->getDisplayPortUsbPathHelper(&displayPortUsbPath) == Status::ERROR) {
         ALOGE("usbdp: could not locate usb displayport directory");
         goto usb_path_error;
     }
+
+    usb->mDisplayPortPollRunning = true;
+
     ALOGI("usbdp: displayport usb path located at %s", displayPortUsbPath.c_str());
     hpdPath = displayPortUsbPath + "hpd";
     pinAssignmentPath = displayPortUsbPath + "pin_assignment";
     orientationPath = "/sys/class/typec/port0/orientation";
     linkPath = string(kDisplayPortDrmPath) + "link_status";
+
+    getI2cBusHelper(&tcpcI2cBus);
+    irqHpdCountPath = kI2CPath + tcpcI2cBus + "/" + tcpcI2cBus + kIrqHpdCounPath;
+    ALOGI("udbdp: irqHpdCountPath:%s", irqHpdCountPath.c_str());
 
     epoll_fd = epoll_create(64);
     if (epoll_fd == -1) {
@@ -1218,7 +1248,7 @@ void *displayPortPollWork(void *param) {
     ev_hpd.data.fd = hpd_fd;
     ev_pin.data.fd = pin_fd;
     ev_orientation.data.fd = orientation_fd;
-    ev_eventfd.data.fd = usb->mDisplayPortShutdown;
+    ev_eventfd.data.fd = usb->mDisplayPortEventPipe;
     ev_link.data.fd = link_fd;
 
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, hpd_fd, &ev_hpd) == -1) {
@@ -1237,7 +1267,7 @@ void *displayPortPollWork(void *param) {
         ALOGE("usbdp: epoll_ctl failed to add link status; errno=%d", errno);
         goto error;
     }
-    if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, usb->mDisplayPortShutdown, &ev_eventfd) == -1) {
+    if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, usb->mDisplayPortEventPipe, &ev_eventfd) == -1) {
         ALOGE("usbdp: epoll_ctl failed to add orientation; errno=%d", errno);
         goto error;
     }
@@ -1265,15 +1295,9 @@ void *displayPortPollWork(void *param) {
             } else if (events[n].data.fd == orientation_fd) {
                 usb->writeDisplayPortAttribute("orientation", orientationPath);
                 orientationSet = true;
-            } else if (events[n].data.fd == link_fd) {
-                if (usb->determineDisplayPortRetry(linkPath, hpdPath) && numRetries < 3) {
-                    ALOGW("usbdp: Link Training Failed, rewriting hpd to trigger retry.");
-                    usb->writeDisplayPortAttributeOverride("hpd", "1");
-                    numRetries++;
-                }
-            } else if (events[n].data.fd == usb->mDisplayPortShutdown) {
+            } else if (events[n].data.fd == usb->mDisplayPortEventPipe) {
                 uint64_t flag = 0;
-                if (!read(usb->mDisplayPortShutdown, &flag, sizeof(flag))) {
+                if (!read(usb->mDisplayPortEventPipe, &flag, sizeof(flag))) {
                     if (errno == EAGAIN)
                         continue;
                     ALOGI("usbdp: Shutdown eventfd read error");
@@ -1283,6 +1307,9 @@ void *displayPortPollWork(void *param) {
                     ALOGI("usbdp: Shutdown eventfd triggered");
                     destroyDisplayPortThread = true;
                     break;
+                } else if (flag == DISPLAYPORT_IRQ_HPD_COUNT_CHECK) {
+                    ALOGI("usbdp: IRQ_HPD event through DISPLAYPORT_IRQ_HPD_COUNT_CHECK");
+                    usb->writeDisplayPortAttribute("irq_hpd_count", irqHpdCountPath);
                 }
             }
         }
@@ -1297,10 +1324,11 @@ orientation_fd_error:
 pin_fd_error:
     close(hpd_fd);
 hpd_fd_error:
-    epoll_ctl(epoll_fd, EPOLL_CTL_DEL, usb->mDisplayPortShutdown, &ev_eventfd);
+    epoll_ctl(epoll_fd, EPOLL_CTL_DEL, usb->mDisplayPortEventPipe, &ev_eventfd);
     close(epoll_fd);
 epoll_fd_error:
 usb_path_error:
+    usb->mDisplayPortPollRunning = false;
     ALOGI("usbdp: Exiting worker thread");
     return NULL;
 }
@@ -1308,7 +1336,7 @@ usb_path_error:
 void Usb::setupDisplayPortPoll() {
     uint64_t flag = DISPLAYPORT_SHUTDOWN_CLEAR;
 
-    write(mDisplayPortShutdown, &flag, sizeof(flag));
+    write(mDisplayPortEventPipe, &flag, sizeof(flag));
     destroyDisplayPortThread = false;
 
     /*
@@ -1345,7 +1373,7 @@ void Usb::shutdownDisplayPortPoll() {
     }
 
     // Shutdown thread, make sure to rewrite hpd because file no longer exists.
-    write(mDisplayPortShutdown, &flag, sizeof(flag));
+    write(mDisplayPortEventPipe, &flag, sizeof(flag));
     if (pthread_create(&mDisplayPortShutdownHelper, NULL, shutdownDisplayPortPollWork, this)) {
         ALOGE("pthread creation failed %d", errno);
     }
