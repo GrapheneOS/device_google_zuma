@@ -39,7 +39,12 @@ include device/google/gs-common/widevine/widevine.mk
 include device/google/zuma/dumpstate/item.mk
 
 ifneq ($(BOARD_WITHOUT_RADIO),true)
-include device/google/gs-common/gps/brcm/device_v2.mk
+# Release stable version to factory image
+ifneq ($(filter factory_%,$(TARGET_PRODUCT)),)
+	include device/google/gs-common/gps/brcm/device.mk
+else
+	include device/google/gs-common/gps/brcm/device_v2.mk
+endif
 endif
 
 TARGET_BOARD_PLATFORM := zuma
