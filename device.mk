@@ -39,7 +39,12 @@ include device/google/gs-common/widevine/widevine.mk
 include device/google/zuma/dumpstate/item.mk
 
 ifneq ($(BOARD_WITHOUT_RADIO),true)
-include device/google/gs-common/gps/brcm/device_v2.mk
+# Release stable version to factory image
+ifneq ($(filter factory_%,$(TARGET_PRODUCT)),)
+	include device/google/gs-common/gps/brcm/device.mk
+else
+	include device/google/gs-common/gps/brcm/device_v2.mk
+endif
 endif
 
 TARGET_BOARD_PLATFORM := zuma
@@ -649,10 +654,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	debug.sf.disable_backpressure=0 \
 	debug.sf.enable_gl_backpressure=1 \
 	debug.sf.enable_sdr_dimming=1
-
-# Camera
-PRODUCT_PROPERTY_OVERRIDES += \
-	vendor.camera.multicam.enable_p23_multicam=true
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.use_phase_offsets_as_durations=1
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.late.sf.duration=10500000
