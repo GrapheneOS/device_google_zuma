@@ -263,6 +263,7 @@ PRODUCT_VENDOR_PROPERTIES += \
 	ro.hardware.vulkan=pastel
 else
 PRODUCT_VENDOR_PROPERTIES += \
+	ro.hardware.egl=mali \
 	ro.hardware.vulkan=mali
 endif
 
@@ -926,6 +927,8 @@ SUPPORT_NR := true
 SUPPORT_NR_DS := true
 # Using IRadio 2.1
 USE_RADIO_HAL_2_1 := true
+# Using Early Send Device Info
+USE_EARLY_SEND_DEVICE_INFO := true
 
 #$(call inherit-product, vendor/google_devices/telephony/common/device-vendor.mk)
 #$(call inherit-product, vendor/google_devices/zuma/proprietary/device-vendor.mk)
