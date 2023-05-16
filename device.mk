@@ -562,7 +562,6 @@ endif
 # Lyric Camera HAL settings
 include device/google/gs-common/camera/lyric.mk
 $(call soong_config_set,lyric,soc,zuma)
-$(call soong_config_set,lyric,kernel_version,v515)
 $(call soong_config_set,google3a_config,soc,zuma)
 
 # WiFi
