@@ -263,6 +263,7 @@ PRODUCT_VENDOR_PROPERTIES += \
 	ro.hardware.vulkan=pastel
 else
 PRODUCT_VENDOR_PROPERTIES += \
+	ro.hardware.egl=mali \
 	ro.hardware.vulkan=mali
 endif
 
@@ -288,7 +289,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_VENDOR_PROPERTIES += \
 	ro.opengles.version=196610 \
 	graphics.gpu.profiler.support=true \
-	debug.renderengine.backend=skiavkthreaded \
+	debug.renderengine.backend=skiaglthreaded \
 
 # GRAPHICS - GPU (end)
 # ####################
