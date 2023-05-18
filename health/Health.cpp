@@ -231,6 +231,16 @@ ndk::ScopedAStatus HealthImpl::getDiskStats(std::vector<DiskStats>* out)
 
 }  // namespace aidl::android::hardware::health::implementation
 
+#ifndef __ANDROID_RECOVERY__
+namespace aidl::android::hardware::health {
+class ChargerCallbackImpl : public ChargerCallback {
+  public:
+    ChargerCallbackImpl(const std::shared_ptr<Health>& service) : ChargerCallback(service) {}
+    bool ChargerEnableSuspend() override { return true; }
+};
+} //namespace aidl::android::hardware::health
+#endif // !__ANDROID_RECOVERY__
+
 int main(int argc, char **argv) {
   using ::aidl::android::hardware::health::implementation::HealthImpl;
 
@@ -251,7 +261,8 @@ int main(int argc, char **argv) {
     // In regular mode, start charger UI.
 #ifndef __ANDROID_RECOVERY__
     LOG(INFO) << "Starting charger mode with UI.";
-    return ChargerModeMain(binder, std::make_shared<ChargerCallback>(binder));
+    auto charger_callback = std::make_shared<aidl::android::hardware::health::ChargerCallbackImpl>(binder);
+    return ChargerModeMain(binder, charger_callback);
 #endif
     // In recovery, ignore --charger arg.
     LOG(INFO) << "Starting charger mode without UI.";
