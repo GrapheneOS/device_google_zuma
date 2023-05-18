@@ -56,7 +56,8 @@
             <Limit name="blocks-per-second" min="1" max="61200" />
             <Limit name="bitrate" range="1-120000000" />
             <Limit name="performance-point-1280x720" range="240" />
-            <Limit name="performance-point-3840x2160" range="30" />
+            <Limit name="performance-point-1920x1080" value="180" />
+            <Limit name="performance-point-3840x2160" range="60" />
             <Limit name="concurrent-instances" max="16" />
             <Feature name="can-swap-width-height" value="1" />
             <Feature name="vq-minimum-quality"/>
