@@ -120,6 +120,12 @@ then
   cat "/dev/logbuffer_wc68"
 fi
 
+if [ -e "/dev/logbuffer_ln8411" ]
+then
+  echo "\n------ LN8411 ------"
+  cat "/dev/logbuffer_ln8411"
+fi
+
 echo "\n------ Battery Health ------"
 cat "/sys/class/power_supply/battery/health_index_stats"
 echo "\n------ BMS ------"
