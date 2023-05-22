@@ -365,6 +365,10 @@ on init
     chown system system /sys/devices/platform/13120000.pcie/link_stats/link_recovery_failures
     chown system system /sys/devices/platform/13120000.pcie/link_stats/link_up_failures
 
+    # Change GSA log group for dumpstate
+    chown root system /sys/devices/platform/16490000.gsa-ns/log_main
+    chown root system /sys/devices/platform/16490000.gsa-ns/log_intermediate
+
 on post-fs
     # Ensure device is ready and start storageproxyd
     wait /dev/sg1
