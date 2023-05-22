@@ -227,3 +227,8 @@
 
 # Wlan
 /dev/wlan                              0660   wifi       wifi
+
+# Udfps
+/sys/bus/aoc/devices/control    udfps_set_clock_source  0220    system  system
+/sys/bus/aoc/devices/control    udfps_get_osc_freq      0440    system  system
+/sys/bus/aoc/devices/control    udfps_get_disp_freq     0440    system  system
