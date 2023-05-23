@@ -365,6 +365,10 @@ on init
     chown system system /sys/devices/platform/13120000.pcie/link_stats/link_recovery_failures
     chown system system /sys/devices/platform/13120000.pcie/link_stats/link_up_failures
 
+    # Change GSA log group for dumpstate
+    chown root system /sys/devices/platform/16490000.gsa-ns/log_main
+    chown root system /sys/devices/platform/16490000.gsa-ns/log_intermediate
+
 on post-fs
     # Ensure device is ready and start storageproxyd
     wait /dev/sg1
@@ -839,14 +843,6 @@ on property:sys.boot_completed=1
     # AOC reset permission
     chown root system /sys/devices/platform/19000000.aoc/reset
     chmod 0220 /sys/devices/platform/19000000.aoc/reset
-
-    # AOC UDFPS clock compensation permission
-    chown system system /sys/devices/platform/17000000.aoc/control/udfps_set_clock_source
-    chmod 220 /sys/devices/platform/17000000.aoc/control/udfps_set_clock_source
-    chown system system /sys/devices/platform/17000000.aoc/control/udfps_get_osc_freq
-    chmod 440 /sys/devices/platform/17000000.aoc/control/udfps_get_osc_freq
-    chown system system /sys/devices/platform/17000000.aoc/control/udfps_get_disp_freq
-    chmod 440 /sys/devices/platform/17000000.aoc/control/udfps_get_disp_freq
 
     # write serialno to battery path for pairing
     write /sys/class/power_supply/battery/dev_sn ${ro.boot.serialno}

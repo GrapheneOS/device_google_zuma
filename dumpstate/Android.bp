@@ -23,3 +23,9 @@ sh_binary {
     sub_dir: "dump",
 }
 
+sh_binary {
+    name: "dump_gsa.sh",
+    src: "dump_gsa.sh",
+    vendor: true,
+    sub_dir: "dump",
+}
