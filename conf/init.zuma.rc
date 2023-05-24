@@ -791,15 +791,15 @@ on property:sys.boot_completed=1
     write /proc/vendor_sched/ug_bg_group_throttle 308
 
     # Set PMU freq limit parameters
-    write /sys/devices/system/cpu/cpufreq/policy0/sched_pixel/lcpi_threshold 2
-    write /sys/devices/system/cpu/cpufreq/policy0/sched_pixel/spc_threshold 59
-    write /sys/devices/system/cpu/cpufreq/policy0/sched_pixel/limit_frequency 1401000
-    write /sys/devices/system/cpu/cpufreq/policy4/sched_pixel/lcpi_threshold 6
-    write /sys/devices/system/cpu/cpufreq/policy4/sched_pixel/spc_threshold 64
-    write /sys/devices/system/cpu/cpufreq/policy4/sched_pixel/limit_frequency 1826000
-    write /sys/devices/system/cpu/cpufreq/policy8/sched_pixel/lcpi_threshold 5
-    write /sys/devices/system/cpu/cpufreq/policy8/sched_pixel/spc_threshold 69
-    write /sys/devices/system/cpu/cpufreq/policy8/sched_pixel/limit_frequency 2507000
+    write /sys/devices/system/cpu/cpufreq/policy0/sched_pixel/lcpi_threshold 0
+    write /sys/devices/system/cpu/cpufreq/policy0/sched_pixel/spc_threshold 76
+    write /sys/devices/system/cpu/cpufreq/policy0/sched_pixel/limit_frequency 1328000
+    write /sys/devices/system/cpu/cpufreq/policy4/sched_pixel/lcpi_threshold 0
+    write /sys/devices/system/cpu/cpufreq/policy4/sched_pixel/spc_threshold 73
+    write /sys/devices/system/cpu/cpufreq/policy4/sched_pixel/limit_frequency 1836000
+    write /sys/devices/system/cpu/cpufreq/policy8/sched_pixel/lcpi_threshold 0
+    write /sys/devices/system/cpu/cpufreq/policy8/sched_pixel/spc_threshold 68
+    write /sys/devices/system/cpu/cpufreq/policy8/sched_pixel/limit_frequency 2363000
     write /proc/vendor_sched/pmu_poll_time 10
 
     # Disable PMU freq limit
