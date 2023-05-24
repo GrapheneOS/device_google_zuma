@@ -140,6 +140,7 @@
     </hal>
     <hal format="aidl" optional="true">
         <name>com.google.input.algos.spd</name>
+        <version>2</version>
         <interface>
             <name>IScreenProtectorDetectorService</name>
             <instance>default</instance>
