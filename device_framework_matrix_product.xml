@@ -156,6 +156,7 @@
     </hal>
     <hal format="aidl" optional="true">
         <name>com.google.input.algos.gril</name>
+        <version>2</version>
         <interface>
             <name>IGrilAntennaTuningService</name>
             <instance>default</instance>
