@@ -34,3 +34,10 @@ license {
         "NOTICE",
     ],
 }
+
+sh_binary {
+    name: "disable_contaminant_detection.sh",
+    src: "disable_contaminant_detection.sh",
+    vendor: true,
+    sub_dir: "hw",
+}
