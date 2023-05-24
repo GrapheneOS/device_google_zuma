@@ -360,6 +360,10 @@ PRODUCT_COPY_FILES += \
 	device/google/$(TARGET_BOARD_PLATFORM)/conf/fstab.persist:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.persist \
 	device/google/$(TARGET_BOARD_PLATFORM)/conf/fstab.modem:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.modem
 
+# Shell scripts
+PRODUCT_PACKAGES += \
+	disable_contaminant_detection.sh
+
 include device/google/gs-common/insmod/insmod.mk
 
 # Insmod config files
