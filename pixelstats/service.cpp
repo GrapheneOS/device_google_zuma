@@ -70,9 +70,15 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
     },
     .ResumeLatencyMetricsPath = "/sys/kernel/metrics/resume_latency/resume_latency_metrics",
     .LongIRQMetricsPath = "/sys/kernel/metrics/irq/long_irq_metrics",
-    .TempResidencyPaths = {
+    .TempResidencyAndResetPaths = {
+        {
             "/sys/kernel/metrics/thermal/tr_by_group/tmu/stats",
+            "/sys/kernel/metrics/thermal/tr_by_group/tmu/stats_reset"
+        },
+        {
             "/sys/kernel/metrics/thermal/tr_by_group/spmic/stats",
+            "/sys/kernel/metrics/thermal/tr_by_group/spmic/stats_reset"
+        }
     },
     .ModemPcieLinkStatsPath = "/sys/devices/platform/12100000.pcie/link_stats",
     .WifiPcieLinkStatsPath = "/sys/devices/platform/13120000.pcie/link_stats",
