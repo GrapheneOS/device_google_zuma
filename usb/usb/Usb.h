@@ -59,6 +59,7 @@ constexpr char kGadgetName[] = "11210000.dwc3";
 
 #define DISPLAYPORT_SHUTDOWN_CLEAR 0
 #define DISPLAYPORT_SHUTDOWN_SET 1
+#define DISPLAYPORT_IRQ_HPD_COUNT_CHECK 3
 
 struct Usb : public BnUsb {
     Usb();
@@ -103,12 +104,17 @@ struct Usb : public BnUsb {
     float mPluggedTemperatureCelsius;
     // Usb Data status
     bool mUsbDataEnabled;
+    // True when mDisplayPortPoll pthread is running
+    volatile bool mDisplayPortPollRunning;
+    // Used to cache the values read from tcpci's irq_hpd_count.
+    // Update drm driver when cached value is not the same as the read value.
+    uint32_t mIrqHpdCountCache;
 
     // Protects writeDisplayPortToExynos(), setupDisplayPortPoll(), and
     // shutdownDisplayPortPoll()
     pthread_mutex_t mDisplayPortLock;
     // eventfd to signal DisplayPort thread
-    int mDisplayPortShutdown;
+    int mDisplayPortEventPipe;
   private:
     pthread_t mPoll;
     pthread_t mDisplayPortPoll;
