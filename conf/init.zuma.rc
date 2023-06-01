@@ -350,7 +350,10 @@ on init
     write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/ratio_ceil_cl1 1000
     write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/ratio_ceil_cl2 3000
 
-    # Add dsulat governor settings
+    write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/mem_stall_floor_cl0 1750
+    write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/mem_stall_floor_cl1 1750
+    write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/mem_stall_floor_cl2 1750
+
     write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/dsulat_cpuidle_state_aware_cl0 2
     write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/dsulat_cpuidle_state_aware_cl1 2
     write /sys/class/devfreq/gs_dsulat_devfreq:devfreq_dsu_lat@17000090/dsu_latency/dsulat_cpuidle_state_aware_cl2 2
