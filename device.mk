@@ -28,6 +28,7 @@ include device/google/gs-common/performance/perf.mk
 include device/google/gs-common/pixel_metrics/pixel_metrics.mk
 include device/google/gs-common/soc/freq.mk
 include device/google/gs-common/gps/dump/log.mk
+include device/google/gs-common/bcmbt/dump/dumplog.mk
 include device/google/gs-common/display/dump.mk
 include device/google/gs-common/gxp/dump.mk
 include device/google/gs-common/camera/dump.mk
