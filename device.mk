@@ -177,7 +177,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
 	bluetooth.profile.asha.central.enabled=true \
 	bluetooth.profile.a2dp.source.enabled=true \
 	bluetooth.profile.avrcp.target.enabled=true \
-	bluetooth.profile.bap.broadcast.assist.enabled=true \
 	bluetooth.profile.bap.unicast.server.enabled=true \
 	bluetooth.profile.bas.client.enabled=true \
 	bluetooth.profile.csip.set_coordinator.enabled=true \
