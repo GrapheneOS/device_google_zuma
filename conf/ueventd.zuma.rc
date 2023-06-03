@@ -76,7 +76,7 @@
 
 # jpeg
 /dev/m2m1shot_jpeg	      0660   media      media
-/dev/video12              0660   system     system
+/dev/video12              0666   system     system
 
 # audio
 /dev/seiren                     0660   system     audio
@@ -94,6 +94,7 @@
 /dev/acd-debug                  0660   system     audio
 /dev/acd-audio_tap*             0660   system     audio
 /dev/acd-audio_dcdoff_ref       0660   system     audio
+/dev/acd-mel_processor          0660   system     audio
 /dev/amcs                       0660   system     audio
 /dev/acd-audio_rtp_*            0660   system     radio
 
