@@ -318,8 +318,8 @@ DEVICE_MATRIX_FILE := \
 
 DEVICE_PACKAGE_OVERLAYS += device/google/zuma/overlay
 
-# This will be updated to 34 (Android U) for shipping
-PRODUCT_SHIPPING_API_LEVEL := 33
+# This device is shipped with 34 (Android U)
+PRODUCT_SHIPPING_API_LEVEL := 34
 
 # RKP VINTF
 -include vendor/google_nos/host/android/hals/keymaster/aidl/strongbox/RemotelyProvisionedComponent-citadel.mk
