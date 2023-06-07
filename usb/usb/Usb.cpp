@@ -817,11 +817,22 @@ done:
 void queryVersionHelper(android::hardware::usb::Usb *usb,
                         std::vector<PortStatus> *currentPortStatus) {
     Status status;
+    string displayPortUsbPath;
+
     pthread_mutex_lock(&usb->mLock);
     status = getPortStatusHelper(usb, currentPortStatus);
     queryMoistureDetectionStatus(currentPortStatus);
     queryPowerTransferStatus(currentPortStatus);
     queryNonCompliantChargerStatus(currentPortStatus);
+    pthread_mutex_lock(&usb->mDisplayPortLock);
+    if (!usb->mDisplayPortFirstSetupDone &&
+        usb->getDisplayPortUsbPathHelper(&displayPortUsbPath) == Status::SUCCESS) {
+
+        ALOGI("usbdp: boot with display connected or usb hal restarted");
+        usb->setupDisplayPortPoll();
+    }
+    pthread_mutex_unlock(&usb->mDisplayPortLock);
+
     if (usb->mCallback != NULL) {
         ScopedAStatus ret = usb->mCallback->notifyPortStatusChange(*currentPortStatus,
             status);
@@ -1184,7 +1195,7 @@ Status Usb::writeDisplayPortAttribute(string attribute, string usb_path) {
         uint32_t temp;
         if (!::android::base::ParseUint(Trim(attrUsb), &temp)) {
             ALOGE("usbdp: failed parsing irq_hpd_count:%s", attrUsb.c_str());
-            return Status::SUCCESS;
+            return Status::ERROR;
         }
         // Used to cache the values read from tcpci's irq_hpd_count.
         // Update drm driver when cached value is not the same as the read value.
@@ -1203,7 +1214,7 @@ Status Usb::writeDisplayPortAttribute(string attribute, string usb_path) {
         } else {
             // Don't write anything
             ALOGI("usbdp: Pin config not yet chosen, nothing written.");
-            return Status::SUCCESS;
+            return Status::ERROR;
         }
     }
 
@@ -1250,6 +1261,11 @@ void *displayPortPollWork(void *param) {
     string tcpcI2cBus, linkPath;
     ::aidl::android::hardware::usb::Usb *usb = (::aidl::android::hardware::usb::Usb *)param;
 
+    if (usb->mDisplayPortPollRunning) {
+        ALOGI("usbdp: displayPortPollWork already running. Shutting down duplicate.");
+        return NULL;
+    }
+
     if (usb->getDisplayPortUsbPathHelper(&displayPortUsbPath) == Status::ERROR) {
         ALOGE("usbdp: could not locate usb displayport directory");
         goto usb_path_error;
@@ -1265,7 +1281,7 @@ void *displayPortPollWork(void *param) {
 
     getI2cBusHelper(&tcpcI2cBus);
     irqHpdCountPath = kI2CPath + tcpcI2cBus + "/" + tcpcI2cBus + kIrqHpdCounPath;
-    ALOGI("udbdp: irqHpdCountPath:%s", irqHpdCountPath.c_str());
+    ALOGI("usbdp: irqHpdCountPath:%s", irqHpdCountPath.c_str());
 
     epoll_fd = epoll_create(64);
     if (epoll_fd == -1) {
@@ -1336,14 +1352,28 @@ void *displayPortPollWork(void *param) {
             if (events[n].data.fd == hpd_fd) {
                 if (!pinSet || !orientationSet) {
                     ALOGW("usbdp: HPD may be set before pin_assignment and orientation");
+                    if (!pinSet &&
+                        usb->writeDisplayPortAttribute("pin_assignment", pinAssignmentPath) ==
+                        Status::SUCCESS) {
+                        pinSet = true;
+                    }
+                    if (!orientationSet &&
+                        usb->writeDisplayPortAttribute("orientation", orientationPath) ==
+                        Status::SUCCESS) {
+                        orientationSet = true;
+                    }
                 }
                 usb->writeDisplayPortAttribute("hpd", hpdPath);
             } else if (events[n].data.fd == pin_fd) {
-                usb->writeDisplayPortAttribute("pin_assignment", pinAssignmentPath);
-                pinSet = true;
+                if (usb->writeDisplayPortAttribute("pin_assignment", pinAssignmentPath) ==
+                    Status::SUCCESS) {
+                    pinSet = true;
+                }
             } else if (events[n].data.fd == orientation_fd) {
-                usb->writeDisplayPortAttribute("orientation", orientationPath);
-                orientationSet = true;
+                if (usb->writeDisplayPortAttribute("orientation", orientationPath) ==
+                    Status::SUCCESS) {
+                    orientationSet = true;
+                }
             } else if (events[n].data.fd == usb->mDisplayPortEventPipe) {
                 uint64_t flag = 0;
                 if (!read(usb->mDisplayPortEventPipe, &flag, sizeof(flag))) {
@@ -1387,6 +1417,7 @@ void Usb::setupDisplayPortPoll() {
 
     write(mDisplayPortEventPipe, &flag, sizeof(flag));
     destroyDisplayPortThread = false;
+    mDisplayPortFirstSetupDone = true;
 
     /*
      * Create a background thread to poll DisplayPort system files
@@ -1417,7 +1448,8 @@ void Usb::shutdownDisplayPortPoll() {
     // Determine if should shutdown thread
     // getDisplayPortUsbPathHelper locates a DisplayPort directory, no need to double check
     // directory.
-    if (getDisplayPortUsbPathHelper(&displayPortUsbPath) == Status::SUCCESS) {
+    if (getDisplayPortUsbPathHelper(&displayPortUsbPath) == Status::SUCCESS ||
+        !mDisplayPortPollRunning) {
         return;
     }
 

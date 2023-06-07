@@ -106,6 +106,7 @@ struct Usb : public BnUsb {
     bool mUsbDataEnabled;
     // True when mDisplayPortPoll pthread is running
     volatile bool mDisplayPortPollRunning;
+    volatile bool mDisplayPortFirstSetupDone;
     // Used to cache the values read from tcpci's irq_hpd_count.
     // Update drm driver when cached value is not the same as the read value.
     uint32_t mIrqHpdCountCache;
