@@ -199,7 +199,9 @@ on property:vendor.usb.contaminantdisable=true
     exec /vendor/bin/hw/disable_contaminant_detection.sh
 
 on property:persist.vendor.usb.displayport.enabled=1
+    write /sys/module/exynos_drm/parameters/dp_enabled 1
     write /sys/class/typec/port0/port0.0/mode1/active "yes"
 
 on property:persist.vendor.usb.displayport.enabled=0
+    write /sys/module/exynos_drm/parameters/dp_enabled 0
     write /sys/class/typec/port0/port0.0/mode1/active "no"
