@@ -89,7 +89,9 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
         "/sys/devices/platform/exynos-drm/secondary-panel/error_count_unknown",
     },
     .PDMStatePath = "/sys/devices/platform/audiometrics/pdm_state",
-    .WavesPath = "/sys/devices/platform/audiometrics/waves"
+    .WavesPath = "/sys/devices/platform/audiometrics/waves",
+    .AdaptedInfoCountPath = "/sys/devices/platform/audiometrics/adapted_info_active_count",
+    .AdaptedInfoDurationPath = "/sys/devices/platform/audiometrics/adapted_info_active_duration"
 };
 
 const struct UeventListener::UeventPaths ueventPaths = {
