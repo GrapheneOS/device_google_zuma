@@ -452,6 +452,9 @@ Usb::Usb()
                  ZoneInfo(TemperatureType::UNKNOWN, kThermalZoneForTempReadSecondary2,
                           ThrottlingSeverity::NONE)}, kSamplingIntervalSec),
       mUsbDataEnabled(true),
+      mDisplayPortPollRunning(false),
+      mDisplayPortPollStarting(false),
+      mDisplayPortCVLock(PTHREAD_MUTEX_INITIALIZER),
       mDisplayPortLock(PTHREAD_MUTEX_INITIALIZER) {
     pthread_condattr_t attr;
     if (pthread_condattr_init(&attr)) {
@@ -464,6 +467,10 @@ Usb::Usb()
     }
     if (pthread_cond_init(&mPartnerCV, &attr)) {
         ALOGE("pthread_cond_init failed: %s", strerror(errno));
+        abort();
+    }
+    if (pthread_cond_init(&mDisplayPortCV, &attr)) {
+        ALOGE("usbdp: pthread_cond_init failed: %s", strerror(errno));
         abort();
     }
     if (pthread_condattr_destroy(&attr)) {
@@ -1005,7 +1012,7 @@ static void uevent_event(uint32_t /*epevents*/, struct data *payload) {
                 pthread_mutex_unlock(&payload->usb->mDisplayPortLock);
             } else if (uevent_type == UeventType::CHANGE) {
                 pthread_mutex_lock(&payload->usb->mDisplayPortLock);
-                payload->usb->shutdownDisplayPortPoll();
+                payload->usb->shutdownDisplayPortPoll(false);
                 pthread_mutex_unlock(&payload->usb->mDisplayPortLock);
             }
             break;
@@ -1243,7 +1250,7 @@ bool Usb::determineDisplayPortRetry(string linkPath, string hpdPath) {
 static int displayPortPollOpenFileHelper(const char *file, int flags) {
     int fd = open(file, flags);
     if (fd == -1) {
-        ALOGE("usbdp: open at %s failed; errno=%d", file, errno);
+        ALOGE("usbdp: worker: open at %s failed; errno=%d", file, errno);
     }
     return fd;
 }
@@ -1261,19 +1268,15 @@ void *displayPortPollWork(void *param) {
     string tcpcI2cBus, linkPath;
     ::aidl::android::hardware::usb::Usb *usb = (::aidl::android::hardware::usb::Usb *)param;
 
-    if (usb->mDisplayPortPollRunning) {
-        ALOGI("usbdp: displayPortPollWork already running. Shutting down duplicate.");
-        return NULL;
-    }
+    usb->mDisplayPortPollRunning = true;
+    usb->mDisplayPortPollStarting = false;
 
     if (usb->getDisplayPortUsbPathHelper(&displayPortUsbPath) == Status::ERROR) {
-        ALOGE("usbdp: could not locate usb displayport directory");
+        ALOGE("usbdp: worker: could not locate usb displayport directory");
         goto usb_path_error;
     }
 
-    usb->mDisplayPortPollRunning = true;
-
-    ALOGI("usbdp: displayport usb path located at %s", displayPortUsbPath.c_str());
+    ALOGI("usbdp: worker: displayport usb path located at %s", displayPortUsbPath.c_str());
     hpdPath = displayPortUsbPath + "hpd";
     pinAssignmentPath = displayPortUsbPath + "pin_assignment";
     orientationPath = "/sys/class/typec/port0/orientation";
@@ -1281,11 +1284,11 @@ void *displayPortPollWork(void *param) {
 
     getI2cBusHelper(&tcpcI2cBus);
     irqHpdCountPath = kI2CPath + tcpcI2cBus + "/" + tcpcI2cBus + kIrqHpdCounPath;
-    ALOGI("usbdp: irqHpdCountPath:%s", irqHpdCountPath.c_str());
+    ALOGI("usbdp: worker: irqHpdCountPath:%s", irqHpdCountPath.c_str());
 
     epoll_fd = epoll_create(64);
     if (epoll_fd == -1) {
-        ALOGE("usbdp: epoll_create failed; errno=%d", errno);
+        ALOGE("usbdp: worker: epoll_create failed; errno=%d", errno);
         goto epoll_fd_error;
     }
 
@@ -1317,23 +1320,23 @@ void *displayPortPollWork(void *param) {
     ev_link.data.fd = link_fd;
 
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, hpd_fd, &ev_hpd) == -1) {
-        ALOGE("usbdp: epoll_ctl failed to add hpd; errno=%d", errno);
+        ALOGE("usbdp: worker: epoll_ctl failed to add hpd; errno=%d", errno);
         goto error;
     }
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, pin_fd, &ev_pin) == -1) {
-        ALOGE("usbdp: epoll_ctl failed to add pin; errno=%d", errno);
+        ALOGE("usbdp: worker: epoll_ctl failed to add pin; errno=%d", errno);
         goto error;
     }
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, orientation_fd, &ev_orientation) == -1) {
-        ALOGE("usbdp: epoll_ctl failed to add orientation; errno=%d", errno);
+        ALOGE("usbdp: worker: epoll_ctl failed to add orientation; errno=%d", errno);
         goto error;
     }
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, link_fd, &ev_link) == -1) {
-        ALOGE("usbdp: epoll_ctl failed to add link status; errno=%d", errno);
+        ALOGE("usbdp: worker: epoll_ctl failed to add link status; errno=%d", errno);
         goto error;
     }
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, usb->mDisplayPortEventPipe, &ev_eventfd) == -1) {
-        ALOGE("usbdp: epoll_ctl failed to add orientation; errno=%d", errno);
+        ALOGE("usbdp: worker: epoll_ctl failed to add orientation; errno=%d", errno);
         goto error;
     }
 
@@ -1344,14 +1347,14 @@ void *displayPortPollWork(void *param) {
         if (nevents == -1) {
             if (errno == EINTR)
                 continue;
-            ALOGE("usbdp: epoll_wait failed; errno=%d", errno);
+            ALOGE("usbdp: worker: epoll_wait failed; errno=%d", errno);
             break;
         }
 
         for (int n = 0; n < nevents; n++) {
             if (events[n].data.fd == hpd_fd) {
                 if (!pinSet || !orientationSet) {
-                    ALOGW("usbdp: HPD may be set before pin_assignment and orientation");
+                    ALOGW("usbdp: worker: HPD may be set before pin_assignment and orientation");
                     if (!pinSet &&
                         usb->writeDisplayPortAttribute("pin_assignment", pinAssignmentPath) ==
                         Status::SUCCESS) {
@@ -1379,15 +1382,15 @@ void *displayPortPollWork(void *param) {
                 if (!read(usb->mDisplayPortEventPipe, &flag, sizeof(flag))) {
                     if (errno == EAGAIN)
                         continue;
-                    ALOGI("usbdp: Shutdown eventfd read error");
+                    ALOGI("usbdp: worker: Shutdown eventfd read error");
                     goto error;
                 }
                 if (flag == DISPLAYPORT_SHUTDOWN_SET) {
-                    ALOGI("usbdp: Shutdown eventfd triggered");
+                    ALOGI("usbdp: worker: Shutdown eventfd triggered");
                     destroyDisplayPortThread = true;
                     break;
                 } else if (flag == DISPLAYPORT_IRQ_HPD_COUNT_CHECK) {
-                    ALOGI("usbdp: IRQ_HPD event through DISPLAYPORT_IRQ_HPD_COUNT_CHECK");
+                    ALOGI("usbdp: worker: IRQ_HPD event through DISPLAYPORT_IRQ_HPD_COUNT_CHECK");
                     usb->writeDisplayPortAttribute("irq_hpd_count", irqHpdCountPath);
                 }
             }
@@ -1408,58 +1411,122 @@ hpd_fd_error:
 epoll_fd_error:
 usb_path_error:
     usb->mDisplayPortPollRunning = false;
-    ALOGI("usbdp: Exiting worker thread");
+    ALOGI("usbdp: worker: exiting worker thread");
     return NULL;
+}
+
+static struct timespec setTimespecTimer(int debounceMs) {
+    struct timespec to;
+    struct timespec now;
+
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    to.tv_nsec = now.tv_nsec + ((debounceMs % 1000) * 1000000);
+    to.tv_sec = now.tv_sec + (debounceMs / 1000);
+    if (to.tv_nsec >= 1000000000) {
+        to.tv_nsec -= 1000000000;
+        to.tv_sec += 1;
+    }
+
+    return to;
 }
 
 void Usb::setupDisplayPortPoll() {
     uint64_t flag = DISPLAYPORT_SHUTDOWN_CLEAR;
+    mDisplayPortFirstSetupDone = true;
+    int ret;
 
+    ALOGI("usbdp: setup: beginning setup for displayport poll thread");
+
+    /*
+     * If thread is currently starting, then it hasn't setup DisplayPort fd's, and we can abandon
+     * this process.
+     */
+    if (mDisplayPortPollStarting) {
+        ALOGI("usbdp: setup: abandoning poll thread because another startup is in progress");
+        return;
+    }
+
+    /*
+     * Check to see if thread is currently running. If it is, then we assume that it must have
+     * invalid DisplayPort fd's and the new thread takes over.
+     */
+    if (mDisplayPortPollRunning) {
+        shutdownDisplayPortPoll(true);
+        pthread_mutex_lock(&mDisplayPortCVLock);
+        struct timespec to = setTimespecTimer(DISPLAYPORT_POLL_WAIT_MS);
+        ret = pthread_cond_timedwait(&mDisplayPortCV, &mDisplayPortCVLock, &to);
+        if (ret == ETIMEDOUT) {
+            ALOGI("usbdp: setup: Wait for poll to shutdown timed out, starting new poll anyways.");
+        }
+        pthread_mutex_unlock(&mDisplayPortCVLock);
+    }
+
+    // Indicate that startup procedure is initiated (mutex protects two threads running setup at
+    // once)
+    mDisplayPortPollStarting = true;
+
+    // Reset shutdown signals because shutdown() does not perform self clean-up
     write(mDisplayPortEventPipe, &flag, sizeof(flag));
     destroyDisplayPortThread = false;
-    mDisplayPortFirstSetupDone = true;
 
     /*
      * Create a background thread to poll DisplayPort system files
      */
     if (pthread_create(&mDisplayPortPoll, NULL, displayPortPollWork, this)) {
-        ALOGE("usbdp: failed to create displayport poll thread %d", errno);
+        ALOGE("usbdp: setup: failed to create displayport poll thread %d", errno);
+        goto error;
     }
-    ALOGI("usbdp: successfully started DisplayPort poll thread");
+    ALOGI("usbdp: setup: successfully started displayport poll thread");
+    return;
+
+error:
+    mDisplayPortPollStarting = false;
     return;
 }
 
 void Usb::shutdownDisplayPortPollHelper() {
+    uint64_t flag = DISPLAYPORT_SHUTDOWN_SET;
+
+    // Write shutdown signal to child thread.
+    write(mDisplayPortEventPipe, &flag, sizeof(flag));
     pthread_join(mDisplayPortPoll, NULL);
+    writeDisplayPortAttributeOverride("hpd", "0");
+    pthread_mutex_lock(&mDisplayPortCVLock);
+    pthread_cond_signal(&mDisplayPortCV);
+    pthread_mutex_unlock(&mDisplayPortCVLock);
 }
 
 void *shutdownDisplayPortPollWork(void *param) {
     ::aidl::android::hardware::usb::Usb *usb = (::aidl::android::hardware::usb::Usb *)param;
 
     usb->shutdownDisplayPortPollHelper();
-    ALOGI("usbdp: DisplayPort Thread Shutdown");
+    ALOGI("usbdp: shutdown: displayport thread shutdown complete.");
     return NULL;
 }
 
-void Usb::shutdownDisplayPortPoll() {
-    uint64_t flag = DISPLAYPORT_SHUTDOWN_SET;
+void Usb::shutdownDisplayPortPoll(bool force) {
     string displayPortUsbPath;
 
-    // Determine if should shutdown thread
-    // getDisplayPortUsbPathHelper locates a DisplayPort directory, no need to double check
-    // directory.
-    if (getDisplayPortUsbPathHelper(&displayPortUsbPath) == Status::SUCCESS ||
-        !mDisplayPortPollRunning) {
+    ALOGI("usbdp: shutdown: beginning shutdown for displayport poll thread");
+
+    /*
+     * Determine if should shutdown thread
+     *
+     * getDisplayPortUsbPathHelper locates a DisplayPort directory, no need to double check
+     * directory.
+     *
+     * Force is put in place to shutdown even when displayPortUsbPath is still present.
+     * Happens when back to back BIND events are sent and fds are no longer current.
+     */
+    if (!mDisplayPortPollRunning ||
+        (!force && getDisplayPortUsbPathHelper(&displayPortUsbPath) == Status::SUCCESS)) {
         return;
     }
 
-    // Shutdown thread, make sure to rewrite hpd because file no longer exists.
-    write(mDisplayPortEventPipe, &flag, sizeof(flag));
+    // Shutdown is nonblocking to let other usb operations continue
     if (pthread_create(&mDisplayPortShutdownHelper, NULL, shutdownDisplayPortPollWork, this)) {
-        ALOGE("pthread creation failed %d", errno);
+        ALOGE("usbdp: shutdown: shutdown worker pthread creation failed %d", errno);
     }
-    writeDisplayPortAttributeOverride("hpd", "0");
-    destroyDisplayPortThread = false;
 }
 
 } // namespace usb
