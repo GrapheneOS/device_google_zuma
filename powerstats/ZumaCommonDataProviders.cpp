@@ -32,6 +32,7 @@
 #include <android/binder_manager.h>
 #include <android/binder_process.h>
 #include <log/log.h>
+#include <sys/stat.h>
 
 using aidl::android::hardware::power::stats::AdaptiveDvfsStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::AocStateResidencyDataProvider;
@@ -678,6 +679,14 @@ void addNFC(std::shared_ptr<PowerStats> p) {
     cfgs.emplace_back(generateGenericStateResidencyConfigs(nfcStateConfig, nfcStateHeaders),
             "NFC", "NFC subsystem");
 
+    std::string path;
+    struct stat buffer;
+    for (int i = 0; i < 10; i++) {
+        std::string idx = std::to_string(i);
+        path = "/sys/devices/platform/10c80000.hsi2c/i2c-" + idx + "/" + idx + "-0008/power_stats";
+        if (!stat(path.c_str(), &buffer))
+            break;
+    }
     p->addStateResidencyDataProvider(std::make_unique<GenericStateResidencyDataProvider>(
-            "/sys/devices/platform/10c80000.hsi2c/i2c-6/6-0008/power_stats", cfgs));
+            path, cfgs));
 }
