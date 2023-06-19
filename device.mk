@@ -36,6 +36,7 @@ include device/google/gs-common/radio/dump.mk
 include device/google/gs-common/gear/dumpstate/aidl.mk
 include device/google/gs-common/umfw_stat/umfw_stat.mk
 include device/google/gs-common/widevine/widevine.mk
+include device/google/gs-common/sota_app/factoryota.mk
 
 include device/google/zuma/dumpstate/item.mk
 
