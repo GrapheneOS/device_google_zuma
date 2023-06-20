@@ -613,13 +613,16 @@ void addTPU(std::shared_ptr<PowerStats> p) {
     stateCoeffs = {
         // TODO (b/197721618): Measuring the TPU power numbers
         {"226000",  10},
-        {"627000",  20},
-        {"845000",  30},
-        {"1066000", 40}};
+        {"455000",  20},
+        {"627000",  30},
+        {"712000",  40},
+        {"845000",  50},
+        {"967000",  60},
+        {"1119000", 70}};
 
     p->addEnergyConsumer(PowerStatsEnergyConsumer::createMeterAndAttrConsumer(p,
-            EnergyConsumerType::OTHER, "TPU", {"S10M_VDD_TPU"},
-            {{UID_TIME_IN_STATE, "/sys/class/edgetpu/edgetpu-soc/device/tpu_usage"}},
+            EnergyConsumerType::OTHER, "TPU", {"S7M_VDD_TPU"},
+            {{UID_TIME_IN_STATE, "/sys/devices/platform/1a000000.rio/tpu_usage"}},
             stateCoeffs));
 }
 

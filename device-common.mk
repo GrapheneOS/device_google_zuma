@@ -25,9 +25,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.verified_boot.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.verified_boot.xml
 
-# Factory OTA
--include vendor/unbundled_google/packages/FactoryOtaPrebuilt/factoryota.mk
-
 # Set system properties identifying the chipset
 PRODUCT_VENDOR_PROPERTIES += ro.soc.manufacturer=Google
 TARGET_VENDOR_PROP += device/google/zuma/vendor.prop
@@ -55,4 +52,5 @@ PRODUCT_PRODUCT_PROPERTIES += ro.arm64.memtag.bootctl_supported=1
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.se=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.google.android.bluetooth=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.nfc=off
+PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.system_server=off
 endif
