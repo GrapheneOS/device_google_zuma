@@ -61,6 +61,8 @@ constexpr char kGadgetName[] = "11210000.dwc3";
 #define DISPLAYPORT_SHUTDOWN_SET 1
 #define DISPLAYPORT_IRQ_HPD_COUNT_CHECK 3
 
+#define DISPLAYPORT_POLL_WAIT_MS 100
+
 struct Usb : public BnUsb {
     Usb();
 
@@ -84,7 +86,7 @@ struct Usb : public BnUsb {
     bool determineDisplayPortRetry(string linkPath, string hpdPath);
     void setupDisplayPortPoll();
     void shutdownDisplayPortPollHelper();
-    void shutdownDisplayPortPoll();
+    void shutdownDisplayPortPoll(bool force);
 
     std::shared_ptr<::aidl::android::hardware::usb::IUsbCallback> mCallback;
     // Protects mCallback variable
@@ -106,6 +108,10 @@ struct Usb : public BnUsb {
     bool mUsbDataEnabled;
     // True when mDisplayPortPoll pthread is running
     volatile bool mDisplayPortPollRunning;
+    volatile bool mDisplayPortPollStarting;
+    pthread_cond_t mDisplayPortCV;
+    pthread_mutex_t mDisplayPortCVLock;
+    volatile bool mDisplayPortFirstSetupDone;
     // Used to cache the values read from tcpci's irq_hpd_count.
     // Update drm driver when cached value is not the same as the read value.
     uint32_t mIrqHpdCountCache;
