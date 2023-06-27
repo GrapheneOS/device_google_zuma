@@ -1139,6 +1139,10 @@ PRODUCT_VENDOR_PROPERTIES += ro.crypto.metadata_init_delete_all_keys.enabled?=tr
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.crypto.volume.options=aes-256-xts:aes-256-hctr2
 
+# Increase lmkd aggressiveness
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.lmk.swap_free_low_percentage=100
+
 # Hardware Info Collection
 include hardware/google/pixel/HardwareInfo/HardwareInfo.mk
 
