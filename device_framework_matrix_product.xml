@@ -88,7 +88,7 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal format="aidl" optional="true">
+    <hal format="aidl" optional="true" updatable-via-apex="true">
       <name>com.google.face.debug</name>
         <version>2</version>
         <interface>
