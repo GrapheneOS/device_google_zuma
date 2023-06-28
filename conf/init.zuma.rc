@@ -471,7 +471,33 @@ on post-fs-data
 on zygote-start
     # For PixelLogger configuration file.
     chmod 0771 /data/vendor/wifi
+    write /proc/vendor_sched/ta_uclamp_min 1
+    write /proc/vendor_sched/fg_uclamp_min 0
     write /proc/vendor_sched/sys_uclamp_min 0
+    write /proc/vendor_sched/ta_preferred_idle_mask_low 0x03f
+    write /proc/vendor_sched/ta_preferred_idle_mask_mid 0x1f0
+    write /proc/vendor_sched/ta_preferred_idle_mask_high 0x1f0
+    write /proc/vendor_sched/ta_prefer_idle 1
+    write /proc/vendor_sched/fg_preferred_idle_mask_low 0x03f
+    write /proc/vendor_sched/fg_preferred_idle_mask_mid 0x1f0
+    write /proc/vendor_sched/fg_preferred_idle_mask_high 0x1f0
+    write /proc/vendor_sched/fg_prefer_idle 1
+    write /proc/vendor_sched/sys_preferred_idle_mask_low 0x03f
+    write /proc/vendor_sched/sys_preferred_idle_mask_mid 0x1f0
+    write /proc/vendor_sched/sys_preferred_idle_mask_high 0x1f0
+    write /proc/vendor_sched/sys_prefer_idle 1
+
+    write /proc/vendor_sched/bg_ug 0
+    write /proc/vendor_sched/sysbg_ug 0
+    write /proc/vendor_sched/ota_ug 0
+    write /proc/vendor_sched/dex2oat_ug 1
+    write /proc/vendor_sched/ta_ug 2
+    write /proc/vendor_sched/fg_ug 2
+    write /proc/vendor_sched/nnapi_ug 2
+    write /proc/vendor_sched/rt_ug 2
+    write /proc/vendor_sched/sf_ug 2
+    write /proc/vendor_sched/sys_ug 2
+
 
 on post-fs-data
     # Create the directories used by the Wireless subsystem
