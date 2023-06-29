@@ -703,7 +703,7 @@ PRODUCT_COPY_FILES += \
 	device/google/zuma/display/display_colordata_cal0.pb:$(TARGET_COPY_OUT_VENDOR)/etc/display_colordata_cal0.pb
 
 # limit DPP downscale ratio
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.hwc.dpp.downscale=3
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.hwc.dpp.downscale=4
 
 # Cannot reference variables defined in BoardConfig.mk, uncomment this if
 # BOARD_USES_EXYNOS_DSS_FEATURE is true
@@ -973,11 +973,14 @@ endif
 PRODUCT_PACKAGES += modem_logging_control
 
 # modem logging configs
-PRODUCT_COPY_FILES += \
-	device/google/zuma/radio/config/logging.conf:$(TARGET_COPY_OUT_VENDOR)/etc/modem/logging.conf \
-	device/google/zuma/radio/config/default.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default.cfg \
-	device/google/zuma/radio/config/default.nprf:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default.nprf \
-	device/google/zuma/radio/config/default_metrics.xml:$(TARGET_COPY_OUT_VENDOR)/etc/modem/default_metrics.xml
+PRODUCT_PACKAGES += \
+	logging.conf \
+	default.cfg \
+	default.nprf \
+	default_metrics.xml \
+	Pixel_stability.cfg \
+	Pixel_stability.nprf
+
 endif
 
 # ARM NN files
