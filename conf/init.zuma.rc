@@ -4,6 +4,7 @@ import init.exynos.sensorhub.rc
 
 on early-init
     mount_all /vendor/etc/fstab.persist --early
+    write /proc/sys/kernel/sched_pelt_multiplier 1
 
 on init
     # CPU0 cannot be offline
