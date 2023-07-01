@@ -970,14 +970,32 @@ endif
 # modem logging binary/configs
 PRODUCT_PACKAGES += modem_logging_control
 
-# modem logging configs
+# PILOT SCENARIOS
+PRODUCT_PACKAGES += \
+	Pixel_stability.cfg \
+	Pixel_stability.nprf
+
+# Default modem log mask for pixel logger
 PRODUCT_PACKAGES += \
 	logging.conf \
 	default.cfg \
 	default.nprf \
-	default_metrics.xml \
-	Pixel_stability.cfg \
-	Pixel_stability.nprf
+	default_metrics.xml
+
+# Log Masks for logmasklibrary below
+# default modem log mask
+PRODUCT_PACKAGES += \
+	default_modem_log_mask.conf \
+	default_modem_log_mask.cfg \
+	default_modem_log_mask.nprf \
+	default_modem_log_mask.xml
+
+# Empty modem log mask
+PRODUCT_PACKAGES += \
+	empty_modem_log_mask.conf \
+	empty_modem_log_mask.cfg \
+	empty_modem_log_mask.nprf \
+	empty_modem_log_mask.xml
 
 endif
 
