@@ -470,7 +470,33 @@ on post-fs-data
 on zygote-start
     # For PixelLogger configuration file.
     chmod 0771 /data/vendor/wifi
+    write /proc/vendor_sched/ta_uclamp_min 1
+    write /proc/vendor_sched/fg_uclamp_min 0
     write /proc/vendor_sched/sys_uclamp_min 0
+    write /proc/vendor_sched/ta_preferred_idle_mask_low 0x03f
+    write /proc/vendor_sched/ta_preferred_idle_mask_mid 0x1f0
+    write /proc/vendor_sched/ta_preferred_idle_mask_high 0x1f0
+    write /proc/vendor_sched/ta_prefer_idle 1
+    write /proc/vendor_sched/fg_preferred_idle_mask_low 0x03f
+    write /proc/vendor_sched/fg_preferred_idle_mask_mid 0x1f0
+    write /proc/vendor_sched/fg_preferred_idle_mask_high 0x1f0
+    write /proc/vendor_sched/fg_prefer_idle 1
+    write /proc/vendor_sched/sys_preferred_idle_mask_low 0x03f
+    write /proc/vendor_sched/sys_preferred_idle_mask_mid 0x1f0
+    write /proc/vendor_sched/sys_preferred_idle_mask_high 0x1f0
+    write /proc/vendor_sched/sys_prefer_idle 1
+
+    write /proc/vendor_sched/bg_ug 0
+    write /proc/vendor_sched/sysbg_ug 0
+    write /proc/vendor_sched/ota_ug 0
+    write /proc/vendor_sched/dex2oat_ug 1
+    write /proc/vendor_sched/ta_ug 2
+    write /proc/vendor_sched/fg_ug 2
+    write /proc/vendor_sched/nnapi_ug 2
+    write /proc/vendor_sched/rt_ug 2
+    write /proc/vendor_sched/sf_ug 2
+    write /proc/vendor_sched/sys_ug 2
+
 
 on post-fs-data
     # Create the directories used by the Wireless subsystem
@@ -1081,6 +1107,28 @@ on charger
     mkdir /dev/thermal/tz-by-name 0750 system system
     mkdir /dev/thermal/cdev-by-name 0750 system system
     start vendor.thermal.symlinks
+
+    # Runtime fs tuning
+    write /sys/block/sda/queue/nr_requests 128
+    write /sys/block/sda/queue/iostats 1
+    write /sys/block/sda/queue/iosched/slice_idle 0
+    write /dev/sys/fs/by-name/userdata/data_io_flag 8
+    write /dev/sys/fs/by-name/userdata/node_io_flag 8
+
+    # Enable UFS powersaving
+    write /dev/sys/block/bootdevice/clkgate_enable 1
+
+    # Cancel boot devfreq and uclamp
+    write /sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/exynos_data/cancel_boot_freq 1
+    write /proc/vendor_sched/ta_uclamp_min 0
+    write /proc/vendor_sched/ta_prefer_idle 0
+    write /proc/vendor_sched/fg_uclamp_min 0
+    write /proc/vendor_sched/fg_prefer_idle 0
+    write /proc/vendor_sched/sys_uclamp_min 0
+    write /proc/vendor_sched/sys_prefer_idle 0
+
+    # Enable SICD
+    write /sys/devices/system/cpu/cpupm/cpupm/sicd 1
 
 on property:vendor.disable.bcl.control=1
     write /sys/devices/virtual/pmic/mitigation/instruction/enable_mitigation 0
