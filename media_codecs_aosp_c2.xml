@@ -26,7 +26,7 @@
             <Limit name="block-count" range="1-129600" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-240000000" />
-            <Limit name="performance-point-1280x720" range="240" />
+            <Limit name="performance-point-1920x1080" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
             <Limit name="performance-point-7680x4320" range="30" />
             <Limit name="concurrent-instances" max="16" />
@@ -41,7 +41,7 @@
             <Limit name="block-count" range="1-32400" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-240000000" />
-            <Limit name="performance-point-1280x720" range="240" />
+            <Limit name="performance-point-1920x1080" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
             <Limit name="concurrent-instances" max="2" />
             <Feature name="adaptive-playback" />
@@ -56,7 +56,7 @@
             <Limit name="block-count" range="1-129600" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-240000000" />
-            <Limit name="performance-point-1280x720" range="240" />
+            <Limit name="performance-point-1920x1080" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
             <Limit name="performance-point-7680x4320" range="30" />
             <Limit name="concurrent-instances" max="16" />
@@ -71,7 +71,7 @@
             <Limit name="block-count" range="1-32400" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-240000000" />
-            <Limit name="performance-point-1280x720" range="240" />
+            <Limit name="performance-point-1920x1080" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
             <Limit name="concurrent-instances" max="2" />
             <Feature name="adaptive-playback" />
@@ -113,7 +113,7 @@
             <Limit name="block-count" range="1-32400" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-80000000" />
-            <Limit name="performance-point-1280x720" range="240" />
+            <Limit name="performance-point-1920x1080" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
             <Limit name="concurrent-instances" max="16" />
             <Feature name="adaptive-playback" />
@@ -127,7 +127,7 @@
             <Limit name="block-count" range="1-8160" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-80000000" />
-            <Limit name="performance-point-1280x720" range="240" />
+            <Limit name="performance-point-1920x1080" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
             <Limit name="performance-point-7680x4320" range="30" />
             <Limit name="concurrent-instances" max="16" />
@@ -142,7 +142,7 @@
             <Limit name="block-count" range="1-2040" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-80000000" />
-            <Limit name="performance-point-1280x720" range="240" />
+            <Limit name="performance-point-1920x1080" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
             <Limit name="concurrent-instances" max="2" />
             <Feature name="adaptive-playback" />
@@ -160,7 +160,7 @@
             <Limit name="block-count" range="1-129600" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-240000000" />
-            <Limit name="performance-point-1280x720" range="240" />
+            <Limit name="performance-point-1920x1080" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
             <Limit name="performance-point-7680x4320" range="30" />
             <Limit name="concurrent-instances" max="16" />
@@ -177,7 +177,7 @@
             <Limit name="block-count" range="1-32400" />
             <Limit name="blocks-per-second" min="1" max="972000" />
             <Limit name="bitrate" range="1-240000000" />
-            <Limit name="performance-point-1280x720" range="240" />
+            <Limit name="performance-point-1920x1080" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
             <Limit name="performance-point-7680x4320" range="30" />
             <Limit name="concurrent-instances" max="16" />
@@ -227,7 +227,7 @@
             <Limit name="block-count" range="1-32400" />
             <Limit name="blocks-per-second" min="1" max="3888000" />
             <Limit name="bitrate" range="1-80000000" />
-            <Limit name="performance-point-1280x720" range="240" />
+            <Limit name="performance-point-1920x1080" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
             <Limit name="concurrent-instances" max="16" />
             <Feature name="can-swap-width-height" value="1" />
@@ -243,7 +243,7 @@
             <Limit name="block-count" range="1-2040" />
             <Limit name="blocks-per-second" min="1" max="243000" />
             <Limit name="bitrate" range="1-80000000" />
-            <Limit name="performance-point-1280x720" range="240" />
+            <Limit name="performance-point-1920x1080" range="240" />
             <Limit name="performance-point-3840x2160" range="120" />
             <Limit name="concurrent-instances" max="16" />
             <Feature name="can-swap-width-height" value="1" />
