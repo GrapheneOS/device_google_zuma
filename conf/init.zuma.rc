@@ -794,6 +794,17 @@ on property:sys.boot_completed=1
     # Cancel boot devfreq
     write /sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/exynos_data/cancel_boot_freq 1
 
+    # Restore prefer idle
+    write /proc/vendor_sched/ta_preferred_idle_mask_low 0x1ff
+    write /proc/vendor_sched/ta_preferred_idle_mask_mid 0x1ff
+    write /proc/vendor_sched/ta_preferred_idle_mask_high 0x1ff
+    write /proc/vendor_sched/fg_preferred_idle_mask_low 0x1ff
+    write /proc/vendor_sched/fg_preferred_idle_mask_mid 0x1ff
+    write /proc/vendor_sched/fg_preferred_idle_mask_high 0x1ff
+    write /proc/vendor_sched/sys_preferred_idle_mask_low 0x1ff
+    write /proc/vendor_sched/sys_preferred_idle_mask_mid 0x1ff
+    write /proc/vendor_sched/sys_preferred_idle_mask_high 0x1ff
+
     # Setup final cpuset
     write /dev/cpuset/top-app/cpus 0-8
     write /dev/cpuset/foreground/cpus 0-7
