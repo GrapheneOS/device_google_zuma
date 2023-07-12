@@ -91,7 +91,10 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
     .PDMStatePath = "/sys/devices/platform/audiometrics/pdm_state",
     .WavesPath = "/sys/devices/platform/audiometrics/waves",
     .AdaptedInfoCountPath = "/sys/devices/platform/audiometrics/adapted_info_active_count",
-    .AdaptedInfoDurationPath = "/sys/devices/platform/audiometrics/adapted_info_active_duration"
+    .AdaptedInfoDurationPath = "/sys/devices/platform/audiometrics/adapted_info_active_duration",
+    .CCARatePath = "/sys/devices/platform/audiometrics/cca_rate_read_once",
+    .PcmLatencyPath = "/sys/devices/platform/audiometrics/pcm_latency",
+    .PcmCountPath = "/sys/devices/platform/audiometrics/pcm_count"
 };
 
 const struct UeventListener::UeventPaths ueventPaths = {
