@@ -244,6 +244,8 @@ PRODUCT_SOONG_NAMESPACES += \
 $(call soong_config_set,pixel_mali,soc,$(TARGET_BOARD_PLATFORM))
 $(call soong_config_set,arm_gralloc,soc,$(TARGET_BOARD_PLATFORM))
 
+include device/google/gs101/neuralnetwork/neuralnetwork.mk
+
 include device/google/gs-common/gpu/gpu.mk
 PRODUCT_PACKAGES += \
 	csffw_image_prebuilt__firmware_prebuilt_ttux_mali_csffw.bin \
@@ -983,6 +985,9 @@ PRODUCT_PACKAGES += \
 	Pixel_stability.nprf
 
 endif
+
+# ARM NN files
+ARMNN_COMPUTE_CL_ENABLE := 1
 
 # Vibrator Diag
 PRODUCT_PACKAGES_DEBUG += \
