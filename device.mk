@@ -1013,7 +1013,7 @@ $(call soong_config_set,aoc,target_product,$(TARGET_PRODUCT))
 ## Audio properties
 ##Audio Vendor property
 PRODUCT_PROPERTY_OVERRIDES += \
-	persist.vendor.audio.cca.enabled=true \
+	persist.vendor.audio.cca.enabled=false \
 	persist.vendor.audio.cca.unsupported=false
 
 PRODUCT_PROPERTY_OVERRIDES += \
