@@ -1141,9 +1141,6 @@ on charger
     write /proc/vendor_sched/sys_uclamp_min 0
     write /proc/vendor_sched/sys_prefer_idle 0
 
-    # Enable SICD
-    write /sys/devices/system/cpu/cpupm/cpupm/sicd 1
-
 on property:vendor.disable.bcl.control=1
     write /sys/devices/virtual/pmic/mitigation/instruction/enable_mitigation 0
 
