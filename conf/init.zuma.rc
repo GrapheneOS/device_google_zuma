@@ -890,8 +890,8 @@ on property:sys.boot_completed=1
     chown system system /sys/class/power_supply/wireless/device/version
 
     # AOC reset permission
-    chown root system /sys/devices/platform/19000000.aoc/reset
-    chmod 0220 /sys/devices/platform/19000000.aoc/reset
+    chown root system /sys/devices/platform/17000000.aoc/reset
+    chmod 0220 /sys/devices/platform/17000000.aoc/reset
 
     # write serialno to battery path for pairing
     write /sys/class/power_supply/battery/dev_sn ${ro.boot.serialno}
