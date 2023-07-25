@@ -925,8 +925,8 @@ PRODUCT_PACKAGES += \
 
 # Boot Control HAL
 PRODUCT_PACKAGES += \
-	android.hardware.boot@1.2-impl-zuma \
-	android.hardware.boot@1.2-service-zuma
+	android.hardware.boot-service.default-zuma\
+	android.hardware.boot-service.default_recovery-zuma
 
 # Exynos RIL and telephony
 # Multi SIM(DSDS)
