@@ -1,11 +1,7 @@
 <compatibility-matrix version="1.0" type="framework" level="8">
-    <hal format="hidl" optional="true">
-        <name>android.hardware.boot</name>
-        <version>1.2</version>
-        <interface>
-            <name>IBootControl</name>
-            <instance>default</instance>
-        </interface>
+    <hal format="aidl" optional="true">
+      <name>android.hardware.boot</name>
+      <fqname>IBootControl/default</fqname>
     </hal>
     <hal format="aidl">
         <name>android.hardware.graphics.composer3</name>
