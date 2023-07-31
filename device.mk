@@ -24,6 +24,7 @@ include device/google/gs-common/trusty/trusty.mk
 include device/google/gs-common/pcie/pcie.mk
 include device/google/gs-common/storage/storage.mk
 include device/google/gs-common/thermal/dump/thermal.mk
+include device/google/gs-common/thermal/thermal_hal/device.mk
 include device/google/gs-common/performance/perf.mk
 include device/google/gs-common/pixel_metrics/pixel_metrics.mk
 include device/google/gs-common/soc/freq.mk
@@ -1058,7 +1059,6 @@ PRODUCT_PACKAGES += \
 include device/google/gs101/telephony/pktrouter.mk
 
 # Thermal HAL
-include hardware/google/pixel/thermal/device.mk
 PRODUCT_PROPERTY_OVERRIDES += persist.vendor.enable.thermal.genl=true
 
 # EdgeTPU
