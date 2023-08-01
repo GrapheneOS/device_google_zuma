@@ -41,15 +41,6 @@ include device/google/gs-common/misc_writer/misc_writer.mk
 
 include device/google/zuma/dumpstate/item.mk
 
-ifneq ($(BOARD_WITHOUT_RADIO),true)
-# Release stable version to factory image
-ifneq ($(filter factory_%,$(TARGET_PRODUCT)),)
-	include device/google/gs-common/gps/brcm/device.mk
-else
-	include device/google/gs-common/gps/brcm/device_v2.mk
-endif
-endif
-
 TARGET_BOARD_PLATFORM := zuma
 ALLOW_MISSING_DEPENDENCIES := true
 
@@ -1019,7 +1010,6 @@ $(call soong_config_set,aoc,target_product,$(TARGET_PRODUCT))
 ## Audio properties
 ##Audio Vendor property
 PRODUCT_PROPERTY_OVERRIDES += \
-	persist.vendor.audio.cca.enabled=false \
 	persist.vendor.audio.cca.unsupported=false
 
 PRODUCT_PROPERTY_OVERRIDES += \
