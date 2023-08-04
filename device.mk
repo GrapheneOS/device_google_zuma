@@ -1165,3 +1165,9 @@ endif
 
 # Touch service
 include hardware/google/pixel/input/twoshay.mk
+
+# Allow longer timeout for incident report generation in bugreport
+# Overriding in /product partition instead of /vendor intentionally,
+# since it can't be overridden from /vendor.
+PRODUCT_PRODUCT_PROPERTIES += \
+	dumpstate.strict_run=false
