@@ -896,10 +896,6 @@ $(call inherit-product-if-exists, vendor/samsung_slsi/telephony/$(BOARD_USES_SHA
 
 PRODUCT_PACKAGES += ShannonIms
 
-#RCS Test Messaging App
-PRODUCT_PACKAGES_DEBUG += \
-	TestRcsApp
-
 PRODUCT_PACKAGES += ShannonRcs
 
 ifeq (,$(filter aosp_% factory_%,$(TARGET_PRODUCT)))
