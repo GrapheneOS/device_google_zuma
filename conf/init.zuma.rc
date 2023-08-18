@@ -963,6 +963,7 @@ service storageproxyd /vendor/bin/storageproxyd -d /dev/trusty-ipc-dev0 \
     class early_hal
     user system
     group system
+    task_profiles MaxPerformance
 
 # Write build info to kdebuginfo
 on property:ro.build.fingerprint=*
