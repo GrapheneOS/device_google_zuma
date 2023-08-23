@@ -70,6 +70,9 @@ constexpr char kGadgetName[] = "11210000.dwc3";
 
 #define DISPLAYPORT_POLL_WAIT_MS 100
 
+#define SVID_DISPLAYPORT "ff01"
+#define SVID_THUNDERBOLT "8087"
+
 struct Usb : public BnUsb {
     Usb();
 

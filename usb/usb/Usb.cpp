@@ -921,6 +921,29 @@ AltModeData::DisplayPortAltModeData constructAltModeData(string hpd, string pin_
     return dpData;
 }
 
+Status queryPartnerSvids(std::vector<string> *svids) {
+    DIR *dp;
+
+    dp = opendir(kDisplayPortUsbPath);
+    if (dp != NULL) {
+        struct dirent *ep;
+        // Iterate through directories for Alt Mode SVIDs
+        while ((ep = readdir(dp))) {
+            if (ep->d_type == DT_DIR) {
+                string svid;
+                string portPartnerPath = string(kDisplayPortUsbPath) + string(ep->d_name) + "/svid";
+                if (ReadFileToString(portPartnerPath, &svid)) {
+                    (*svids).push_back(Trim(svid));
+                }
+            }
+        }
+        closedir(dp);
+    } else {
+        return Status::ERROR;
+    }
+    return Status::SUCCESS;
+}
+
 /* DisplayPort Helper Functions End */
 
 // Only care about first port which must support DisplayPortAltMode
@@ -930,18 +953,32 @@ Status queryDisplayPortStatus(android::hardware::usb::Usb *usb,
     string path;
     AltModeData::DisplayPortAltModeData dpData;
 
+    /*
+    * We check if the DisplayPort Alt Mode sysfs nodes exist. If they don't, then it means that the
+    * device has not entered Alt Mode with the port partner because of a source/sink role
+    * incompatibility, pin assignment incompatibility, etc. So, we then check to see if the partner
+    * supports Thunderbolt and DisplayPort SVIDs. If it supports DisplayPort, then we assume that
+    * it must be a source device and Thunderbolt should operate similarly; we don't populate the
+    * DisplayPortAltModeStatus. If it only supports Thunderbolt, then we cannot determine if it is
+    * sink or source capable, and need to notify the user.
+    */
     if (usb->getDisplayPortUsbPathHelper(&path) == Status::ERROR) {
-        (*currentPortStatus)[0].supportedAltModes.push_back(dpData);
-        return Status::SUCCESS;
+        std::vector<string> svids;
+        if (queryPartnerSvids(&svids) == Status::SUCCESS) {
+            if (std::count(svids.begin(), svids.end(), SVID_THUNDERBOLT) &&
+                !std::count(svids.begin(), svids.end(), SVID_DISPLAYPORT)) {
+                dpData.cableStatus = DisplayPortAltModeStatus::NOT_CAPABLE;
+            }
+        }
+    } else {
+        usb->readDisplayPortAttribute("hpd", path, &hpd);
+        usb->readDisplayPortAttribute("pin_assignment", path, &pinAssign);
+        usb->readDisplayPortAttribute("vdo", path, &vdo);
+        usb->readDisplayPortAttribute("link_status", path, &linkStatus);
+
+        dpData = constructAltModeData(hpd, pinAssign, linkStatus, vdo);
     }
 
-    usb->readDisplayPortAttribute("hpd", path, &hpd);
-    usb->readDisplayPortAttribute("pin_assignment", path, &pinAssign);
-    usb->readDisplayPortAttribute("vdo", path, &vdo);
-    usb->readDisplayPortAttribute("link_status", path, &linkStatus);
-
-    // Set DisplayPortAltModeInfo
-    dpData = constructAltModeData(hpd, pinAssign, linkStatus, vdo);
     (*currentPortStatus)[0].supportedAltModes.push_back(dpData);
 
     return Status::SUCCESS;
