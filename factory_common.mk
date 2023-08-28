@@ -31,6 +31,7 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 # Disable camera related features for factory builds
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.vendor.camera.af.ignore_gyro=1 \
+    persist.vendor.camera.multicam.framesync=0 \
     vendor.camera.debug.bypass_face_ssd_processor=1 \
     vendor.camera.debug.csi_ebuf_enable=0 \
     vendor.camera.debug.enable_face_detection=0 \
