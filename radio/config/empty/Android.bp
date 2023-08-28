@@ -25,17 +25,33 @@ package {
 }
 
 prebuilt_etc {
-    name: "Pixel_stability.cfg",
+    name: "empty_modem_log_mask.conf",
     vendor: true,
     proprietary: true,
-    src: "config/Pixel_stability.cfg",
-    relative_install_path: "modem"
+    src: "logging.conf",
+    relative_install_path: "radio/log_masks/empty"
 }
 
 prebuilt_etc {
-    name: "Pixel_stability.nprf",
+    name: "empty_modem_log_mask.cfg",
     vendor: true,
     proprietary: true,
-    src: "config/Pixel_stability.nprf",
-    relative_install_path: "modem"
+    src: "empty.cfg",
+    relative_install_path: "radio/log_masks/empty"
+}
+
+prebuilt_etc {
+    name: "empty_modem_log_mask.nprf",
+    vendor: true,
+    proprietary: true,
+    src: "empty.nprf",
+    relative_install_path: "radio/log_masks/empty"
+}
+
+prebuilt_etc {
+    name: "empty_modem_log_mask.xml",
+    vendor: true,
+    proprietary: true,
+    src: "empty_metrics.xml",
+    relative_install_path: "radio/log_masks/empty"
 }
