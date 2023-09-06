@@ -1,6 +1,5 @@
 #!/vendor/bin/sh
 build_type="$(getprop ro.build.type)"
-
 echo "\n------ Power Stats Times ------"
 echo -n "Boot: " && /vendor/bin/uptime -s && echo -n "Now: " && date;
 
@@ -240,6 +239,11 @@ fi
 if [ -e "/sys/devices/platform/10c90000.hsi2c/i2c-7/7-0050/eeprom" ]
 then
   xxd /sys/devices/platform/10c90000.hsi2c/i2c-7/7-0050/eeprom
+fi
+
+if [ -e "/sys/devices/platform/10c90000.hsi2c/i2c-6/6-0050/eeprom" ]
+then
+  xxd /sys/devices/platform/10c90000.hsi2c/i2c-6/6-0050/eeprom
 fi
 
 echo "\n------ Charger Stats ------"
