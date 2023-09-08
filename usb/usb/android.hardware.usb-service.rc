@@ -68,6 +68,16 @@ on post-fs
     chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-7/7-0025/usb_limit_source_enable
     chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-8/8-0025/usb_limit_source_enable
     chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-9/9-0025/usb_limit_source_enable
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-0/0-0025/update_sdp_enum_timeout
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-1/1-0025/update_sdp_enum_timeout
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-2/2-0025/update_sdp_enum_timeout
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-3/3-0025/update_sdp_enum_timeout
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-4/4-0025/update_sdp_enum_timeout
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-5/5-0025/update_sdp_enum_timeout
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-6/6-0025/update_sdp_enum_timeout
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-7/7-0025/update_sdp_enum_timeout
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-8/8-0025/update_sdp_enum_timeout
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-9/9-0025/update_sdp_enum_timeout
     chown root system /sys/devices/platform/110f0000.drmdp/drm-displayport/hpd
     chown root system /sys/devices/platform/110f0000.drmdp/drm-displayport/irq_hpd
     chown root system /sys/devices/platform/110f0000.drmdp/drm-displayport/orientation
@@ -143,6 +153,16 @@ on post-fs
     chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-7/7-0025/usb_limit_source_enable
     chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-8/8-0025/usb_limit_source_enable
     chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-9/9-0025/usb_limit_source_enable
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-0/0-0025/update_sdp_enum_timeout
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-1/1-0025/update_sdp_enum_timeout
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-2/2-0025/update_sdp_enum_timeout
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-3/3-0025/update_sdp_enum_timeout
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-4/4-0025/update_sdp_enum_timeout
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-5/5-0025/update_sdp_enum_timeout
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-6/6-0025/update_sdp_enum_timeout
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-7/7-0025/update_sdp_enum_timeout
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-8/8-0025/update_sdp_enum_timeout
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-9/9-0025/update_sdp_enum_timeout
     chmod 664 /sys/devices/platform/110f0000.drmdp/drm-displayport/hpd
     chmod 664 /sys/devices/platform/110f0000.drmdp/drm-displayport/irq_hpd
     chmod 664 /sys/devices/platform/110f0000.drmdp/drm-displayport/orientation
