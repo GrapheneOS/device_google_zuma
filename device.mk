@@ -1015,7 +1015,11 @@ PRODUCT_PACKAGES += \
 
 # Audio
 # Audio HAL Server & Default Implementations
+ifeq ($(RELEASE_PIXEL_AIDL_AUDIO_HAL),true)
+include device/google/gs-common/audio/aidl.mk
+else
 include device/google/gs-common/audio/hidl_zuma.mk
+endif
 
 ## AoC soong
 PRODUCT_SOONG_NAMESPACES += \
