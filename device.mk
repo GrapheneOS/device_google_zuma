@@ -50,6 +50,7 @@ else
 endif
 endif
 
+
 TARGET_BOARD_PLATFORM := zuma
 ALLOW_MISSING_DEPENDENCIES := true
 
@@ -250,6 +251,14 @@ PRODUCT_PACKAGES += \
 	vulkan.mali \
 	libOpenCL \
 	libgpudataproducer
+
+# factory should always has SELinux permissive
+BOARD_BOOTCONFIG += androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+PRODUCT_PACKAGES += thermistor_log.sh \
+		    thermistor_log_recovery.sh \
+		    mark_normal_boot.sh \
+		    mark_recovery_boot.sh
 
 ifeq ($(USE_SWIFTSHADER),true)
 PRODUCT_PACKAGES += \
