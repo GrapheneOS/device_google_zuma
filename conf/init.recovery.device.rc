@@ -3,6 +3,18 @@ on init
     setprop sys.usb.controller "11210000.dwc3"
     setprop sys.usb.configfs 1
 
+on init
+    mkdir /mnt/vendor/persist
+    mount f2fs /dev/block/sda1 /mnt/vendor/persist
+    start thermistor_log_recovery_sh
+    start mark_recovery_boot
+
+service thermistor_log_recovery /system/bin/thermistor_log_recovery.sh
+    user root
+    group root shell log readproc
+    seclabel u:r:su:s0
+
+
 on init && property:ro.debuggable=1 && property:ro.boot.mode=recovery
     start recovery-console
 
