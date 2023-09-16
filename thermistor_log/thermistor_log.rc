@@ -1,0 +1,25 @@
+on post-fs
+    # Copy ufs firmware to disk
+    start thermistor_log_sh
+    start mark_normal_boot
+
+service thermistor_log_sh /vendor/bin/thermistor_log.sh
+    user root
+    group root shell log readproc
+    seclabel u:r:su:s0
+    disabled
+    oneshot
+
+service mark_normal_boot /vendor/bin/mark_normal_boot.sh
+    user root
+    group root shell log readproc
+    seclabel u:r:su:s0
+    disabled
+    oneshot
+
+service mark_recovery_boot /vendor/bin/mark_recovery_boot.sh
+    user root
+    group root shell log readproc
+    seclabel u:r:su:s0
+    disabled
+    oneshot
