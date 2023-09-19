@@ -44,6 +44,9 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.thermal_warmreset = true
 
+# Set the max page size to 4096 (b/300367402)
+PRODUCT_MAX_PAGE_SIZE_SUPPORTED := 4096
+
 # Indicate that the bootloader supports the MTE developer option switch
 # (MISC_MEMTAG_MODE_MEMTAG_ONCE), with the exception of _fullmte products that
 # force enable MTE.
