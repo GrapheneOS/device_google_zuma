@@ -286,5 +286,5 @@
     <bool translatable="false" name="skip_restoring_network_selection">true</bool>
 
     <!-- Enable variable refresh rate when typing. -->
-    <bool name="config_variableRefreshRateTypingSupported">true</bool>
+    <bool name="config_variableRefreshRateTypingSupported">false</bool>
 </resources>
