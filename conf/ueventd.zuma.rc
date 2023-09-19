@@ -239,3 +239,6 @@
 /sys/bus/aoc/devices/control    udfps_set_clock_source  0220    system  system
 /sys/bus/aoc/devices/control    udfps_get_osc_freq      0440    system  system
 /sys/bus/aoc/devices/control    udfps_get_disp_freq     0440    system  system
+
+# USB Alt Modes
+/sys/devices/platform/10cb0000.hsi2c/i2c-*/*-0025/typec/port0/port0-partner/port0-partner.*    mode1/active    0664    system    system
