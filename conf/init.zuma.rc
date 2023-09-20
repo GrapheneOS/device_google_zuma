@@ -596,11 +596,6 @@ on boot
     chown audioserver system /sys/devices/platform/17c50000.abox/0.abox_debug/calliope_iva
     chown audioserver system /sys/kernel/debug/abox/log-00
 
-    # Change sched lib affinity
-    write /proc/vendor_sched/sched_lib_name libunity.so
-    write /proc/vendor_sched/sched_lib_mask_in 0x100
-    write /proc/vendor_sched/sched_lib_mask_out 0x1f0
-
 # Permission for USB SELECT
     chown system system /sys/class/android_usb/android0/enable
     chmod 0660 /sys/class/android_usb/android0/enable
