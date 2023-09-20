@@ -145,9 +145,5 @@
         <!-- Notifications -->
         <permission name="android.permission.POST_NOTIFICATIONS" fixed="true"/>
     </exception>
-    <exception package="com.google.android.apps.pixel.dcservice">
-        <!-- Phone state for Clear Calling logging -->
-        <permission name="android.permission.READ_PHONE_STATE" fixed="false"/>
-    </exception>
 </exceptions>
 
