@@ -5,6 +5,7 @@ import init.exynos.sensorhub.rc
 on early-init
     mount_all /vendor/etc/fstab.persist --early
     write /proc/sys/kernel/sched_pelt_multiplier 1
+    write /sys/kernel/mm/lru_gen/enabled n
 
 on init
     # CPU0 cannot be offline
@@ -240,6 +241,7 @@ on init
     chown system system /sys/devices/platform/10970000.hsi2c/i2c-5/5-0050/eeprom
     chown system system /sys/devices/platform/10970000.hsi2c/i2c-4/4-0050/eeprom
     chown system system /sys/devices/platform/10da0000.hsi2c/i2c-6/6-0050/eeprom
+    chown system system /sys/devices/platform/10c90000.hsi2c/i2c-6/6-0050/eeprom
     chown system system /sys/devices/platform/10c90000.hsi2c/i2c-7/7-0050/eeprom
     chown system system /dev/battery_history
     chmod 0644 /dev/battery_history
@@ -979,6 +981,7 @@ service storageproxyd /vendor/bin/storageproxyd -d /dev/trusty-ipc-dev0 \
     class early_hal
     user system
     group system
+    task_profiles MaxPerformance
 
 # Write build info to kdebuginfo
 on property:ro.build.fingerprint=*
@@ -1165,3 +1168,30 @@ on property:ro.boot.mode=charger && property:init.svc.vendor.charger=running
     # Enable UFS powersaving in Off Mode Charger
     write /dev/sys/block/bootdevice/clkgate_enable 1
 
+# MTE
+on property:persist.device_config.runtime_native_boot.mode_override=sync
+    # Per-core mode overrides.
+    # Little Cores: sync
+    write /sys/devices/system/cpu/cpu0/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu1/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu2/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu3/mte_tcf_preferred sync
+    # Mid Cores: sync
+    write /sys/devices/system/cpu/cpu4/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu5/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu6/mte_tcf_preferred sync
+    write /sys/devices/system/cpu/cpu7/mte_tcf_preferred sync
+    # Big Core: sync mode performance is prohibitively bad
+    write /sys/devices/system/cpu/cpu8/mte_tcf_preferred asymm
+
+on property:persist.device_config.runtime_native_boot.mode_override=asymm
+    # Per-core mode overrides.
+    write /sys/devices/system/cpu/cpu0/mte_tcf_preferred asymm
+    write /sys/devices/system/cpu/cpu1/mte_tcf_preferred asymm
+    write /sys/devices/system/cpu/cpu2/mte_tcf_preferred asymm
+    write /sys/devices/system/cpu/cpu3/mte_tcf_preferred asymm
+    write /sys/devices/system/cpu/cpu4/mte_tcf_preferred asymm
+    write /sys/devices/system/cpu/cpu5/mte_tcf_preferred asymm
+    write /sys/devices/system/cpu/cpu6/mte_tcf_preferred asymm
+    write /sys/devices/system/cpu/cpu7/mte_tcf_preferred asymm
+    write /sys/devices/system/cpu/cpu8/mte_tcf_preferred asymm

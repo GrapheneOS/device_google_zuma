@@ -25,38 +25,6 @@ package {
 }
 
 prebuilt_etc {
-    name: "logging.conf",
-    vendor: true,
-    proprietary: true,
-    src: "config/logging.conf",
-    relative_install_path: "modem"
-}
-
-prebuilt_etc {
-    name: "default.cfg",
-    vendor: true,
-    proprietary: true,
-    src: "config/default.cfg",
-    relative_install_path: "modem"
-}
-
-prebuilt_etc {
-    name: "default.nprf",
-    vendor: true,
-    proprietary: true,
-    src: "config/default.nprf",
-    relative_install_path: "modem"
-}
-
-prebuilt_etc {
-    name: "default_metrics.xml",
-    vendor: true,
-    proprietary: true,
-    src: "config/default_metrics.xml",
-    relative_install_path: "modem"
-}
-
-prebuilt_etc {
     name: "Pixel_stability.cfg",
     vendor: true,
     proprietary: true,

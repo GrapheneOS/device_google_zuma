@@ -39,6 +39,7 @@ include device/google/gs-common/umfw_stat/umfw_stat.mk
 include device/google/gs-common/widevine/widevine.mk
 include device/google/gs-common/sota_app/factoryota.mk
 include device/google/gs-common/misc_writer/misc_writer.mk
+include device/google/gs-common/gyotaku_app/gyotaku.mk
 
 include device/google/zuma/dumpstate/item.mk
 
@@ -337,7 +338,8 @@ PRODUCT_COPY_FILES += \
 
 ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
 PRODUCT_COPY_FILES += \
-	device/google/zuma/conf/init.debug.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.debug.rc
+	device/google/zuma/conf/init.debug.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.debug.rc \
+	device/google/zuma/conf/init.check_ap_pd_auth.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.check_ap_pd_auth.sh
 PRODUCT_COPY_FILES += \
 	device/google/zuma/conf/init.freq.userdebug.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.freq.userdebug.rc
 endif
@@ -660,7 +662,8 @@ endif
 PRODUCT_PROPERTY_OVERRIDES += \
 	debug.sf.disable_backpressure=0 \
 	debug.sf.enable_gl_backpressure=1 \
-	debug.sf.enable_sdr_dimming=1
+	debug.sf.enable_sdr_dimming=1 \
+        debug.sf.dim_in_gamma_in_enhanced_screenshots=1
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.use_phase_offsets_as_durations=1
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.late.sf.duration=10500000
@@ -893,10 +896,6 @@ $(call inherit-product-if-exists, vendor/samsung_slsi/telephony/$(BOARD_USES_SHA
 
 PRODUCT_PACKAGES += ShannonIms
 
-#RCS Test Messaging App
-PRODUCT_PACKAGES_DEBUG += \
-	TestRcsApp
-
 PRODUCT_PACKAGES += ShannonRcs
 
 ifeq (,$(filter aosp_% factory_%,$(TARGET_PRODUCT)))
@@ -945,6 +944,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 #$(call inherit-product-if-exists, vendor/google_devices/common/exynos-vendor.mk)
 #$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4375/device-bcm.mk)
 include device/google/gs-common/sensors/sensors.mk
+$(call soong_config_set,usf,target_soc,zuma)
 
 PRODUCT_COPY_FILES += \
 	device/google/zuma/default-permissions.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions.xml \
@@ -970,14 +970,32 @@ endif
 # modem logging binary/configs
 PRODUCT_PACKAGES += modem_logging_control
 
-# modem logging configs
+# PILOT SCENARIOS
+PRODUCT_PACKAGES += \
+	Pixel_stability.cfg \
+	Pixel_stability.nprf
+
+# Default modem log mask for pixel logger
 PRODUCT_PACKAGES += \
 	logging.conf \
 	default.cfg \
 	default.nprf \
-	default_metrics.xml \
-	Pixel_stability.cfg \
-	Pixel_stability.nprf
+	default_metrics.xml
+
+# Log Masks for logmasklibrary below
+# default modem log mask
+PRODUCT_PACKAGES += \
+	default_modem_log_mask.conf \
+	default_modem_log_mask.cfg \
+	default_modem_log_mask.nprf \
+	default_modem_log_mask.xml
+
+# Empty modem log mask
+PRODUCT_PACKAGES += \
+	empty_modem_log_mask.conf \
+	empty_modem_log_mask.cfg \
+	empty_modem_log_mask.nprf \
+	empty_modem_log_mask.xml
 
 endif
 

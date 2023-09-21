@@ -44,13 +44,21 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.thermal_warmreset = true
 
+# Set the max page size to 4096 (b/300367402)
+PRODUCT_MAX_PAGE_SIZE_SUPPORTED := 4096
+
 # Indicate that the bootloader supports the MTE developer option switch
 # (MISC_MEMTAG_MODE_MEMTAG_ONCE), with the exception of _fullmte products that
 # force enable MTE.
 ifeq (,$(filter %_fullmte,$(TARGET_PRODUCT)))
 PRODUCT_PRODUCT_PROPERTIES += ro.arm64.memtag.bootctl_supported=1
+# N.B. persist properties in product Makefiles aren't actually persisted to the data
+# partition, so they will actually go away if we remove them here, or if the user
+# flashes from a normal build to a fullmte build.
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.se=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.google.android.bluetooth=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.nfc=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.system_server=off
+else
+PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.chrome=off
 endif
