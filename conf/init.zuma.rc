@@ -689,6 +689,8 @@ on fs
     chown system system /sys/class/dqe0/atc/gain_limit
     chown system system /sys/class/dqe0/atc/lt_calc_ab_shift
 
+    chown system system /sys/devices/platform/110f0000.drmdp/drm-displayport/dp_hotplug_error_code
+
     chown system system /sys/devices/platform/19470000.drmdecon/early_wakeup
     chmod 0660 /sys/devices/platform/19470000.drmdecon/early_wakeup
 
