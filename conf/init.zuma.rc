@@ -839,10 +839,15 @@ on property:sys.boot_completed=1
     write /proc/vendor_sched/ug_bg_group_throttle ${persist.device_config.vendor_system_native.ug_bg_group_throttle:-308}
 
     # Set uclamp.max for some groups, which could indicate cpu importance used in scheduling
-    write /proc/vendor_sched/bg_uclamp_max 512
+    write /proc/vendor_sched/auto_uclamp_max "130 130 130 130 512 512 512 512 670"
+    write /proc/vendor_sched/bg_uclamp_max 130
     write /proc/vendor_sched/sysbg_uclamp_max 512
     write /proc/vendor_sched/ota_uclamp_max 512
-    write /proc/vendor_sched/dex2oat_uclamp_max 615
+    write /proc/vendor_sched/dex2oat_uclamp_max -2
+
+    write /proc/vendor_sched/uclamp_max_filter_divider 4
+    write /proc/vendor_sched/uclamp_max_filter_rt 16
+    write /proc/vendor_sched/uclamp_max_filter_enable 1
 
     # Set PMU freq limit parameters
     write /sys/devices/system/cpu/cpufreq/policy0/sched_pixel/lcpi_threshold 0
