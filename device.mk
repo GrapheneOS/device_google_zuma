@@ -119,9 +119,13 @@ ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.logd.size=1M
 # b/114766334: persist all logs by default rotating on 30 files of 1MiB
+# change to 60 files for zuma
 PRODUCT_PROPERTY_OVERRIDES += \
 	logd.logpersistd=logcatd \
-	logd.logpersistd.size=30
+	logd.logpersistd.size=60
+
+PRODUCT_PRODUCT_PROPERTIES += \
+	ro.logcat.compress=true
 endif
 
 # From system.property
