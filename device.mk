@@ -1001,6 +1001,10 @@ PRODUCT_PACKAGES += \
 	empty_modem_log_mask.nprf \
 	empty_modem_log_mask.xml
 
+# Lassen default log mask
+PRODUCT_PACKAGES += \
+	lassen_default.conf
+
 endif
 
 # Vibrator Diag
