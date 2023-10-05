@@ -997,6 +997,7 @@ on post-fs-data
     chown bluetooth system /proc/bluetooth/sleep/btwake
     chown bluetooth system /proc/bluetooth/sleep/lpm
     chown bluetooth system /proc/bluetooth/sleep/btwrite
+    chown bluetooth system /sys/devices/platform/155d0000.serial/uart_dbg
     mkdir /data/vendor/bluetooth 0770 bluetooth system
 
 # ODPM
