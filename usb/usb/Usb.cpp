@@ -42,6 +42,7 @@
 #include "Usb.h"
 
 #include <aidl/android/frameworks/stats/IStats.h>
+#include <pixelusb/CommonUtils.h>
 #include <pixelusb/UsbGadgetAidlCommon.h>
 #include <pixelstats/StatsHelper.h>
 
@@ -54,6 +55,9 @@ using android::base::Trim;
 using android::hardware::google::pixel::getStatsService;
 using android::hardware::google::pixel::PixelAtoms::VendorUsbPortOverheat;
 using android::hardware::google::pixel::reportUsbPortOverheat;
+using android::hardware::google::pixel::PixelAtoms::VendorUsbDataSessionEvent;
+using android::hardware::google::pixel::reportUsbDataSessionEvent;
+using android::hardware::google::pixel::usb::BuildVendorUsbDataSessionEvent;
 
 namespace aidl {
 namespace android {
@@ -98,6 +102,8 @@ void queryVersionHelper(android::hardware::usb::Usb *usb,
                         std::vector<PortStatus> *currentPortStatus);
 AltModeData::DisplayPortAltModeData constructAltModeData(string hpd, string pin_assignment,
                                                          string link_status, string vdo);
+void queryUsbDataSession(android::hardware::usb::Usb *usb,
+                         std::vector<PortStatus> *currentPortStatus);
 
 #define USB_STATE_MAX_LEN 20
 
@@ -957,6 +963,7 @@ void queryVersionHelper(android::hardware::usb::Usb *usb,
     queryMoistureDetectionStatus(currentPortStatus);
     queryPowerTransferStatus(currentPortStatus);
     queryNonCompliantChargerStatus(currentPortStatus);
+    queryUsbDataSession(usb, currentPortStatus);
     pthread_mutex_lock(&usb->mDisplayPortLock);
     if (!usb->mDisplayPortFirstSetupDone &&
         usb->getDisplayPortUsbPathHelper(&displayPortUsbPath) == Status::SUCCESS) {
@@ -1052,6 +1059,54 @@ void report_overheat_event(android::hardware::usb::Usb *usb) {
     }
 }
 
+void report_usb_data_session_event(android::hardware::usb::Usb *usb) {
+    std::vector<VendorUsbDataSessionEvent> events;
+
+    if (usb->mDataRole == PortDataRole::DEVICE) {
+        VendorUsbDataSessionEvent event;
+        BuildVendorUsbDataSessionEvent(false /* is_host */, std::chrono::steady_clock::now(),
+                                       usb->mDataSessionStart, &usb->mDeviceState.states,
+                                       &usb->mDeviceState.timestamps, &event);
+        events.push_back(event);
+    } else if (usb->mDataRole == PortDataRole::HOST) {
+        bool empty = true;
+        for (auto &entry : usb->mHostStateMap) {
+            // Host port will at least get an not_attached event after enablement,
+            // skip upload if no additional state is added.
+            if (entry.second.states.size() > 1) {
+                VendorUsbDataSessionEvent event;
+                BuildVendorUsbDataSessionEvent(true /* is_host */, std::chrono::steady_clock::now(),
+                                               usb->mDataSessionStart, &entry.second.states,
+                                               &entry.second.timestamps, &event);
+                events.push_back(event);
+                empty = false;
+            }
+        }
+        // All host ports have no state update, upload an event to reflect it
+        if (empty && usb->mHostStateMap.size() > 0) {
+            VendorUsbDataSessionEvent event;
+            BuildVendorUsbDataSessionEvent(true /* is_host */, std::chrono::steady_clock::now(),
+                                           usb->mDataSessionStart,
+                                           &usb->mHostStateMap.begin()->second.states,
+                                           &usb->mHostStateMap.begin()->second.timestamps,
+                                           &event);
+            events.push_back(event);
+        }
+    } else {
+        return;
+    }
+
+    const shared_ptr<IStats> stats_client = getStatsService();
+    if (!stats_client) {
+        ALOGE("Unable to get AIDL Stats service");
+        return;
+    }
+
+    for (auto &event : events) {
+        reportUsbDataSessionEvent(stats_client, event);
+    }
+}
+
 struct data {
     int uevent_fd;
     ::aidl::android::hardware::usb::Usb *usb;
@@ -1141,14 +1196,16 @@ static int registerEpollEntryByFile(Usb *usb, std::string name, int flags,
 }
 
 static void clearUsbDeviceState(struct Usb::usbDeviceState *device) {
-    device->latestState.clear();
+    device->states.clear();
+    device->timestamps.clear();
     device->portResetCount = 0;
 }
 
 static void updateUsbDeviceState(struct Usb::usbDeviceState *device, char *state) {
     ALOGI("Update USB device state: %s", state);
 
-    device->latestState = state;
+    device->states.push_back(state);
+    device->timestamps.push_back(std::chrono::steady_clock::now());
 
     if (!std::strcmp(state, "configured\n")) {
         device->portResetCount = 0;
@@ -1166,6 +1223,37 @@ static void host_event(uint32_t /*epevents*/, struct Usb::payload *payload) {
     n = read(payload->fd, &state, USB_STATE_MAX_LEN);
 
     updateUsbDeviceState(&payload->usb->mHostStateMap[payload->name], state);
+}
+
+void queryUsbDataSession(android::hardware::usb::Usb *usb,
+                          std::vector<PortStatus> *currentPortStatus) {
+    PortDataRole newDataRole = (*currentPortStatus)[0].currentDataRole;
+    PowerBrickStatus newPowerBrickStatus = (*currentPortStatus)[0].powerBrickStatus;
+
+    if (newDataRole != usb->mDataRole) {
+        // Upload metrics for the last non-powerbrick data session that has ended
+        if (usb->mDataRole != PortDataRole::NONE && !usb->mIsPowerBrickConnected) {
+            report_usb_data_session_event(usb);
+       }
+
+        // Set up for the new data session
+        usb->mDataRole = newDataRole;
+        usb->mDataSessionStart = std::chrono::steady_clock::now();
+        usb->mIsPowerBrickConnected = (newPowerBrickStatus == PowerBrickStatus::CONNECTED);
+        if (newDataRole == PortDataRole::DEVICE) {
+            clearUsbDeviceState(&usb->mDeviceState);
+        } else if (newDataRole == PortDataRole::HOST) {
+            for (auto &entry : usb->mHostStateMap) {
+                clearUsbDeviceState(&entry.second);
+            }
+        }
+    }
+
+    // PowerBrickStatus could flip from DISCONNECTED to CONNECTED during the same data
+    // session when BC1.2 SDP times out and falls back to DCP
+    if (newPowerBrickStatus == PowerBrickStatus::CONNECTED) {
+        usb->mIsPowerBrickConnected = true;
+    }
 }
 
 static void uevent_event(uint32_t /*epevents*/, struct Usb::payload *payload) {
@@ -1263,7 +1351,6 @@ static void uevent_event(uint32_t /*epevents*/, struct Usb::payload *payload) {
                     registerEpollEntryByFile(payload->usb, path, EPOLLPRI, host_event);
                 } else if (action == "unbind") {
                     unregisterEpollEntry(payload->usb, path);
-                    clearUsbDeviceState(&payload->usb->mHostStateMap[path]);
                 }
             }
         }
