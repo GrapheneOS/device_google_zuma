@@ -890,15 +890,13 @@ PRODUCT_PACKAGES_DEBUG += \
 
 PRODUCT_PACKAGES += ShannonRcs
 
-ifeq (,$(filter aosp_% factory_%,$(TARGET_PRODUCT)))
 #ImsMediaAoc library
-FEATURE_TYPE := oem_audio
-SOONG_CONFIG_NAMESPACES += audio_lib
-SOONG_CONFIG_audio_lib += \
-        audio_type
+#FEATURE_TYPE := oem_audio
+#SOONG_CONFIG_NAMESPACES += audio_lib
+#SOONG_CONFIG_audio_lib += \
+#        audio_type
 
 SOONG_CONFIG_audio_lib_audio_type := $(FEATURE_TYPE)
-endif
 
 # ImsMedia
 PRODUCT_PACKAGES += \
