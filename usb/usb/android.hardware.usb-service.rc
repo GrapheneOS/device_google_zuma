@@ -8,6 +8,7 @@ on post-fs
     chown root system /sys/class/typec/port0/power_role
     chown root system /sys/class/typec/port0/data_role
     chown root system /sys/class/typec/port0/port_type
+    chown root system /sys/class/typec/port0/port0.0/mode1/active
     chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-0/0-0025/contaminant_detection
     chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-1/1-0025/contaminant_detection
     chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-2/2-0025/contaminant_detection
@@ -90,6 +91,7 @@ on post-fs
     chmod 664 /sys/class/typec/port0/power_role
     chmod 664 /sys/class/typec/port0/data_role
     chmod 664 /sys/class/typec/port0/port_type
+    chmod 664 /sys/class/typec/port0/port0.0/mode1/active
     chmod 664 /sys/devices/platform/11110000.usb/dwc3_exynos_otg_b_sess
     chmod 664 /sys/devices/platform/11110000.usb/dwc3_exynos_otg_id
     chmod 664 /sys/devices/platform/11110000.usb/usb_data_enabled

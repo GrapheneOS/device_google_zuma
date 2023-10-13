@@ -60,6 +60,8 @@ constexpr char kGadgetName[] = "11210000.dwc3";
 #define VBUS_PATH NEW_UDC_PATH "dwc3_exynos_otg_b_sess"
 #define USB_DATA_PATH NEW_UDC_PATH "usb_data_enabled"
 
+#define DISPLAYPORT_ACTIVE_PATH "/sys/class/typec/port0/port0.0/mode1/active"
+
 #define LINK_TRAINING_STATUS_UNKNOWN "0"
 #define LINK_TRAINING_STATUS_SUCCESS "1"
 #define LINK_TRAINING_STATUS_FAILURE "2"
