@@ -111,6 +111,7 @@ ScopedAStatus Usb::enableUsbData(const string& in_portName, bool in_enable,
         int64_t in_transactionId) {
     bool result = true;
     std::vector<PortStatus> currentPortStatus;
+    string displayPortPartnerPath;
 
     ALOGI("Userspace turn %s USB data signaling. opID:%ld", in_enable ? "on" : "off",
             in_transactionId);
@@ -125,6 +126,27 @@ ScopedAStatus Usb::enableUsbData(const string& in_portName, bool in_enable,
             if (!WriteStringToFile(kGadgetName, PULLUP_PATH)) {
                 ALOGE("Gadget cannot be pulled up");
                 result = false;
+            }
+
+            if (!WriteStringToFile("1", DISPLAYPORT_ACTIVE_PATH)) {
+                ALOGE("Failed to enable DisplayPort Alt Mode on port");
+            } else {
+                ALOGI("Successfully enabled DisplayPort Alt Mode on port");
+            }
+
+            if (getDisplayPortUsbPathHelper(&displayPortPartnerPath) == Status::SUCCESS) {
+                size_t pos = displayPortPartnerPath.find("/displayport");
+                if (pos != string::npos) {
+                    displayPortPartnerPath = displayPortPartnerPath.substr(0, pos) + "/mode1/active";
+                }
+                if (!WriteStringToFile("1", displayPortPartnerPath)) {
+                    ALOGE("Failed to enable DisplayPort Alt Mode on partner at %s",
+                            displayPortPartnerPath.c_str());
+                } else {
+                    ALOGI("Successfully enabled DisplayPort Alt Mode on partner at %s",
+                            displayPortPartnerPath.c_str());
+                    setupDisplayPortPoll();
+                }
             }
         }
     } else {
@@ -146,6 +168,27 @@ ScopedAStatus Usb::enableUsbData(const string& in_portName, bool in_enable,
         if (!WriteStringToFile("none", PULLUP_PATH)) {
             ALOGE("Gadget cannot be pulled down");
             result = false;
+        }
+
+        if (getDisplayPortUsbPathHelper(&displayPortPartnerPath) == Status::SUCCESS) {
+            size_t pos = displayPortPartnerPath.find("/displayport");
+            if (pos != string::npos) {
+                displayPortPartnerPath = displayPortPartnerPath.substr(0, pos) + "/mode1/active";
+            }
+            if (!WriteStringToFile("0", displayPortPartnerPath)) {
+                ALOGE("Failed to disable DisplayPort Alt Mode on partner at %s",
+                        displayPortPartnerPath.c_str());
+            } else {
+                ALOGI("Successfully disabled DisplayPort Alt Mode on partner at %s",
+                        displayPortPartnerPath.c_str());
+                shutdownDisplayPortPoll(true);
+            }
+        }
+
+        if (!WriteStringToFile("0", DISPLAYPORT_ACTIVE_PATH)) {
+            ALOGE("Failed to disable DisplayPort Alt Mode on port");
+        } else {
+            ALOGI("Successfully disabled DisplayPort Alt Mode on port");
         }
     }
 
