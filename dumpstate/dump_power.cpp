@@ -151,7 +151,7 @@ void dumpPowerSupplyStats() {
             {"Power supply property gcpm_pps", "/sys/class/power_supply/gcpm_pps/uevent"},
             {"Power supply property main-charger", "/sys/class/power_supply/main-charger/uevent"},
             {"Power supply property dc-mains", "/sys/class/power_supply/dc-mains/uevent"},
-            {"Power supply property tcpm", "/sys/class/power_supply/tcpm-source-psy-8-0025/uevent"},
+            {"Power supply property tcpm", "/sys/class/power_supply/tcpm-source-psy-11-0025/uevent"},
             {"Power supply property usb", "/sys/class/power_supply/usb/uevent"},
             {"Power supply property wireless", "/sys/class/power_supply/wireless/uevent"},
     };
@@ -420,12 +420,7 @@ void dumpChgUserDebug() {
 void dumpBatteryEeprom() {
     const char *title = "Battery EEPROM";
     const char *files[] {
-            "/sys/devices/platform/10970000.hsi2c/i2c-4/4-0050/eeprom",
-            "/sys/devices/platform/10970000.hsi2c/i2c-5/5-0050/eeprom",
-            "/sys/devices/platform/10da0000.hsi2c/i2c-6/6-0050/eeprom",
-            "/sys/devices/platform/10da0000.hsi2c/i2c-7/7-0050/eeprom",
-            "/sys/devices/platform/10c90000.hsi2c/i2c-7/7-0050/eeprom",
-            "/sys/devices/platform/10c90000.hsi2c/i2c-6/6-0050/eeprom",
+            "/sys/devices/platform/10c90000.hsi2c/i2c-9/9-0050/eeprom",
     };
     std::string result;
     std::string xxdCmd;
@@ -714,9 +709,9 @@ void dumpIrqDurationCounts() {
     };
 
     const char *lpfCurrentDirs[] = {
-            "/sys/devices/platform/acpm_mfd_bus@15500000/i2c-1/1-001f/s2mpg14-meter/"
+            "/sys/devices/platform/acpm_mfd_bus@15500000/i2c-7/7-001f/s2mpg14-meter/"
                     "s2mpg14-odpm/iio:device1/lpf_current",
-            "/sys/devices/platform/acpm_mfd_bus@15510000/i2c-0/0-002f/s2mpg15-meter/"
+            "/sys/devices/platform/acpm_mfd_bus@15510000/i2c-8/8-002f/s2mpg15-meter/"
                     "s2mpg15-odpm/iio:device0/lpf_current",
     };
 
