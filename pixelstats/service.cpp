@@ -100,7 +100,8 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
     .TotalCallCountPath = "/sys/devices/platform/audiometrics/call_count",
     .OffloadEffectsIdPath = "/sys/devices/platform/audiometrics/offload_effects_id",
     .OffloadEffectsDurationPath = "/sys/devices/platform/audiometrics/offload_effects_duration",
-    .BluetoothAudioUsagePath = "/sys/devices/platform/audiometrics/bt_usage"
+    .BluetoothAudioUsagePath = "/sys/devices/platform/audiometrics/bt_usage",
+    .GMSRPath = "/sys/class/power_supply/maxfg/gmsr"
 };
 
 const struct UeventListener::UeventPaths ueventPaths = {
