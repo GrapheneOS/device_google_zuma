@@ -44,6 +44,10 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.thermal_warmreset = true
 
+# Trigger fsck on upgrade (305658663)
+PRODUCT_PRODUCT_PROPERTIES += \
+    ro.preventative_fsck = 1
+
 # Indicate that the bootloader supports the MTE developer option switch
 # (MISC_MEMTAG_MODE_MEMTAG_ONCE), with the exception of _fullmte products that
 # force enable MTE.
