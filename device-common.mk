@@ -65,11 +65,5 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # force enable MTE.
 ifeq (,$(filter %_fullmte,$(TARGET_PRODUCT)))
 PRODUCT_PRODUCT_PROPERTIES += ro.arm64.memtag.bootctl_supported=1
-# N.B. persist properties in product Makefiles aren't actually persisted to the data
-# partition, so they will actually go away if we remove them here, or if the user
-# flashes from a normal build to a fullmte build.
-PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.se=off
-PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.google.android.bluetooth=off
-PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.nfc=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.system_server=off
 endif
