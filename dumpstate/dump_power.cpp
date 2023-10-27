@@ -314,10 +314,11 @@ void dumpBatteryHealth() {
 }
 
 void dumpBatteryDefend() {
-    const char* defendConfig [][3] {
+    const char* defendConfig [][4] {
             {"TRICKLE-DEFEND Config",
                     "/sys/devices/platform/google,battery/power_supply/battery/", "bd_"},
             {"DWELL-DEFEND Config", "/sys/devices/platform/google,charger/", "charge_s"},
+            {"DWELL-DEFEND Time", "/mnt/vendor/persist/battery/", "defender_"},
             {"TEMP-DEFEND Config", "/sys/devices/platform/google,charger/", "bd_"},
     };
 
