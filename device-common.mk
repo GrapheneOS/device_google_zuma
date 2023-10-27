@@ -59,4 +59,5 @@ PRODUCT_PRODUCT_PROPERTIES += \
 ifeq (,$(filter %_fullmte,$(TARGET_PRODUCT)))
 PRODUCT_PRODUCT_PROPERTIES += ro.arm64.memtag.bootctl_supported=1
 SANITIZE_TARGET := $(strip $(SANITIZE_TARGET) memtag_heap)
+PRODUCT_PRODUCT_PROPERTIES += ro.arm64.memtag.bootctl_settings_toggle=1
 endif
