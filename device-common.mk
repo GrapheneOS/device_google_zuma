@@ -63,4 +63,5 @@ PRODUCT_PRODUCT_PROPERTIES += \
 ifeq (,$(filter %_fullmte,$(TARGET_PRODUCT)))
 PRODUCT_PRODUCT_PROPERTIES += ro.arm64.memtag.bootctl_supported=1
 SANITIZE_TARGET := $(strip $(SANITIZE_TARGET) memtag_heap)
+BOARD_KERNEL_CMDLINE += bootloader.pixel.MTE_FORCE_ON
 endif
