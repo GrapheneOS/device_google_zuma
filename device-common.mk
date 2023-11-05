@@ -62,7 +62,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # eng products that force enable MTE
 ifeq (,$(filter %_fullmte,$(TARGET_PRODUCT)))
 ifeq (,$(filter eng,$(TARGET_BUILD_VARIANT)))
-PRODUCT_PRODUCT_PROPERTIES += ro.arm64.memtag.bootctl_supported=1
 SANITIZE_TARGET := $(strip $(SANITIZE_TARGET) memtag_heap)
 BOARD_KERNEL_CMDLINE += bootloader.pixel.MTE_FORCE_ON
 endif
