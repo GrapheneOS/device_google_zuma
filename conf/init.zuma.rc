@@ -669,6 +669,7 @@ on fs
     chown system system /sys/devices/platform/exynos-drm/primary-panel/panel_idle
     chown system system /sys/devices/platform/exynos-drm/primary-panel/panel_need_handle_idle_exit
     chown system system /sys/devices/platform/exynos-drm/primary-panel/op_hz
+    chown system system /sys/devices/platform/exynos-drm/primary-panel/refresh_ctrl
     chown system system /sys/module/drm/parameters/vblankoffdelay
     chown system system /sys/module/drm/parameters/debug
     chown system system /sys/class/dqe0/atc/ambient_light
