@@ -52,9 +52,20 @@ int getCommandOutput(const char *cmd, std::string *output) {
 }
 
 bool isValidFile(const char *file) {
-    if (!access(file, R_OK)) {
-        return false;
+    FILE *fp = fopen(file, "r");
+    if (fp != NULL) {
+        fclose(fp);
+        return true;
     }
+    return false;
+}
+
+bool isValidDir(const char *directory) {
+    DIR *dir = opendir(directory);
+    if (dir == NULL)
+        return false;
+
+    closedir(dir);
     return true;
 }
 
@@ -167,8 +178,8 @@ void dumpMaxFg() {
     const char *maxfg [][2] = {
             {"Power supply property maxfg", "/sys/class/power_supply/maxfg/uevent"},
             {"m5_state", "/sys/class/power_supply/maxfg/m5_model_state"},
-            {"maxfg", "/dev/logbuffer_maxfg"},
-            {"maxfg", "/dev/logbuffer_maxfg_monitor"},
+            {"maxfg logbuffer", "/dev/logbuffer_maxfg"},
+            {"maxfg_monitor logbuffer", "/dev/logbuffer_maxfg_monitor"},
     };
 
     const char *maxfgFlip [][2] = {
@@ -187,7 +198,7 @@ void dumpMaxFg() {
     std::string content;
 
 
-    if (isValidFile(maxfgLoc)) {
+    if (isValidDir(maxfgLoc)) {
         for (const auto &row : maxfg) {
             dumpFileContent(row[0], row[1]);
         }
@@ -205,7 +216,9 @@ void dumpMaxFg() {
 void dumpPowerSupplyDock() {
     const char* powerSupplyPropertyDockTitle = "Power supply property dock";
     const char* powerSupplyPropertyDockFile = "/sys/class/power_supply/dock/uevent";
-    dumpFileContent(powerSupplyPropertyDockTitle, powerSupplyPropertyDockFile);
+    if (isValidFile(powerSupplyPropertyDockFile)) {
+        dumpFileContent(powerSupplyPropertyDockTitle, powerSupplyPropertyDockFile);
+    }
 }
 
 void dumpLogBufferTcpm() {
@@ -286,14 +299,18 @@ void dumpWc68() {
     const char* wc68Title = "WC68";
     const char* wc68File = "/dev/logbuffer_wc68";
 
-    dumpFileContent(wc68Title, wc68File);
+    if (isValidFile(wc68File)) {
+        dumpFileContent(wc68Title, wc68File);
+    }
 }
 
 void dumpLn8411() {
     const char* ln8411Title = "LN8411";
     const char* ln8411File = "/dev/logbuffer_ln8411";
 
-    dumpFileContent(ln8411Title, ln8411File);
+    if (isValidFile(ln8411File)) {
+        dumpFileContent(ln8411Title, ln8411File);
+    }
 }
 
 void dumpBatteryHealth() {
@@ -359,62 +376,102 @@ void dumpBatteryDefend() {
     }
 }
 
-void dumpChgUserDebug() {
+void printValuesOfDirectory(const char *directory, std::string debugfs, const char *strMatch) {
     std::vector<std::string> files;
-    struct dirent *entry;
+    auto info = directory;
     std::string content;
+    struct dirent *entry;
+    DIR *dir = opendir(debugfs.c_str());
+    if (dir == NULL)
+        return;
 
-    const char *chgUserDebug [][2] {
-            {"DC_registers dump", "/sys/class/power_supply/dc-mains/device/registers_dump"},
+    printTitle((debugfs + std::string(strMatch) + "/" + std::string(info)).c_str());
+    while ((entry = readdir(dir)) != NULL)
+        if (std::string(entry->d_name).find(strMatch) != std::string::npos)
+            files.push_back(entry->d_name);
+    closedir(dir);
+
+    sort(files.begin(), files.end());
+
+    for (auto &file : files) {
+        std::string fileDirectory = debugfs + file;
+        std::string fileLocation = fileDirectory + "/" + std::string(info);
+        if (!android::base::ReadFileToString(fileLocation, &content)) {
+            content = "\n";
+        }
+
+        printf("%s:\n%s", fileDirectory.c_str(), content.c_str());
+
+        if (content.back() != '\n')
+            printf("\n");
+    }
+    files.clear();
+}
+
+void dumpChgUserDebug() {
+    const char *chgDebugMax77759 [][2] {
             {"max77759_chg registers dump", "/d/max77759_chg/registers"},
             {"max77729_pmic registers dump", "/d/max77729_pmic/registers"},
-            {"Charging table dump", "/d/google_battery/chg_raw_profile"},
+    };
+    const char *chgDebugMax77779 [][2] {
+            {"max77779_chg registers dump", "/d/max77779_chg/registers"},
+            {"max77779_pmic registers dump", "/d/max77779_pmic/registers"},
     };
 
     const std::string debugfs = "/d/";
-    const char *maxFgStrMatch = "maxfg";
 
-    const char *fgInfo [][2] {
-            {"fg_model", "fg_model"},
-            {"fg_alo_ver", "algo_ver"},
-            {"fg_model_ok", "model_ok"},
-            {"fg registers", "registers"},
-            {"Maxim FG NV RAM", "nv_registers"},
+    const char *maxFgDir = "/d/maxfg";
+    const char *maxFgStrMatch = "maxfg";
+    const char *maxFg77779StrMatch = "max77779fg";
+    const char *baseChgDir = "/d/max77759_chg";
+    const char *dcRegName = "DC_registers dump";
+    const char *dcRegDir = "/sys/class/power_supply/dc-mains/device/registers_dump";
+    const char *chgTblName = "Charging table dump";
+    const char *chgTblDir = "/d/google_battery/chg_raw_profile";
+
+    const char *maxFgInfo [] {
+            "fg_model",
+            "algo_ver",
+            "model_ok",
+            "registers",
+            "nv_registers",
     };
 
-    if (!isUserBuild())
+    const char *max77779FgInfo [] {
+            "fg_model",
+            "algo_ver",
+            "model_ok",
+            "registers",
+            "debug_registers",
+    };
+
+    if (isUserBuild())
         return;
 
-    for (auto &row : chgUserDebug) {
-        dumpFileContent(row[0], row[1]);
+    if (isValidFile(dcRegDir)) {
+        dumpFileContent(dcRegName, dcRegDir);
     }
 
-    for (auto &info : fgInfo) {
-        DIR *dir = opendir(debugfs.c_str());
-        if (dir == NULL)
-            return;
-
-        printTitle(info[0]);
-        while ((entry = readdir(dir)) != NULL)
-            if (std::string(entry->d_name).find(maxFgStrMatch) != std::string::npos)
-                files.push_back(entry->d_name);
-        closedir(dir);
-
-        sort(files.begin(), files.end());
-
-        for (auto &file : files) {
-            std::string fileDirectory = debugfs + file;
-            std::string fileLocation = fileDirectory + "/" + std::string(info[1]);
-            if (!android::base::ReadFileToString(fileLocation, &content)) {
-                content = "\n";
-            }
-
-            printf("%s:\n%s", fileDirectory.c_str(), content.c_str());
-
-            if (content.back() != '\n')
-                printf("\n");
+    if (isValidDir(baseChgDir)) {
+        for (auto &row : chgDebugMax77759) {
+            dumpFileContent(row[0], row[1]);
         }
-        files.clear();
+    } else {
+        for (auto &row : chgDebugMax77779) {
+            dumpFileContent(row[0], row[1]);
+        }
+    }
+
+    dumpFileContent(chgTblName, chgTblDir);
+
+    if (isValidDir(maxFgDir)) {
+        for (auto & directory : maxFgInfo) {
+            printValuesOfDirectory(directory, debugfs, maxFgStrMatch);
+        }
+    } else {
+        for (auto & directory : max77779FgInfo) {
+            printValuesOfDirectory(directory, debugfs, maxFg77779StrMatch);
+        }
     }
 }
 
@@ -454,7 +511,7 @@ void dumpChargerStats() {
 
     dumpFileContent(chgStatsTitle, chgStatsLocation);
 
-    if (!isUserBuild())
+    if (isUserBuild())
         return;
 
     for (auto &stat : chargerStats) {
@@ -509,7 +566,7 @@ void dumpGvoteables() {
     std::vector<std::string> files;
     int ret;
 
-    if (!isUserBuild())
+    if (isUserBuild())
         return;
 
     ret = getFilesInDir(directory, &files);
