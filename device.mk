@@ -422,6 +422,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	persist.vendor.verbose_logging_enabled=false
 endif
 
+# Vendor modem extensive logging default property
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.vendor.modem.extensive_logging_enabled=false
+
 # CP Logging properties
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.vendor.sys.modem.logging.loc = /data/vendor/slog \
@@ -987,7 +991,8 @@ PRODUCT_PACKAGES += \
 	logging.conf \
 	default.cfg \
 	default.nprf \
-	default_metrics.xml
+	default_metrics.xml \
+	extensive_logging.conf
 
 # Log Masks for logmasklibrary below
 # default modem log mask
