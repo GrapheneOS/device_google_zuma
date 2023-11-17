@@ -32,6 +32,13 @@
 #define PORT_TYPE_TIMEOUT 8
 #define DISPLAYPORT_CAPABILITIES_RECEPTACLE_BIT 6
 #define DISPLAYPORT_STATUS_DEBOUNCE_MS 2000
+/*
+ * Type-C HAL should wait 2 seconds to reattempt DisplayPort Alt Mode entry to
+ * allow the port and port partner to settle Role Swaps.
+ */
+#define DISPLAYPORT_ACTIVATE_DEBOUNCE_MS 2000
+// Number of times the HAL should reattempt to enter DisplayPort Alt Mode
+#define DISPLAYPORT_ACTIVATE_MAX_RETRIES 2
 
 namespace aidl {
 namespace android {
@@ -173,6 +180,10 @@ struct Usb : public BnUsb {
      *        sending notifications to the frameworks layer.
      */
     int mDisplayPortDebounceTimer;
+    /*
+     * eventfd to monitor whether a connection results in DisplayPort Alt Mode activating.
+     */
+    int mDisplayPortActivateTimer;
 
   private:
     pthread_t mPoll;
