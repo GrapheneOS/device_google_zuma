@@ -560,6 +560,11 @@ Usb::Usb()
         ALOGE("mDisplayPortDebounceTimer timerfd failed: %s", strerror(errno));
         abort();
     }
+    mDisplayPortActivateTimer = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK);
+    if (mDisplayPortActivateTimer == -1) {
+        ALOGE("mDisplayPortActivateTimer timerfd failed: %s", strerror(errno));
+        abort();
+    }
 }
 
 ScopedAStatus Usb::switchRole(const string& in_portName, const PortRole& in_role,
@@ -1721,6 +1726,10 @@ static int displayPortPollOpenFileHelper(const char *file, int flags) {
     return fd;
 }
 
+/*
+ * armTimerFdHelper - Sets timerfd (fd) to trigger after (ms) milliseconds.
+ * Setting ms to 0 disarms the timer.
+ */
 static int armTimerFdHelper(int fd, int ms) {
     struct itimerspec ts;
 
@@ -1733,22 +1742,30 @@ static int armTimerFdHelper(int fd, int ms) {
 }
 
 void *displayPortPollWork(void *param) {
+    /* USB Payload */
+    ::aidl::android::hardware::usb::Usb *usb = (::aidl::android::hardware::usb::Usb *)param;
+    /* Epoll fields */
     int epoll_fd;
     struct epoll_event ev_hpd, ev_pin, ev_orientation, ev_eventfd, ev_link, ev_debounce;
+    struct epoll_event ev_activate;
     int nevents = 0;
     int hpd_fd, pin_fd, orientation_fd, link_training_status_fd;
     int file_flags = O_RDONLY;
     int epoll_flags;
+    /* DisplayPort link statuses */
     bool orientationSet = false;
     bool pinSet = false;
+    int activateRetryCount = 0;
     unsigned long res;
     int ret = 0;
+    /* File paths */
     string displayPortUsbPath, irqHpdCountPath, hpdPath, pinAssignmentPath, orientationPath;
-    string tcpcI2cBus, linkPath;
-    ::aidl::android::hardware::usb::Usb *usb = (::aidl::android::hardware::usb::Usb *)param;
+    string tcpcI2cBus, linkPath, partnerActivePath, portActivePath;
 
     usb->mDisplayPortPollRunning = true;
     usb->mDisplayPortPollStarting = false;
+
+    /*---------- Setup ----------*/
 
     if (usb->getDisplayPortUsbPathHelper(&displayPortUsbPath) == Status::ERROR) {
         ALOGE("usbdp: worker: could not locate usb displayport directory");
@@ -1760,6 +1777,9 @@ void *displayPortPollWork(void *param) {
     pinAssignmentPath = displayPortUsbPath + "pin_assignment";
     orientationPath = "/sys/class/typec/port0/orientation";
     linkPath = string(kDisplayPortDrmPath) + "link_status";
+
+    partnerActivePath = displayPortUsbPath + "../mode1/active";
+    portActivePath = "/sys/class/typec/port0/port0.0/mode1/active";
 
     getI2cBusHelper(&tcpcI2cBus);
     irqHpdCountPath = kI2CPath + tcpcI2cBus + "/" + tcpcI2cBus + kIrqHpdCounPath;
@@ -1793,12 +1813,15 @@ void *displayPortPollWork(void *param) {
     ev_eventfd.events = epoll_flags;
     ev_link.events = epoll_flags;
     ev_debounce.events = epoll_flags;
+    ev_activate.events = epoll_flags;
+
     ev_hpd.data.fd = hpd_fd;
     ev_pin.data.fd = pin_fd;
     ev_orientation.data.fd = orientation_fd;
     ev_eventfd.data.fd = usb->mDisplayPortEventPipe;
     ev_link.data.fd = link_training_status_fd;
     ev_debounce.data.fd = usb->mDisplayPortDebounceTimer;
+    ev_activate.data.fd = usb->mDisplayPortActivateTimer;
 
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, hpd_fd, &ev_hpd) == -1) {
         ALOGE("usbdp: worker: epoll_ctl failed to add hpd; errno=%d", errno);
@@ -1817,13 +1840,20 @@ void *displayPortPollWork(void *param) {
         goto error;
     }
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, usb->mDisplayPortDebounceTimer, &ev_debounce) == -1) {
-        ALOGE("usbdp: worker: epoll_ctl failed to add debounce; errno=%d", errno);
+        ALOGE("usbdp: worker: epoll_ctl failed to add framework update debounce; errno=%d", errno);
+        goto error;
+    }
+     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, usb->mDisplayPortActivateTimer, &ev_activate) == -1) {
+        ALOGE("usbdp: worker: epoll_ctl failed to add activate debounce; errno=%d", errno);
         goto error;
     }
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, usb->mDisplayPortEventPipe, &ev_eventfd) == -1) {
         ALOGE("usbdp: worker: epoll_ctl failed to add orientation; errno=%d", errno);
         goto error;
     }
+
+    /* Arm timer to see if DisplayPort Alt Mode Activates */
+    armTimerFdHelper(usb->mDisplayPortActivateTimer, DISPLAYPORT_ACTIVATE_DEBOUNCE_MS);
 
     while (!destroyDisplayPortThread) {
         struct epoll_event events[64];
@@ -1874,6 +1904,33 @@ void *displayPortPollWork(void *param) {
                 if (ret < 0)
                     ALOGE("usbdp: debounce read errno:%d", errno);
                 queryVersionHelper(usb, &currentPortStatus);
+            } else if (events[n].data.fd == usb->mDisplayPortActivateTimer) {
+                string activePartner, activePort;
+
+                if (ReadFileToString(partnerActivePath.c_str(), &activePartner) &&
+                    ReadFileToString(portActivePath.c_str(), &activePort)) {
+                    // Retry activate signal when DisplayPort Alt Mode is active on port but not
+                    // partner.
+                    if (!strncmp(activePartner.c_str(), "no", strlen("no")) &&
+                        !strncmp(activePort.c_str(), "yes", strlen("yes")) &&
+                        activateRetryCount < DISPLAYPORT_ACTIVATE_MAX_RETRIES) {
+                        if (!WriteStringToFile("1", partnerActivePath)) {
+                            ALOGE("usbdp: Failed to activate port partner Alt Mode");
+                        } else {
+                            ALOGI("usbdp: Attempting to activate port partner Alt Mode");
+                        }
+                        activateRetryCount++;
+                        armTimerFdHelper(usb->mDisplayPortActivateTimer,
+                                         DISPLAYPORT_ACTIVATE_DEBOUNCE_MS);
+                    } else {
+                        ALOGI("usbdp: DisplayPort Alt Mode is active, or disabled on port");
+                    }
+                } else {
+                    activateRetryCount++;
+                    armTimerFdHelper(usb->mDisplayPortActivateTimer,
+                                     DISPLAYPORT_ACTIVATE_DEBOUNCE_MS);
+                    ALOGE("usbdp: Failed to read active state from port or partner");
+                }
             } else if (events[n].data.fd == usb->mDisplayPortEventPipe) {
                 uint64_t flag = 0;
                 if (!read(usb->mDisplayPortEventPipe, &flag, sizeof(flag))) {
@@ -1895,6 +1952,8 @@ void *displayPortPollWork(void *param) {
     }
 
 error:
+    /* Need to disarm so new threads don't get old event */
+    armTimerFdHelper(usb->mDisplayPortActivateTimer, 0);
     close(link_training_status_fd);
 link_training_status_fd_error:
     close(orientation_fd);
@@ -1904,6 +1963,7 @@ pin_fd_error:
     close(hpd_fd);
 hpd_fd_error:
     epoll_ctl(epoll_fd, EPOLL_CTL_DEL, usb->mDisplayPortDebounceTimer, &ev_debounce);
+    epoll_ctl(epoll_fd, EPOLL_CTL_DEL, usb->mDisplayPortActivateTimer, &ev_activate);
     epoll_ctl(epoll_fd, EPOLL_CTL_DEL, usb->mDisplayPortEventPipe, &ev_eventfd);
     close(epoll_fd);
 epoll_fd_error:
