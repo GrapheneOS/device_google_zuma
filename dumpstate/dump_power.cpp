@@ -362,7 +362,7 @@ void dumpBatteryDefend() {
 
         for (auto &file : files) {
             fileLocation = std::string(config[1]) + std::string(file);
-            if (!android::base::ReadFileToString(fileLocation, &content)) {
+            if (!android::base::ReadFileToString(fileLocation, &content) || content.empty()) {
                 content = "\n";
             }
 
