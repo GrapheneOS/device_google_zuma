@@ -155,6 +155,10 @@
 /dev/acd-com.google.chre              0660   system     system
 /dev/acd-com.google.chre.non_wake_up  0660   system     system
 
+# BT
+/dev/acd-com.google.bt  		          0660   system     system
+/dev/acd-com.google.bt.non_wake_up  	0660   system     system
+
 # LWIS
 /dev/lwis*               0660   system     system
 
