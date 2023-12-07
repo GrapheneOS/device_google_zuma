@@ -295,6 +295,15 @@ void dumpPdEngine() {
     }
 }
 
+void dumpEusbRepeater() {
+    const char* dumpTitle = "registers dump of eUSB repeater";
+    const char* dumpFile = "/d/eusb_repeater/registers";
+
+    if (isValidFile(dumpFile)) {
+        dumpFileContent(dumpTitle, dumpFile);
+    }
+}
+
 void dumpWc68() {
     const char* wc68Title = "WC68";
     const char* wc68File = "/dev/logbuffer_wc68";
@@ -908,6 +917,7 @@ int main() {
     dumpLogBufferTcpm();
     dumpTcpc();
     dumpPdEngine();
+    dumpEusbRepeater();
     dumpWc68();
     dumpLn8411();
     dumpBatteryHealth();
