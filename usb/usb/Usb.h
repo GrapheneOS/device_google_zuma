@@ -29,6 +29,8 @@
 // Having a margin of ~3 secs for the directory and other related bookeeping
 // structures created and uvent fired.
 #define PORT_TYPE_TIMEOUT 8
+#define DISPLAYPORT_CAPABILITIES_RECEPTACLE_BIT 6
+#define DISPLAYPORT_STATUS_DEBOUNCE_MS 2000
 
 namespace aidl {
 namespace android {
@@ -57,9 +59,16 @@ constexpr char kGadgetName[] = "11210000.dwc3";
 #define VBUS_PATH NEW_UDC_PATH "dwc3_exynos_otg_b_sess"
 #define USB_DATA_PATH NEW_UDC_PATH "usb_data_enabled"
 
+#define LINK_TRAINING_STATUS_UNKNOWN "0"
+#define LINK_TRAINING_STATUS_SUCCESS "1"
+#define LINK_TRAINING_STATUS_FAILURE "2"
+#define LINK_TRAINING_STATUS_FAILURE_SINK "3"
+
 #define DISPLAYPORT_SHUTDOWN_CLEAR 0
 #define DISPLAYPORT_SHUTDOWN_SET 1
 #define DISPLAYPORT_IRQ_HPD_COUNT_CHECK 3
+
+#define DISPLAYPORT_POLL_WAIT_MS 100
 
 struct Usb : public BnUsb {
     Usb();
@@ -79,12 +88,13 @@ struct Usb : public BnUsb {
     ScopedAStatus resetUsbPort(const string& in_portName, int64_t in_transactionId) override;
 
     Status getDisplayPortUsbPathHelper(string *path);
+    Status readDisplayPortAttribute(string attribute, string usb_path, string* value);
     Status writeDisplayPortAttributeOverride(string attribute, string value);
     Status writeDisplayPortAttribute(string attribute, string usb_path);
     bool determineDisplayPortRetry(string linkPath, string hpdPath);
     void setupDisplayPortPoll();
     void shutdownDisplayPortPollHelper();
-    void shutdownDisplayPortPoll();
+    void shutdownDisplayPortPoll(bool force);
 
     std::shared_ptr<::aidl::android::hardware::usb::IUsbCallback> mCallback;
     // Protects mCallback variable
@@ -106,6 +116,10 @@ struct Usb : public BnUsb {
     bool mUsbDataEnabled;
     // True when mDisplayPortPoll pthread is running
     volatile bool mDisplayPortPollRunning;
+    volatile bool mDisplayPortPollStarting;
+    pthread_cond_t mDisplayPortCV;
+    pthread_mutex_t mDisplayPortCVLock;
+    volatile bool mDisplayPortFirstSetupDone;
     // Used to cache the values read from tcpci's irq_hpd_count.
     // Update drm driver when cached value is not the same as the read value.
     uint32_t mIrqHpdCountCache;
@@ -115,6 +129,14 @@ struct Usb : public BnUsb {
     pthread_mutex_t mDisplayPortLock;
     // eventfd to signal DisplayPort thread
     int mDisplayPortEventPipe;
+
+    /*
+     * eventfd to set DisplayPort framework update debounce timer. Debounce timer is necessary for
+     *     1) allowing enough time for each sysfs node needed to set HPD high in the drm to populate
+     *     2) preventing multiple IRQs that trigger link training failures from continuously
+     *        sending notifications to the frameworks layer.
+     */
+    int mDisplayPortDebounceTimer;
   private:
     pthread_t mPoll;
     pthread_t mDisplayPortPoll;

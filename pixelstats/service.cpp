@@ -70,6 +70,8 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
     },
     .ResumeLatencyMetricsPath = "/sys/kernel/metrics/resume_latency/resume_latency_metrics",
     .LongIRQMetricsPath = "/sys/kernel/metrics/irq/long_irq_metrics",
+    .StormIRQMetricsPath = "/sys/kernel/metrics/irq/storm_irq_metrics",
+    .IRQStatsResetPath = "/sys/kernel/metrics/irq/stats_reset",
     .TempResidencyAndResetPaths = {
         {
             "/sys/kernel/metrics/thermal/tr_by_group/tmu/stats",
@@ -92,7 +94,10 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
     .WavesPath = "/sys/devices/platform/audiometrics/waves",
     .AdaptedInfoCountPath = "/sys/devices/platform/audiometrics/adapted_info_active_count",
     .AdaptedInfoDurationPath = "/sys/devices/platform/audiometrics/adapted_info_active_duration",
-    .CCARatePath = "/sys/devices/platform/audiometrics/cca_rate_read_once"
+    .CCARatePath = "/sys/devices/platform/audiometrics/cca_count_read_once",
+    .PcmLatencyPath = "/sys/devices/platform/audiometrics/pcm_latency",
+    .PcmCountPath = "/sys/devices/platform/audiometrics/pcm_count",
+    .TotalCallCountPath = "/sys/devices/platform/audiometrics/call_count"
 };
 
 const struct UeventListener::UeventPaths ueventPaths = {

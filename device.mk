@@ -38,17 +38,9 @@ include device/google/gs-common/umfw_stat/umfw_stat.mk
 include device/google/gs-common/widevine/widevine.mk
 include device/google/gs-common/sota_app/factoryota.mk
 include device/google/gs-common/misc_writer/misc_writer.mk
+include device/google/gs-common/gyotaku_app/gyotaku.mk
 
 include device/google/zuma/dumpstate/item.mk
-
-ifneq ($(BOARD_WITHOUT_RADIO),true)
-# Release stable version to factory image
-ifneq ($(filter factory_%,$(TARGET_PRODUCT)),)
-	include device/google/gs-common/gps/brcm/device.mk
-else
-	include device/google/gs-common/gps/brcm/device_v2.mk
-endif
-endif
 
 TARGET_BOARD_PLATFORM := zuma
 ALLOW_MISSING_DEPENDENCIES := true
@@ -203,14 +195,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	telephony.active_modems.max_count=2
-
-ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
-PRODUCT_PROPERTY_OVERRIDES += \
-	persist.vendor.usb.displayport.enabled=0
-else
-PRODUCT_PROPERTY_OVERRIDES += \
-	persist.vendor.usb.displayport.enabled=0
-endif
 
 USE_LASSEN_OEMHOOK := true
 
@@ -397,6 +381,7 @@ PRODUCT_COPY_FILES += \
 
 ## Enable the CHRE Daemon
 CHRE_USF_DAEMON_ENABLED := true
+CHRE_DEDICATED_TRANSPORT_CHANNEL_ENABLED := true
 PRODUCT_PACKAGES += \
 	chre \
 	preloaded_nanoapps.json
@@ -666,7 +651,8 @@ endif
 PRODUCT_PROPERTY_OVERRIDES += \
 	debug.sf.disable_backpressure=0 \
 	debug.sf.enable_gl_backpressure=1 \
-	debug.sf.enable_sdr_dimming=1
+	debug.sf.enable_sdr_dimming=1 \
+        debug.sf.dim_in_gamma_in_enhanced_screenshots=1
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.use_phase_offsets_as_durations=1
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += debug.sf.late.sf.duration=10500000
@@ -707,7 +693,7 @@ PRODUCT_COPY_FILES += \
 	device/google/zuma/display/display_colordata_cal0.pb:$(TARGET_COPY_OUT_VENDOR)/etc/display_colordata_cal0.pb
 
 # limit DPP downscale ratio
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.hwc.dpp.downscale=3
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.hwc.dpp.downscale=4
 
 # Cannot reference variables defined in BoardConfig.mk, uncomment this if
 # BOARD_USES_EXYNOS_DSS_FEATURE is true
@@ -951,6 +937,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 #$(call inherit-product-if-exists, vendor/google_devices/common/exynos-vendor.mk)
 #$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4375/device-bcm.mk)
 include device/google/gs-common/sensors/sensors.mk
+$(call soong_config_set,usf,target_soc,zuma)
 
 PRODUCT_COPY_FILES += \
 	device/google/zuma/default-permissions.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions.xml \
@@ -1016,7 +1003,6 @@ $(call soong_config_set,aoc,target_product,$(TARGET_PRODUCT))
 ## Audio properties
 ##Audio Vendor property
 PRODUCT_PROPERTY_OVERRIDES += \
-	persist.vendor.audio.cca.enabled=false \
 	persist.vendor.audio.cca.unsupported=false
 
 PRODUCT_PROPERTY_OVERRIDES += \
