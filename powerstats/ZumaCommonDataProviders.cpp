@@ -20,6 +20,7 @@
 #include <CpupmStateResidencyDataProvider.h>
 #include <DevfreqStateResidencyDataProvider.h>
 #include <AdaptiveDvfsStateResidencyDataProvider.h>
+#include <TpuDvfsStateResidencyDataProvider.h>
 #include <UfsStateResidencyDataProvider.h>
 #include <dataproviders/GenericStateResidencyDataProvider.h>
 #include <dataproviders/IioEnergyMeterDataProvider.h>
@@ -45,6 +46,7 @@ using aidl::android::hardware::power::stats::GenericStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::IioEnergyMeterDataProvider;
 using aidl::android::hardware::power::stats::PixelStateResidencyDataProvider;
 using aidl::android::hardware::power::stats::PowerStatsEnergyConsumer;
+using aidl::android::hardware::power::stats::TpuDvfsStateResidencyDataProvider;
 
 // TODO (b/181070764) (b/182941084):
 // Remove this when Wifi/BT energy consumption models are available or revert before ship
@@ -178,17 +180,6 @@ void addDvfsStats(std::shared_ptr<PowerStats> p) {
             path, NS_TO_MS, adpCfgs));
 
     std::vector<DvfsStateResidencyDataProvider::Config> cfgs;
-    cfgs.push_back({"TPU", {
-        std::make_pair("1119MHz", "1119000"),
-        std::make_pair("1066MHz", "1066000"),
-        std::make_pair("967MHz", "967000"),
-        std::make_pair("845MHz", "845000"),
-        std::make_pair("712MHz", "712000"),
-        std::make_pair("627MHz", "627000"),
-        std::make_pair("455MHz", "455000"),
-        std::make_pair("226MHz", "226000"),
-    }});
-
     cfgs.push_back({"AUR", {
         std::make_pair("1065MHz", "1065000"),
         std::make_pair("861MHz", "861000"),
@@ -201,6 +192,20 @@ void addDvfsStats(std::shared_ptr<PowerStats> p) {
 
     p->addStateResidencyDataProvider(std::make_unique<DvfsStateResidencyDataProvider>(
             path, NS_TO_MS, cfgs));
+
+    // TPU DVFS
+    const int TICK_TO_MS = 100;
+    std::vector<std::string> freqs = {
+            "1119000",
+            "1066000",
+            "845000",
+            "712000",
+            "627000",
+            "455000",
+            "226000"
+    };
+    p->addStateResidencyDataProvider(std::make_unique<TpuDvfsStateResidencyDataProvider>(
+            "/sys/devices/platform/1a000000.rio/tpu_usage", freqs, TICK_TO_MS));
 }
 
 void addSoC(std::shared_ptr<PowerStats> p) {
