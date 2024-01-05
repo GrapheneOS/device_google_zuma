@@ -63,6 +63,4 @@ PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.se=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.google.android.bluetooth=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.nfc=off
 PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.system_server=off
-else
-PRODUCT_PRODUCT_PROPERTIES += persist.arm64.memtag.app.com.android.chrome=off
 endif
