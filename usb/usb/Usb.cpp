@@ -81,6 +81,8 @@ constexpr char kStatusPath[] = "-0025/contaminant_detection_status";
 constexpr char kSinkLimitEnable[] = "-0025/usb_limit_sink_enable";
 constexpr char kSourceLimitEnable[] = "-0025/usb_limit_source_enable";
 constexpr char kSinkLimitCurrent[] = "-0025/usb_limit_sink_current";
+constexpr char kCcToggleEnable[] = "-0025/cc_toggle_enable";
+constexpr char kDataPathEnable[] = "-0025/data_path_enable";
 constexpr char kTypecPath[] = "/sys/class/typec";
 constexpr char kDisableContatminantDetection[] = "vendor.usb.contaminantdisable";
 constexpr char kOverheatStatsPath[] = "/sys/devices/platform/google,usbc_port_cooling_dev/";
@@ -1891,6 +1893,92 @@ void Usb::shutdownDisplayPortPoll(bool force) {
     if (pthread_create(&mDisplayPortShutdownHelper, NULL, shutdownDisplayPortPollWork, this)) {
         ALOGE("usbdp: shutdown: shutdown worker pthread creation failed %d", errno);
     }
+}
+
+using ext::PortSecurityState;
+using ext::IUsbExt;
+
+static int WriteStringToFileOrLog(string val, string path) {
+    if (WriteStringToFile(val, path)) {
+        ALOGD("written %s to %s", val.c_str(), path.c_str());
+        return 1;
+    }
+    ALOGE("unable to write %s to %s", val.c_str(), path.c_str());
+    return 0;
+}
+
+static ScopedAStatus setPortSecurityStateInner(PortSecurityState in_state) {
+    string path;
+
+    if (Status ret = getI2cBusHelper(&path); ret != Status::SUCCESS) {
+        return ScopedAStatus::fromServiceSpecificError(IUsbExt::ERROR_NO_I2C_PATH);
+    }
+
+    string ccToggleEnablePath = kI2CPath + path + "/" + path + kCcToggleEnable;
+    string dataPathEnablePath = kI2CPath + path + "/" + path + kDataPathEnable;
+
+    // '&' is used instead of '&&' intentionally to disable short-circuit evaluation
+
+    switch (in_state) {
+        case PortSecurityState::DISABLED: {
+            if (WriteStringToFileOrLog("0", ccToggleEnablePath)
+                    & WriteStringToFileOrLog("0", dataPathEnablePath)) {
+                return ScopedAStatus::ok();
+            }
+            return ScopedAStatus::fromServiceSpecificError(IUsbExt::ERROR_FILE_WRITE);
+        }
+        case PortSecurityState::CHARGING_ONLY_IMMEDIATE: {
+            if (WriteStringToFileOrLog("0", dataPathEnablePath)
+                    & WriteStringToFileOrLog("1", ccToggleEnablePath)) {
+                return ScopedAStatus::ok();
+            }
+            return ScopedAStatus::fromServiceSpecificError(IUsbExt::ERROR_FILE_WRITE);
+        }
+        case PortSecurityState::CHARGING_ONLY: {
+            if (WriteStringToFileOrLog("-1", dataPathEnablePath)
+                    & WriteStringToFileOrLog("1", ccToggleEnablePath)) {
+                return ScopedAStatus::ok();
+            }
+            return ScopedAStatus::fromServiceSpecificError(IUsbExt::ERROR_FILE_WRITE);
+        }
+        case PortSecurityState::ENABLED: {
+            if (WriteStringToFileOrLog("1", dataPathEnablePath)
+                    & WriteStringToFileOrLog("1", ccToggleEnablePath)) {
+                return ScopedAStatus::ok();
+            }
+            return ScopedAStatus::fromServiceSpecificError(IUsbExt::ERROR_FILE_WRITE);
+        }
+    }
+
+    return ScopedAStatus::ok();
+}
+
+// keep in sync with frameworks/base/core/java/android/ext/settings/UsbPortSecurity.java
+static const int MODE_DISABLED = 0;
+static const int MODE_CHARGING_ONLY = 1;
+static const int MODE_CHARGING_ONLY_WHEN_LOCKED = 2;
+static const int MODE_CHARGING_ONLY_WHEN_LOCKED_AFU = 3;
+static const int MODE_ENABLED = 4;
+
+UsbExt::UsbExt(std::shared_ptr<Usb> usb) : mUsb(usb) {
+    int initialMode = ::android::base::GetIntProperty("persist.security.usb_mode", MODE_ENABLED);
+    ALOGD("initial persist.security.usb_mode: %i", initialMode);
+
+    switch (initialMode) {
+        case MODE_CHARGING_ONLY:
+        case MODE_CHARGING_ONLY_WHEN_LOCKED:
+            setPortSecurityStateInner(PortSecurityState::CHARGING_ONLY_IMMEDIATE);
+            break;
+        case MODE_CHARGING_ONLY_WHEN_LOCKED_AFU:
+        case MODE_ENABLED:
+            setPortSecurityStateInner(PortSecurityState::ENABLED);
+            break;
+    }
+}
+
+ScopedAStatus UsbExt::setPortSecurityState(const std::string& in_portName,
+        PortSecurityState in_state) {
+    return setPortSecurityStateInner(in_state);
 }
 
 } // namespace usb

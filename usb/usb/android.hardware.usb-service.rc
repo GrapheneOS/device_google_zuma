@@ -16,6 +16,8 @@ on post-fs
     chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-11/11-0025/usb_limit_sink_enable
     chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-11/11-0025/usb_limit_source_enable
     chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-11/11-0025/update_sdp_enum_timeout
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-11/11-0025/cc_toggle_enable
+    chown root system /sys/devices/platform/10cb0000.hsi2c/i2c-11/11-0025/data_path_enable
     chown root system /sys/devices/platform/110f0000.drmdp/drm-displayport/hpd
     chown root system /sys/devices/platform/110f0000.drmdp/drm-displayport/irq_hpd
     chown root system /sys/devices/platform/110f0000.drmdp/drm-displayport/orientation
@@ -39,6 +41,8 @@ on post-fs
     chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-11/11-0025/usb_limit_sink_enable
     chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-11/11-0025/usb_limit_source_enable
     chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-11/11-0025/update_sdp_enum_timeout
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-11/11-0025/cc_toggle_enable
+    chmod 664 /sys/devices/platform/10cb0000.hsi2c/i2c-11/11-0025/data_path_enable
     chmod 664 /sys/devices/platform/110f0000.drmdp/drm-displayport/hpd
     chmod 664 /sys/devices/platform/110f0000.drmdp/drm-displayport/irq_hpd
     chmod 664 /sys/devices/platform/110f0000.drmdp/drm-displayport/orientation
