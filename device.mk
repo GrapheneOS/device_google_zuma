@@ -915,21 +915,6 @@ PRODUCT_PACKAGES += ShannonIms
 
 PRODUCT_PACKAGES += ShannonRcs
 
-ifeq (,$(filter aosp_% factory_%,$(TARGET_PRODUCT)))
-#ImsMediaAoc library
-FEATURE_TYPE := oem_audio
-SOONG_CONFIG_NAMESPACES += audio_lib
-SOONG_CONFIG_audio_lib += \
-        audio_type
-
-SOONG_CONFIG_audio_lib_audio_type := $(FEATURE_TYPE)
-endif
-
-# ImsMedia
-PRODUCT_PACKAGES += \
-	ImsMediaService \
-	libimsmedia
-
 # Exynos RIL and telephony
 # Multi SIM(DSDS)
 SIM_COUNT := 2
@@ -1197,8 +1182,8 @@ include device/google/gs-common/pixel_ril/ril.mk
 endif
 
 # Touch service
+include hardware/google/pixel/input/twoshay.mk
 include device/google/gs-common/touch/twoshay/aidl_zuma.mk
-include device/google/gs-common/touch/twoshay/twoshay.mk
 
 # Allow longer timeout for incident report generation in bugreport
 # Overriding in /product partition instead of /vendor intentionally,
