@@ -101,7 +101,10 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
     .OffloadEffectsIdPath = "/sys/devices/platform/audiometrics/offload_effects_id",
     .OffloadEffectsDurationPath = "/sys/devices/platform/audiometrics/offload_effects_duration",
     .BluetoothAudioUsagePath = "/sys/devices/platform/audiometrics/bt_usage",
-    .GMSRPath = "/sys/class/power_supply/maxfg/gmsr",
+    .GMSRPath = {
+        "/sys/class/power_supply/maxfg/gmsr",
+        "/sys/class/power_supply/maxfg_base/gmsr",
+    },
     .DisplayPortStatsPaths = {
         "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/link_negotiation_failures",
         "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/edid_read_failures",
