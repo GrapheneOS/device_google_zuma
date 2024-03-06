@@ -42,7 +42,6 @@ include device/google/gs-common/sota_app/factoryota.mk
 include device/google/gs-common/misc_writer/misc_writer.mk
 include device/google/gs-common/gyotaku_app/gyotaku.mk
 include device/google/gs-common/bootctrl/bootctrl_aidl.mk
-include device/google/gs-common/betterbug/betterbug.mk
 
 include device/google/zuma/dumpstate/item.mk
 
@@ -551,10 +550,6 @@ PRODUCT_PROPERTY_OVERRIDES += aaudio.hw_burst_min_usec=2000
 # Libs
 PRODUCT_PACKAGES += \
 	com.android.future.usb.accessory
-
-PRODUCT_PACKAGES += \
-	android.hardware.graphics.mapper@4.0-impl \
-	android.hardware.graphics.allocator-V1-service
 
 PRODUCT_PACKAGES += \
 	android.hardware.memtrack-service.pixel \
@@ -1183,8 +1178,8 @@ include device/google/gs-common/pixel_ril/ril.mk
 endif
 
 # Touch service
-include hardware/google/pixel/input/twoshay.mk
 include device/google/gs-common/touch/twoshay/aidl_zuma.mk
+include device/google/gs-common/touch/twoshay/twoshay.mk
 
 # Allow longer timeout for incident report generation in bugreport
 # Overriding in /product partition instead of /vendor intentionally,
