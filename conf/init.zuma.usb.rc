@@ -423,3 +423,12 @@ on property:persist.vendor.usb.displayport.enabled=1
 on property:persist.vendor.usb.displayport.enabled=0
     write /sys/module/exynos_drm/parameters/dp_enabled 0
     write /sys/class/typec/port0/port0.0/mode1/active "no"
+
+on property:persist.sys.hdcp_checking=always
+    write /sys/module/exynos_hdcp2/parameters/max_ver 2
+
+on property:persist.sys.hdcp_checking="drm-only"
+    write /sys/module/exynos_hdcp2/parameters/max_ver 2
+
+on property:persist.sys.hdcp_checking=never
+    write /sys/module/exynos_hdcp2/parameters/max_ver 0

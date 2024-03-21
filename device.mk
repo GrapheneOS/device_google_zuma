@@ -217,6 +217,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	persist.vendor.usb.displayport.enabled=1
 endif
 
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.sys.hdcp_checking=always
+
 USE_LASSEN_OEMHOOK := true
 
 # Use for GRIL
