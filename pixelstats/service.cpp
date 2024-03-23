@@ -128,7 +128,8 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
         "/sys/devices/platform/hdcp/hdcp1_success_count",
         "/sys/devices/platform/hdcp/hdcp1_fail_count",
         "/sys/devices/platform/hdcp/hdcp0_count",
-    }
+    },
+    .FGLogBufferPath = "/dev/logbuffer_maxfg_monitor"
 };
 
 const struct UeventListener::UeventPaths ueventPaths = {
