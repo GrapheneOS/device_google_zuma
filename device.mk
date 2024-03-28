@@ -221,6 +221,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	persist.sys.hdcp_checking=always
 
 USE_LASSEN_OEMHOOK := true
+# The "power-anomaly-sitril" is added into PRODUCT_SOONG_NAMESPACES when
+# $(USE_LASSEN_OEMHOOK) is true and $(BOARD_WITHOUT_RADIO) is not true.
+ifneq ($(BOARD_WITHOUT_RADIO),true)
+    PRODUCT_SOONG_NAMESPACES += vendor/google/tools/power-anomaly-sitril
+endif
 
 # Use for GRIL
 USES_LASSEN_MODEM := true
