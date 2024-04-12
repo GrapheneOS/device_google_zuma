@@ -16,7 +16,7 @@
 
 include device/google/gs-common/device.mk
 include device/google/gs-common/gs_watchdogd/watchdog.mk
-include device/google/gs-common/ramdump/ramdump.mk
+include device/google/gs-common/ramdump_and_coredump/ramdump_and_coredump.mk
 include device/google/gs-common/soc/soc.mk
 include device/google/gs-common/modem/modem.mk
 include device/google/gs-common/aoc/aoc.mk
@@ -1148,9 +1148,6 @@ include hardware/google/pixel/PixelLogger/PixelLogger.mk
 else
 BOARD_SEPOLICY_DIRS += hardware/google/pixel-sepolicy/logger_app
 endif
-
-# sscoredump
-include hardware/google/pixel/sscoredump/device.mk
 
 # RadioExt Version
 USES_RADIOEXT_V1_6 = true
