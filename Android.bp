@@ -41,3 +41,14 @@ sh_binary {
     vendor: true,
     sub_dir: "hw",
 }
+
+// Filesystem: Copy efs/efs_backup/modem_userdata to /data partition
+// so that they can be accessed under 16K mode. By default, these partitions
+// are 4K F2FS , which can't be mounted under 16K mode.
+// (b/293313353)
+sh_binary {
+    name: "copy_efs_files_to_data",
+    src: "copy_efs_files_to_data.sh",
+    vendor: true,
+}
+

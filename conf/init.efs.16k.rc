@@ -1,0 +1,30 @@
+
+service copy_efs_files_to_data /vendor/bin/copy_efs_files_to_data
+    user root
+    group root radio system audio media graphics camera
+    stdio_to_kmsg
+    oneshot
+    disabled
+
+on post-fs-data && property:ro.boot.flash.locked=0
+    mkdir /data/vendor/copied 0775 radio system
+    restorecon_recursive /data/vendor/copied
+    restorecon_recursive /mnt/vendor
+    mount_all /vendor/etc/fstab.efs
+    mount_all /vendor/etc/fstab.persist
+    exec_start copy_efs_files_to_data
+    umount_all /vendor/etc/fstab.efs
+    umount_all /vendor/etc/fstab.persist
+    mount_all /vendor/etc/fstab.efs.from_data
+    restorecon_recursive /mnt/vendor/efs
+    restorecon_recursive /mnt/vendor/efs_backup
+    restorecon_recursive /mnt/vendor/modem_userdata
+    restorecon_recursive /mnt/vendor/persist
+    restorecon_recursive /data/vendor/ss
+    setprop ro.vendor.persist.status mounted
+
+on post-fs-data && property:ro.boot.flash.locked=1
+    mount_all /vendor/etc/fstab.efs
+    mount_all /vendor/etc/fstab.persist
+    setprop ro.vendor.persist.status mounted
+
