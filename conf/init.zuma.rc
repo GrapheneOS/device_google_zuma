@@ -102,7 +102,6 @@ on init
     start vendor.keymaster-4-0
 
     # ZRAM setup
-    write /sys/block/zram0/comp_algorithm lz77eh
     write /proc/sys/vm/page-cluster 0
 
     # Some user code relies on ro.boot.hardware.revision
@@ -360,6 +359,12 @@ on init
     # Change GSA log group for dumpstate
     chown root system /sys/devices/platform/16490000.gsa-ns/log_main
     chown root system /sys/devices/platform/16490000.gsa-ns/log_intermediate
+
+on init && property:ro.boot.hardware.cpu.pagesize=4096
+    write /sys/block/zram0/comp_algorithm lz77eh
+
+on init && property:ro.boot.hardware.cpu.pagesize=16384
+    write /sys/block/zram0/comp_algorithm lzo-rle
 
 on post-fs
     # Ensure device is ready and start storageproxyd
