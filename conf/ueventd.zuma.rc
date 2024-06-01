@@ -159,6 +159,11 @@
 /dev/acd-com.google.bt  		          0660   system     system
 /dev/acd-com.google.bt.non_wake_up  	0660   system     system
 
+# AoC Bluetooth Offload
+/dev/acd-chre_bt_offload_ctl       0660   bluetooth   bluetooth
+/dev/acd-chre_bt_offload_data_tx   0220   bluetooth   bluetooth
+/dev/acd-chre_bt_offload_data_rx   0440   bluetooth   bluetooth
+
 # LWIS
 /dev/lwis*               0660   system     system
 
