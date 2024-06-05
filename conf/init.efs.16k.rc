@@ -9,12 +9,7 @@ service copy_efs_files_to_data /vendor/bin/copy_efs_files_to_data
 on post-fs-data && property:ro.boot.flash.locked=0 && property:ro.fstype.data=ext4
     mkdir /data/vendor/copied 0775 radio system
     restorecon_recursive /data/vendor/copied
-    restorecon_recursive /mnt/vendor
-    mount_all /vendor/etc/fstab.efs
-    mount_all /vendor/etc/fstab.persist
     exec_start copy_efs_files_to_data
-    umount_all /vendor/etc/fstab.efs
-    umount_all /vendor/etc/fstab.persist
     mount_all /vendor/etc/fstab.efs.from_data
     restorecon_recursive /mnt/vendor/efs
     restorecon_recursive /mnt/vendor/efs_backup
