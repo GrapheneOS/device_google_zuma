@@ -130,7 +130,8 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
         "/sys/devices/platform/hdcp/hdcp1_success_count",
         "/sys/devices/platform/hdcp/hdcp1_fail_count",
         "/sys/devices/platform/hdcp/hdcp0_count",
-    }
+    },
+    .SpeakerVersionPath = "/sys/devices/platform/audiometrics/speaker_version"
 };
 
 const struct UeventListener::UeventPaths ueventPaths = {

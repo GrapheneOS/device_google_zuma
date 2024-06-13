@@ -361,7 +361,7 @@ PRODUCT_COPY_FILES += \
 	device/google/zuma/conf/init.zuma.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.zuma.rc \
 	device/google/zuma/conf/init.persist.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.persist.rc
 
-ifeq (true,$(PRODUCT_16K_DEVELOPER_OPTION))
+ifeq (true,$(filter $(DEVICE_PAGE_AGNOSTIC) $(PRODUCT_16K_DEVELOPER_OPTION),true))
 PRODUCT_COPY_FILES += \
 	device/google/zuma/conf/init.efs.16k.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.efs.rc \
 	device/google/$(TARGET_BOARD_PLATFORM)/conf/fstab.efs.from_data:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.efs.from_data \
