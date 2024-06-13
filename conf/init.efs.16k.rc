@@ -11,9 +11,6 @@ on post-fs-data && property:ro.boot.flash.locked=0 && property:ro.fstype.data=ex
     restorecon_recursive /data/vendor/copied
     exec_start copy_efs_files_to_data
     mount_all /vendor/etc/fstab.efs.from_data
-    restorecon_recursive /mnt/vendor/efs
-    restorecon_recursive /mnt/vendor/efs_backup
-    restorecon_recursive /mnt/vendor/modem_userdata
     restorecon_recursive /mnt/vendor/persist
     restorecon_recursive /data/vendor/ss
     setprop ro.vendor.persist.status mounted
