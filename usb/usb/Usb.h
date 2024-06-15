@@ -79,6 +79,7 @@ constexpr char kGadgetName[] = "11210000.dwc3";
 #define DISPLAYPORT_IRQ_HPD_COUNT_CHECK 3
 
 #define DISPLAYPORT_POLL_WAIT_MS 100
+#define ROLE_SWAP_RETRY_MS 700
 
 #define SVID_DISPLAYPORT "ff01"
 #define SVID_THUNDERBOLT "8087"
