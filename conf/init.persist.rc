@@ -31,6 +31,7 @@ on property:ro.vendor.persist.status=mounted
     mkdir /mnt/vendor/persist/data/tz 0700 system system
     mkdir /mnt/vendor/persist/touch 0770 system system
 
+on property:ro.fstype.data=* && property:ro.vendor.persist.status=mounted
     # Proxy for Secure Storage
     mkdir /data/vendor/rebootescrow 0770 hsm hsm
     mkdir /data/vendor/ss 0770 root system

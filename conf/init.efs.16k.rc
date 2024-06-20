@@ -6,7 +6,7 @@ service copy_efs_files_to_data /vendor/bin/copy_efs_files_to_data
     oneshot
     disabled
 
-on post-fs-data && property:ro.boot.flash.locked=0 && property:ro.fstype.data=ext4
+on post-fs-data && property:ro.boot.hardware.cpu.pagesize=16384
     mkdir /data/vendor/copied 0775 radio system
     restorecon_recursive /data/vendor/copied
     exec_start copy_efs_files_to_data
@@ -15,12 +15,7 @@ on post-fs-data && property:ro.boot.flash.locked=0 && property:ro.fstype.data=ex
     restorecon_recursive /data/vendor/ss
     setprop ro.vendor.persist.status mounted
 
-on post-fs-data && property:ro.boot.flash.locked=0 && property:ro.fstype.data=f2fs
-    mount_all /vendor/etc/fstab.efs
-    mount_all /vendor/etc/fstab.persist
-    setprop ro.vendor.persist.status mounted
-
-on post-fs-data && property:ro.boot.flash.locked=1
+on late-fs && property:ro.boot.hardware.cpu.pagesize=4096
     mount_all /vendor/etc/fstab.efs
     mount_all /vendor/etc/fstab.persist
     setprop ro.vendor.persist.status mounted

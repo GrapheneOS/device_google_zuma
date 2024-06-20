@@ -1,4 +1,4 @@
-on post-fs-data
+on late-fs
     mount_all /vendor/etc/fstab.efs
     mount_all /vendor/etc/fstab.persist
     setprop ro.vendor.persist.status mounted
