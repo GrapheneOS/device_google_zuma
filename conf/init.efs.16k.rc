@@ -15,8 +15,10 @@ on post-fs-data && property:ro.boot.hardware.cpu.pagesize=16384
     restorecon_recursive /data/vendor/ss
     setprop ro.vendor.persist.status mounted
 
-on late-fs && property:ro.boot.hardware.cpu.pagesize=4096
-    mount_all /vendor/etc/fstab.efs
-    mount_all /vendor/etc/fstab.persist
+on early-init && property:ro.boot.hardware.cpu.pagesize=4096
+    mount_all /vendor/etc/fstab.persist --early
     setprop ro.vendor.persist.status mounted
+
+on late-fs && property:ro.boot.hardware.cpu.pagesize=4096
+    mount_all /vendor/etc/fstab.efs --early
 
