@@ -30,6 +30,9 @@ java_test_host {
         "compatibility-host-util",
         "compatibility-tradefed",
     ],
-    test_suites: ["device-tests"],
+    test_suites: [
+        "device-tests",
+        "device-pixel-tests"
+    ],
     test_config: "AndroidTest.xml",
 }

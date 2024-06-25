@@ -19,12 +19,15 @@ package com.android.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
+import org.junit.Before;
+import org.junit.After;
 
 import android.platform.test.annotations.AppModeFull;
 
 import com.android.tradefed.testtype.DeviceJUnit4ClassRunner;
 import com.android.tradefed.testtype.junit4.BaseHostJUnit4Test;
 import com.android.tradefed.testtype.junit4.DeviceTestRunOptions;
+import com.android.tradefed.util.CommandResult;
 import com.android.tradefed.util.RunUtil;
 
 import org.junit.Test;
@@ -36,62 +39,46 @@ import java.io.StringReader;
 @RunWith(DeviceJUnit4ClassRunner.class)
 public class CopyEfsTest extends BaseHostJUnit4Test {
 
+    @Before
+    public void setUp() throws Exception {
+        getDevice().enableAdbRoot();
 
-
+        getDevice().executeShellCommand("rm -rf /data/local/tmp/efs_test");
+        getDevice().executeShellCommand("mkdir -p /data/local/tmp/efs_test/mnt");
+        getDevice().executeShellCommand("mkdir -p /data/local/tmp/efs_test/dump");
+    }
 
     @Test
     @AppModeFull
     public void copyEfsTest() throws Exception {
+        assumeTrue(getDevice().executeShellCommand("getconf PAGESIZE").trim().equals("4096"));
 
-        getDevice().enableAdbRoot();
-
-        // This test can be run on OEM unlocked device only as unlocking bootloader requires
-        // manual intervention.
-        String result = getDevice().getProperty("ro.boot.flash.locked");
-        assumeTrue("0".equals(result));
-        final String dataFstype = getFsTypeFor("/data");
-        assertTrue(!dataFstype.isEmpty());
-        if (!dataFstype.equals("ext4")) {
-            getDevice().executeShellCommand("cmd recovery wipe ext4");
-            RunUtil.getDefault().sleep(10000);
-            // Wait for 2 mins device to be online againg
-            getDevice().waitForDeviceOnline(120000);
-            getDevice().enableAdbRoot();
-        }
-        assertEquals("ext4", getFsTypeFor("/data"));
-        String dataBlockDev = getBlockDevFor("/data");
-        assertEquals(dataBlockDev, getBlockDevFor("/mnt/vendor/efs"));
-        assertEquals(dataBlockDev, getBlockDevFor("/mnt/vendor/efs_backup"));
-        assertEquals(dataBlockDev, getBlockDevFor("/mnt/vendor/modem_userdata"));
+        testDumpF2FS("efs");
+        testDumpF2FS("efs_backup");
+        testDumpF2FS("modem_userdata");
     }
 
-    private String[] getMountInfo(String mountPoint) throws Exception {
-        String result = getDevice().executeShellCommand("cat /proc/mounts");
-        BufferedReader br = new BufferedReader(new StringReader(result));
-        String line;
-        while ((line = br.readLine()) != null) {
-            final String[] fields = line.split(" ");
-            final String device = fields[0];
-            final String partition = fields[1];
-            final String fsType = fields[2];
-            if (partition.equals(mountPoint)) {
-                return fields;
-            }
-        }
-        return null;
+    private void testDumpF2FS(String name) throws Exception {
+        getDevice().executeShellV2Command(String.format("cp /dev/block/by-name/%s /data/local/tmp/efs_test/%s.img", name, name));
+        CommandResult r = getDevice().executeShellV2Command(String.format("dump.f2fs -rfPo /data/local/tmp/efs_test/dump /data/local/tmp/efs_test/%s.img", name));
+        assertEquals(r.getExitCode().intValue(), 0);
+        r = getDevice().executeShellV2Command(String.format("mount -r /data/local/tmp/efs_test/%s.img /data/local/tmp/efs_test/mnt", name));
+        assertEquals(r.getExitCode().intValue(), 0);
+        assertEquals("", getDevice().executeShellCommand("diff -rq /data/local/tmp/efs_test/mnt /data/local/tmp/efs_test/dump"));
+        // Remove timestamps at positions 6 and 7, because ls on device does not support --time-style
+        // Remove totals because on disk block usage may change depending on filesystem
+        String ls_cmd = "ls -alLnR /data/local/tmp/efs_test/%s | awk {\'$6=\"\";$7=\"\";if ($1 != \"total\"){print $0'}";
+        String mnt_ls = getDevice().executeShellCommand(String.format(ls_cmd, "mnt"));
+        String dump_ls = getDevice().executeShellCommand(String.format(ls_cmd, "dump"));
+        assertEquals(mnt_ls, dump_ls);
+        getDevice().executeShellCommand("umount -r /data/local/tmp/efs_test/mnt");
+        getDevice().executeShellCommand("rm -rf /data/local/tmp/efs_test/dump/*");
+        getDevice().executeShellCommand("rm /data/local/tmp/efs_test/" + name + ".img");
     }
-    private String getFsTypeFor(String mountPoint) throws Exception {
-        String[] result = getMountInfo(mountPoint);
-        if (result == null) {
-            return "";
-        }
-        return result[2];
-    }
-    private String getBlockDevFor(String mountPoint) throws Exception {
-        String[] result = getMountInfo(mountPoint);
-        if (result == null) {
-            return "";
-        }
-        return result[0];
+
+    @After
+    public void tearDown() throws Exception {
+        getDevice().executeShellCommand("umount -r /data/local/tmp/efs_test/mnt");
+        getDevice().executeShellCommand("rm -rf /data/local/tmp/efs_test");
     }
 }
