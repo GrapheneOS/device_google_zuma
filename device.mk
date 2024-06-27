@@ -26,6 +26,7 @@ include device/google/gs-common/storage/storage.mk
 include device/google/gs-common/thermal/dump/thermal.mk
 include device/google/gs-common/thermal/thermal_hal/device.mk
 include device/google/gs-common/performance/perf.mk
+include device/google/gs-common/power/power.mk
 include device/google/gs-common/pixel_metrics/pixel_metrics.mk
 include device/google/gs-common/soc/freq.mk
 include device/google/gs-common/gps/dump/log.mk
