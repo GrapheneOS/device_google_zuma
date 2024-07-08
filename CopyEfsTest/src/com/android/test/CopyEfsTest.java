@@ -59,26 +59,39 @@ public class CopyEfsTest extends BaseHostJUnit4Test {
     }
 
     private void testDumpF2FS(String name) throws Exception {
-        getDevice().executeShellV2Command(String.format("cp /dev/block/by-name/%s /data/local/tmp/efs_test/%s.img", name, name));
-        CommandResult r = getDevice().executeShellV2Command(String.format("dump.f2fs -rfPo /data/local/tmp/efs_test/dump /data/local/tmp/efs_test/%s.img", name));
+        getDevice().executeShellCommand(String.format("cp /dev/block/by-name/%s /data/local/tmp/efs_test/%s.img", name, name));
+
+        // The device was mounted r/w. To get a clean image, we run fsck, and then mount to allow mount time fixes to happen.
+        // We can then dump and mount read only to ensure the contents should be the same.
+        getDevice().executeShellCommand(String.format("fsck.f2fs -f /data/local/tmp/efs_test/%s.img", name, name));
+        CommandResult r = getDevice().executeShellV2Command(String.format("mount /data/local/tmp/efs_test/%s.img /data/local/tmp/efs_test/mnt", name));
+        assertEquals(r.getExitCode().intValue(), 0);
+        r = getDevice().executeShellV2Command("umount /data/local/tmp/efs_test/mnt");
+        assertEquals(r.getExitCode().intValue(), 0);
+
+        r = getDevice().executeShellV2Command(String.format("dump.f2fs -rfPo /data/local/tmp/efs_test/dump /data/local/tmp/efs_test/%s.img", name));
         assertEquals(r.getExitCode().intValue(), 0);
         r = getDevice().executeShellV2Command(String.format("mount -r /data/local/tmp/efs_test/%s.img /data/local/tmp/efs_test/mnt", name));
         assertEquals(r.getExitCode().intValue(), 0);
+
         assertEquals("", getDevice().executeShellCommand("diff -rq /data/local/tmp/efs_test/mnt /data/local/tmp/efs_test/dump"));
         // Remove timestamps at positions 6 and 7, because ls on device does not support --time-style
         // Remove totals because on disk block usage may change depending on filesystem
-        String ls_cmd = "ls -alLnR /data/local/tmp/efs_test/%s | awk {\'$6=\"\";$7=\"\";if ($1 != \"total\"){print $0'}";
+        String ls_cmd = "cd /data/local/tmp/efs_test/%s;ls -AlLnR . | awk {'$6=\"\";$7=\"\";if ($1 != \"total\"){print $0}'}";
         String mnt_ls = getDevice().executeShellCommand(String.format(ls_cmd, "mnt"));
+        assertEquals(getDevice().executeShellCommand("echo $?"), "0\n");
         String dump_ls = getDevice().executeShellCommand(String.format(ls_cmd, "dump"));
+        assertEquals(getDevice().executeShellCommand("echo $?"), "0\n");
         assertEquals(mnt_ls, dump_ls);
-        getDevice().executeShellCommand("umount -r /data/local/tmp/efs_test/mnt");
+
+        getDevice().executeShellCommand("umount /data/local/tmp/efs_test/mnt");
         getDevice().executeShellCommand("rm -rf /data/local/tmp/efs_test/dump/*");
         getDevice().executeShellCommand("rm /data/local/tmp/efs_test/" + name + ".img");
     }
 
     @After
     public void tearDown() throws Exception {
-        getDevice().executeShellCommand("umount -r /data/local/tmp/efs_test/mnt");
+        getDevice().executeShellCommand("umount /data/local/tmp/efs_test/mnt");
         getDevice().executeShellCommand("rm -rf /data/local/tmp/efs_test");
     }
 }

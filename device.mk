@@ -82,7 +82,6 @@ PRODUCT_SOONG_NAMESPACES += \
 	vendor/google_devices/common/chre/host/hal \
 	vendor/google/whitechapel/tools \
 	vendor/google/interfaces \
-	vendor/google_devices/common/proprietary/confirmatioui_hal \
 	vendor/google_nos/host/android \
 	vendor/google_nos/test/system-test-harness \
 	vendor/google/camera
@@ -95,6 +94,11 @@ TRUSTY_KEYMINT_IMPL := rust
 ifeq ($(RELEASE_AVF_ENABLE_LLPVM_CHANGES),true)
 	# Set the environment variable to enable the Secretkeeper HAL service.
 	SECRETKEEPER_ENABLED := true
+	# TODO(b/341708664): Enable Secretkeeper unconditionally once AOSP targets are built with
+	# compatible bootloader (24Q3+).
+	ifneq (,$(filter aosp_%,$(TARGET_PRODUCT)))
+		SECRETKEEPER_ENABLED := false
+	endif
 endif
 
 # OEM Unlock reporting
@@ -863,8 +867,6 @@ PRODUCT_PACKAGES_DEBUG += \
    tipc-test \
    trusty_stats_test \
    trusty-coverage-controller \
-
-include device/google/gs101/confirmationui/confirmationui.mk
 
 # Trusty Metrics Daemon
 PRODUCT_SOONG_NAMESPACES += \
