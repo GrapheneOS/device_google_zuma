@@ -65,6 +65,7 @@
             <Feature name="can-swap-width-height" value="1" />
             <Feature name="vq-minimum-quality"/>
             <Feature name="encoding-statistics"/>
+            <Feature name="hdr-editing" />
         </MediaCodec>
     </Encoders>
 </MediaCodecs>

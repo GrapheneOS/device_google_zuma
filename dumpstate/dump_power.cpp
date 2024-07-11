@@ -941,9 +941,21 @@ void dumpIrqDurationCounts() {
     }
 }
 
+void dumpCpuIdleHistogramStats() {
+    const char* cpuIdleHistogramTitle = "CPU Idle Histogram";
+    const char* cpuIdleHistogramFile = "/sys/kernel/metrics/cpuidle_histogram/"
+                                        "cpuidle_histogram";
+    const char* cpuClusterHistogramTitle = "CPU Cluster Histogram";
+    const char* cpuClusterHistogramFile = "/sys/kernel/metrics/"
+                                    "cpuidle_histogram/cpucluster_histogram";
+    dumpFileContent(cpuIdleHistogramTitle, cpuIdleHistogramFile);
+    dumpFileContent(cpuClusterHistogramTitle, cpuClusterHistogramFile);
+}
+
 int main() {
     dumpPowerStatsTimes();
     dumpAcpmStats();
+    dumpCpuIdleHistogramStats();
     dumpPowerSupplyStats();
     dumpMaxFg();
     dumpPowerSupplyDock();
