@@ -351,6 +351,9 @@ on init
     chown root system /sys/devices/platform/16490000.gsa-ns/log_main
     chown root system /sys/devices/platform/16490000.gsa-ns/log_intermediate
 
+    # Enable CPU Idle histograms
+    write /sys/kernel/metrics/cpuidle_histogram/enable 1
+
 on init && property:ro.boot.hardware.cpu.pagesize=4096
     write /sys/block/zram0/comp_algorithm lz77eh
 

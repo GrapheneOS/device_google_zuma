@@ -2,7 +2,7 @@
 
 CHECKPOINT_DIR=/data/vendor/copied
 
-BIN_DIR=/vendor/bin
+export BIN_DIR=/vendor/bin
 
 $BIN_DIR/mkdir -p $CHECKPOINT_DIR
 
@@ -21,12 +21,12 @@ function copy_files_to_data()
       echo "Failed to $BIN_DIR/dump.f2fs -rfPo $tmpdir $block_device"
       return
     fi
-    mv $tmpdir $build_checkpoint
+    $BIN_DIR/mv $tmpdir $build_checkpoint
     if [ $? -ne 0 ]; then
       echo "mv $tmpdir $build_checkpoint"
       return
     fi
-    fsync `dirname $build_checkpoint`
+    $BIN_DIR/fsync `dirname $build_checkpoint`
   fi
   echo "Successfully copied $mount_point to $build_checkpoint"
 }
@@ -36,3 +36,10 @@ copy_files_to_data "/dev/block/by-name/efs_backup" "/mnt/vendor/efs_backup"
 copy_files_to_data "/dev/block/by-name/modem_userdata" "/mnt/vendor/modem_userdata"
 
 copy_files_to_data "/dev/block/by-name/persist" "/mnt/vendor/persist"
+
+# TODO(b/352567354): fixup symlinks until dump.f2fs is fixed
+a=$($BIN_DIR/cat /data/vendor/copied/persist/ss/0)
+$BIN_DIR/mv /data/vendor/copied/persist/ss/0 /data/vendor/copied/persist/ss/0_backup
+$BIN_DIR/ln -s $a /data/vendor/copied/persist/ss/0
+
+$BIN_DIR/fsync /data/vendor/copied
