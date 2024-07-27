@@ -230,6 +230,7 @@ USE_LASSEN_OEMHOOK := true
 # The "power-anomaly-sitril" is added into PRODUCT_SOONG_NAMESPACES when
 # $(USE_LASSEN_OEMHOOK) is true and $(BOARD_WITHOUT_RADIO) is not true.
 ifneq ($(BOARD_WITHOUT_RADIO),true)
+    $(call soong_config_set,sitril,use_lassen_oemhook_with_radio,true)
     PRODUCT_SOONG_NAMESPACES += vendor/google/tools/power-anomaly-sitril
 endif
 
