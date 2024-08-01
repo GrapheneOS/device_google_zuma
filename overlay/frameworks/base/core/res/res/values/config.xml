@@ -318,4 +318,11 @@
 
     <!-- Pre-scale volume at volume step 3 for Absolute Volume -->
     <fraction name="config_prescaleAbsoluteVolume_index3">100%</fraction>
+
+    <!-- User activity timeout: Maximum screen dim duration in milliseconds. -->
+    <integer name="config_maximumScreenDimDuration">20000</integer>
+
+    <!-- User activity timeout: Maximum screen dim duration as a percentage of screen off timeout.
+    -->
+    <fraction name="config_maximumScreenDimRatio">33%</fraction>
 </resources>
