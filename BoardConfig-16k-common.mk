@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 
+ifneq ($(wildcard $(TARGET_KERNEL_DIR)/16kb/),)
+
 ifeq ($(TARGET_BOOTS_16K),true)
 # Configures the 16kb kernel directory.
 TARGET_KERNEL_DIR := $(TARGET_KERNEL_DIR)/16kb
@@ -34,4 +36,6 @@ BOARD_KERNEL_MODULES_16K := $(filter-out %/bcm_dbg.ko,$(BOARD_KERNEL_MODULES_16K
 BOARD_KERNEL_MODULES_LOAD_16K := $(foreach module,$(BOARD_KERNEL_MODULES_16K),$(notdir $(module)))
 
 BOARD_16K_OTA_MOVE_VENDOR := true
+endif
+
 endif
