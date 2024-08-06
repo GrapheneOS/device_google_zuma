@@ -123,6 +123,23 @@ const struct SysfsCollector::SysfsPaths sysfs_paths = {
         "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/sink_count_invalid_failures",
         "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/link_unstable_failures",
     },
+    .DisplayPortDSCStatsPaths = {
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/fec_dsc_supported",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/fec_dsc_not_supported",
+    },
+    .DisplayPortMaxResolutionStatsPaths = {
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/max_res_other",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/max_res_1366_768",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/max_res_1440_900",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/max_res_1600_900",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/max_res_1920_1080",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/max_res_2560_1080",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/max_res_2560_1440",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/max_res_3440_1440",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/max_res_3840_2160",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/max_res_5120_2880",
+        "/sys/devices/platform/exynos-drm/displayport/drm-displayport-stats/max_res_7680_4320",
+    },
     .HDCPStatsPaths = {
         "/sys/devices/platform/hdcp/hdcp2_success_count",
         "/sys/devices/platform/hdcp/hdcp2_fallback_count",
