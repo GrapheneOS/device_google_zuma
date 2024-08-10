@@ -259,8 +259,13 @@ USE_SWIFTSHADER := false
 # HWUI
 TARGET_USES_VULKAN = true
 
+ifeq (,$(realpath $(TOPDIR)vendor/arm/mali/valhall/Android.bp))
+PRODUCT_SOONG_NAMESPACES += \
+	vendor/google_devices/zuma/prebuilts/firmware/gpu
+else
 PRODUCT_SOONG_NAMESPACES += \
 	vendor/arm/mali/valhall
+endif
 
 $(call soong_config_set,pixel_mali,soc,$(TARGET_BOARD_PLATFORM))
 $(call soong_config_set,arm_gralloc,soc,$(TARGET_BOARD_PLATFORM))
