@@ -198,6 +198,7 @@ void dumpMaxFg() {
 
     const char *maxfg [][2] = {
             {"Power supply property maxfg", "/sys/class/power_supply/maxfg/uevent"},
+            {"maxfg registers", "/sys/class/power_supply/maxfg/registers_dump"},
             {"m5_state", "/sys/class/power_supply/maxfg/m5_model_state"},
             {"maxfg logbuffer", "/dev/logbuffer_maxfg"},
             {"maxfg_monitor logbuffer", "/dev/logbuffer_maxfg_monitor"},
@@ -206,6 +207,8 @@ void dumpMaxFg() {
     const char *maxfgFlip [][2] = {
             {"Power supply property maxfg_base", "/sys/class/power_supply/maxfg_base/uevent"},
             {"Power supply property maxfg_flip", "/sys/class/power_supply/maxfg_flip/uevent"},
+            {"maxfg_base registers", "/sys/class/power_supply/maxfg_base/registers_dump"},
+            {"maxfg_secondary registers", "/sys/class/power_supply/maxfg_secondary/registers_dump"},
             {"m5_state", "/sys/class/power_supply/maxfg_base/m5_model_state"},
             {"maxfg_base", "/dev/logbuffer_maxfg_base"},
             {"maxfg_flip", "/dev/logbuffer_maxfg_flip"},
