@@ -16,9 +16,9 @@ function copy_files_to_data()
   if [ ! -e $build_checkpoint ]; then
     $BIN_DIR/rm -rf $tmpdir
     $BIN_DIR/mkdir -p $tmpdir
-    $BIN_DIR/dump.f2fs -rfPo $tmpdir $block_device
+    $BIN_DIR/dump.f2fs -rfPLo $tmpdir $block_device
     if [ $? -ne 0 ]; then
-      echo "Failed to $BIN_DIR/dump.f2fs -rfPo $tmpdir $block_device"
+      echo "Failed to $BIN_DIR/dump.f2fs -rfPLo $tmpdir $block_device"
       return
     fi
     $BIN_DIR/mv $tmpdir $build_checkpoint
@@ -36,10 +36,5 @@ copy_files_to_data "/dev/block/by-name/efs_backup" "/mnt/vendor/efs_backup"
 copy_files_to_data "/dev/block/by-name/modem_userdata" "/mnt/vendor/modem_userdata"
 
 copy_files_to_data "/dev/block/by-name/persist" "/mnt/vendor/persist"
-
-# TODO(b/352567354): fixup symlinks until dump.f2fs is fixed
-a=$($BIN_DIR/cat /data/vendor/copied/persist/ss/0)
-$BIN_DIR/mv /data/vendor/copied/persist/ss/0 /data/vendor/copied/persist/ss/0_backup
-$BIN_DIR/ln -s $a /data/vendor/copied/persist/ss/0
 
 $BIN_DIR/fsync /data/vendor/copied
