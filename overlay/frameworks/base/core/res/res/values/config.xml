@@ -325,4 +325,7 @@
     <!-- User activity timeout: Maximum screen dim duration as a percentage of screen off timeout.
     -->
     <fraction name="config_maximumScreenDimRatio">33%</fraction>
+
+    <!-- Whether to enable usb state update via udc sysfs. -->
+    <bool name="config_enableUdcSysfsUsbStateUpdate">true</bool>
 </resources>
