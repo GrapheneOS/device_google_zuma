@@ -21,7 +21,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/sysinfo.h>
+#include <sys/wait.h>
 #include <time.h>
+#include <unistd.h>
 #include <vector>
 
 #include <android-base/file.h>
@@ -629,9 +631,26 @@ void dumpGvoteables() {
 
 void dumpMitigation() {
     const char *mitigationList [][2] {
+            {"LastmealCSV" , "/data/vendor/mitigation/lastmeal.csv"},
             {"Lastmeal" , "/data/vendor/mitigation/lastmeal.txt"},
             {"Thismeal" , "/data/vendor/mitigation/thismeal.txt"},
     };
+
+    /* parsing thismeal.bin */
+    int status;
+    int pid = fork();
+    if (pid < 0) {
+        printf("Fork failed for parsing thismeal.bin.\n");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        execl("/vendor/bin/hw/battery_mitigation", "battery_mitigation", "-d", nullptr);
+        exit(EXIT_SUCCESS);
+    }
+    waitpid(pid, &status, 0);
+
+    if (WIFSIGNALED(status)) {
+        printf("Failed to parse thismeal.bin.(killed by: %d)\n", WTERMSIG(status));
+    }
 
     for (auto &row : mitigationList) {
         if (!isValidFile(row[1]))

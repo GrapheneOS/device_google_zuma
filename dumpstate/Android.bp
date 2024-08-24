@@ -24,6 +24,7 @@ cc_binary {
     ],
     vendor: true,
     relative_install_path: "dump",
+    init_rc: ["dump_power.rc"],
 }
 
 sh_binary {
