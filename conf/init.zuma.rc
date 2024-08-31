@@ -742,9 +742,9 @@ on property:sys.boot_completed=1
     write /sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/exynos_data/cancel_boot_freq 1
 
     # Restore prefer idle
-    write /proc/vendor_sched/groups/ta/preferred_idle_mask_low 0x1ff
-    write /proc/vendor_sched/groups/ta/preferred_idle_mask_mid 0x1ff
-    write /proc/vendor_sched/groups/ta/preferred_idle_mask_high 0x1ff
+    write /proc/vendor_sched/groups/ta/preferred_idle_mask_low 0xff
+    write /proc/vendor_sched/groups/ta/preferred_idle_mask_mid 0xff
+    write /proc/vendor_sched/groups/ta/preferred_idle_mask_high 0xff
     write /proc/vendor_sched/groups/fg/preferred_idle_mask_low 0x1ff
     write /proc/vendor_sched/groups/fg/preferred_idle_mask_mid 0x1ff
     write /proc/vendor_sched/groups/fg/preferred_idle_mask_high 0x1ff
