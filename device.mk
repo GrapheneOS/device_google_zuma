@@ -80,6 +80,7 @@ PRODUCT_SOONG_NAMESPACES += \
 	device/google/zuma \
 	device/google/zuma/powerstats \
 	vendor/google_devices/common/chre/host/hal \
+	vendor/google_devices/zuma/proprietary/debugpolicy \
 	vendor/google/whitechapel/tools \
 	vendor/google/interfaces \
 	vendor/google_nos/host/android \
@@ -232,7 +233,6 @@ USE_LASSEN_OEMHOOK := true
 ifneq ($(BOARD_WITHOUT_RADIO),true)
     $(call soong_config_set,sitril,use_lassen_oemhook_with_radio,true)
     PRODUCT_SOONG_NAMESPACES += vendor/google/tools/power-anomaly-sitril
-    $(call soong_config_set,grilservice,use_google_qns,true)
 endif
 
 # Use for GRIL
