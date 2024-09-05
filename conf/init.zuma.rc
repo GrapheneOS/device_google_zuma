@@ -1,3 +1,4 @@
+import /vendor/etc/init/hw/init.zuma.storage.rc
 import /vendor/etc/init/hw/init.zuma.usb.rc
 import android.hardware.drm@1.2-service.widevine.rc
 import init.exynos.sensorhub.rc
@@ -14,10 +15,6 @@ on init
     write /sys/devices/system/cpu/cpuidle/current_governor teo
     # Disable util-awareness for mids and bigs
     write /proc/vendor_sched/teo_util_threshold "2 1024 1024"
-
-    # Boot time fs tuning
-    write /sys/block/sda/queue/scheduler bfq
-    write /sys/block/sda/queue/iosched/slice_idle 0
 
     chown system system /proc/vendor_sched/groups/bg/set_task_group
     chown system system /proc/vendor_sched/groups/cam/set_task_group
@@ -394,7 +391,7 @@ on post-fs-data
     mkdir /data/vendor/radio/logs/always-on 777 system radio
 
     # Modem extended log folder
-    mkdir /data/vendor/radio/extended_logs 0770 radio system
+    mkdir /data/vendor/radio/extended_logs 0771 radio system
 
     # Log Mask Library Mask storage paths
     mkdir /data/vendor/radio/log_masks 777 system system
