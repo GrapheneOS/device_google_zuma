@@ -56,6 +56,7 @@ public class CopyEfsTest extends BaseHostJUnit4Test {
         testDumpF2FS("efs");
         testDumpF2FS("efs_backup");
         testDumpF2FS("modem_userdata");
+        testDumpF2FS("persist");
     }
 
     private void testDumpF2FS(String name) throws Exception {
@@ -69,15 +70,22 @@ public class CopyEfsTest extends BaseHostJUnit4Test {
         r = getDevice().executeShellV2Command("umount /data/local/tmp/efs_test/mnt");
         assertEquals(r.getExitCode().intValue(), 0);
 
-        r = getDevice().executeShellV2Command(String.format("dump.f2fs -rfPo /data/local/tmp/efs_test/dump /data/local/tmp/efs_test/%s.img", name));
+        r = getDevice().executeShellV2Command(String.format("dump.f2fs -rfPLo /data/local/tmp/efs_test/dump /data/local/tmp/efs_test/%s.img", name));
         assertEquals(r.getExitCode().intValue(), 0);
         r = getDevice().executeShellV2Command(String.format("mount -r /data/local/tmp/efs_test/%s.img /data/local/tmp/efs_test/mnt", name));
         assertEquals(r.getExitCode().intValue(), 0);
 
-        assertEquals("", getDevice().executeShellCommand("diff -rq /data/local/tmp/efs_test/mnt /data/local/tmp/efs_test/dump"));
-        // Remove timestamps at positions 6 and 7, because ls on device does not support --time-style
+        r = getDevice().executeShellV2Command("diff -rq --no-dereference /data/local/tmp/efs_test/mnt /data/local/tmp/efs_test/dump");
+        assertEquals(r.getExitCode().intValue(), 0);
+        assertEquals(r.getStdout(), "");
+
+        // Remove timestamps because ls on device does not support --time-style. This is AWKward.
+        // Format is [permissions] [links] [uid] [gid] [size] time [name/symlink]
+        // time may have different numbers of blocks
+        // symlinks will be of the form a -> b
+        // So we can check for -> in the second to last spot to determine what position the timestamp ends at
         // Remove totals because on disk block usage may change depending on filesystem
-        String ls_cmd = "cd /data/local/tmp/efs_test/%s;ls -AlLnR . | awk {'$6=\"\";$7=\"\";if ($1 != \"total\"){print $0}'}";
+        String ls_cmd = "cd /data/local/tmp/efs_test/%s;ls -AlnR . | awk {'if (NF>3 && $(NF-1) == \"->\") end=3; else end=1; for(i=6;i<=NF-end && i>0;i++)$i=\"\";if ($1 != \"total\"){print $0}'}";
         String mnt_ls = getDevice().executeShellCommand(String.format(ls_cmd, "mnt"));
         assertEquals(getDevice().executeShellCommand("echo $?"), "0\n");
         String dump_ls = getDevice().executeShellCommand(String.format(ls_cmd, "dump"));

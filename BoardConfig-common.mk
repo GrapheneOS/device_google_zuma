@@ -19,9 +19,6 @@ include build/make/target/board/BoardConfigPixelCommon.mk
 # Include settings for 16k developer option, if enabled
 include device/google/zuma/BoardConfig-16k-common.mk
 
-# Should be uncommented after fixing vndk-sp violation is fixed.
-PRODUCT_FULL_TREBLE_OVERRIDE := true
-
 # HACK : To fix up after bring up multimedia devices.
 TARGET_SOC := zuma
 
