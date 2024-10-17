@@ -858,6 +858,9 @@ on property:sys.boot_completed=1
     # Enable SICD
     write /sys/devices/system/cpu/cpupm/cpupm/sicd 1
 
+    # To be removed after InputDispatche and InputReader become ADPF
+    write /proc/vendor_sched/prefer_idle_task_name "InputDispatcher,InputReader"
+
 on property:sys.boot_completed=1 && property:persist.sys.device_provisioned=1
     write /sys/class/power_supply/battery/first_usage_date 0
 
