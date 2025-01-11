@@ -40,9 +40,9 @@ BOARD_KERNEL_CMDLINE += swiotlb=1024
 BOARD_KERNEL_CMDLINE += cgroup.memory=nokmem
 BOARD_KERNEL_CMDLINE += sysctl.kernel.sched_pelt_multiplier=4
 
-# Normal (non-_fullmte) builds should disable kasan
+# Normal (non-_fullmte) builds
 ifeq (,$(filter %_fullmte,$(TARGET_PRODUCT)))
-BOARD_KERNEL_CMDLINE += kasan=off
+BOARD_KERNEL_CMDLINE += kasan.fault=panic kasan.mode=asymm
 endif
 
 # Enable a limited subset of MTE for "normal" (non-_fullmte) eng builds.
