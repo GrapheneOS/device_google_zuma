@@ -77,7 +77,6 @@ PRODUCT_SOONG_NAMESPACES += \
 	hardware/google/interfaces \
 	hardware/google/pixel \
 	device/google/zuma \
-	device/google/zuma/powerstats \
 	vendor/google_devices/common/chre/host/hal \
 	vendor/google_devices/zuma/proprietary/debugpolicy \
 	vendor/google/whitechapel/tools \
