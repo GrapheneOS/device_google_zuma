@@ -1045,10 +1045,6 @@ PRODUCT_PACKAGES_DEBUG += \
 	diag-vibrator-drv2624 \
 	$(NULL)
 
-PRODUCT_PACKAGES += \
-	android.hardware.health-service.zuma \
-	android.hardware.health-service.zuma_recovery \
-
 # Audio
 # Audio HAL Server & Default Implementations
 ifeq ($(USE_AUDIO_HAL_AIDL),true)
