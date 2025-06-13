@@ -1,6 +1,0 @@
-on early-init
-    mount_all /vendor/etc/fstab.persist --early
-    setprop ro.vendor.persist.status mounted
-
-on late-fs
-    mount_all /vendor/etc/fstab.efs --early

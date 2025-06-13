@@ -378,31 +378,7 @@ PRODUCT_ENFORCE_PRODUCT_PARTITION_INTERFACE := true
 # Init files
 PRODUCT_COPY_FILES += \
 	$(LOCAL_KERNEL):kernel \
-	device/google/zuma/conf/init.zuma.usb.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.zuma.usb.rc \
 	device/google/zuma/conf/ueventd.zuma.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc
-
-PRODUCT_COPY_FILES += \
-	device/google/zuma/conf/init.zuma.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.zuma.rc \
-	device/google/zuma/conf/init.persist.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.persist.rc
-
-ifeq (true,$(filter $(TARGET_BOOTS_16K) $(PRODUCT_16K_DEVELOPER_OPTION),true))
-PRODUCT_COPY_FILES += \
-	device/google/zuma/conf/init.efs.16k.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.efs.rc \
-	device/google/$(TARGET_BOARD_PLATFORM)/conf/fstab.efs.from_data:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.efs.from_data \
-
-PRODUCT_PACKAGES += copy_efs_files_to_data
-PRODUCT_PACKAGES += fsck.f2fs.vendor
-else
-PRODUCT_COPY_FILES += \
-	device/google/zuma/conf/init.efs.4k.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.efs.rc
-endif
-
-ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
-PRODUCT_COPY_FILES += \
-	device/google/zuma/conf/init.debug.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.debug.rc
-PRODUCT_COPY_FILES += \
-	device/google/zuma/conf/init.freq.userdebug.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.freq.userdebug.rc
-endif
 
 ifneq (,$(filter 5.%, $(TARGET_LINUX_KERNEL_VERSION)))
 PRODUCT_COPY_FILES += \
@@ -430,12 +406,6 @@ PRODUCT_PACKAGES += \
 	fstab.zuma.vendor_ramdisk \
 	fstab.zuma-fips \
 	fstab.zuma-fips.vendor_ramdisk
-
-PRODUCT_COPY_FILES += \
-	device/google/$(TARGET_BOARD_PLATFORM)/conf/fstab.persist:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.persist \
-	device/google/$(TARGET_BOARD_PLATFORM)/conf/fstab.modem:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.modem \
-	device/google/$(TARGET_BOARD_PLATFORM)/conf/fstab.efs:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.efs
-
 
 # Shell scripts
 PRODUCT_PACKAGES += \
@@ -943,9 +913,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # Use /product/etc/fstab.postinstall to mount system_other
 PRODUCT_PRODUCT_PROPERTIES += \
 	ro.postinstall.fstab.prefix=/product
-
-PRODUCT_COPY_FILES += \
-	device/google/zuma/conf/fstab.postinstall:$(TARGET_COPY_OUT_PRODUCT)/etc/fstab.postinstall
 
 # fastbootd
 PRODUCT_PACKAGES += \
