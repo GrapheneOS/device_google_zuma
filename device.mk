@@ -992,38 +992,6 @@ PRODUCT_PACKAGES += modem_logging_control
 # libeomservice_proxy binary/configs
 PRODUCT_PACKAGES += liboemservice_proxy_default
 
-# PILOT SCENARIOS
-PRODUCT_PACKAGES += \
-	Pixel_stability.cfg \
-	Pixel_stability.nprf
-
-# Default modem log mask for pixel logger
-PRODUCT_PACKAGES += \
-	logging.conf \
-	default.cfg \
-	default.nprf \
-	default_metrics.xml \
-	extensive_logging.conf
-
-# Log Masks for logmasklibrary below
-# default modem log mask
-PRODUCT_PACKAGES += \
-	default_modem_log_mask.conf \
-	default_modem_log_mask.cfg \
-	default_modem_log_mask.nprf \
-	default_modem_log_mask.xml
-
-# Empty modem log mask
-PRODUCT_PACKAGES += \
-	empty_modem_log_mask.conf \
-	empty_modem_log_mask.cfg \
-	empty_modem_log_mask.nprf \
-	empty_modem_log_mask.xml
-
-# Lassen default log mask
-PRODUCT_PACKAGES += \
-	lassen_default.conf
-
 endif
 
 # Vibrator Diag
