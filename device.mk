@@ -985,17 +985,8 @@ SHARED_MODEM_PLATFORM_VENDOR := lassen
 # Shared Modem Platform
 include device/google/gs-common/modem/modem_svc_sit/shared_modem_platform.mk
 
-# modem_ml_svc_sit daemon
+# modem_ml_svc_sit daemon (will be dropped to later)
 PRODUCT_PACKAGES += modem_ml_svc_sit
-
-# modem ML models configs
-ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
-PRODUCT_COPY_FILES += \
-	device/google/zuma/modem_ml/modem_ml_models_userdebug.conf:$(TARGET_COPY_OUT_VENDOR)/etc/modem_ml_models.conf
-else
-PRODUCT_COPY_FILES += \
-	device/google/zuma/modem_ml/modem_ml_models_user.conf:$(TARGET_COPY_OUT_VENDOR)/etc/modem_ml_models.conf
-endif
 
 # modem logging binary/configs
 PRODUCT_PACKAGES += modem_logging_control
