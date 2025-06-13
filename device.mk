@@ -375,14 +375,6 @@ PRODUCT_COPY_FILES += \
 	$(LOCAL_KERNEL):kernel \
 	device/google/zuma/conf/ueventd.zuma.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc
 
-ifneq (,$(filter 5.%, $(TARGET_LINUX_KERNEL_VERSION)))
-PRODUCT_COPY_FILES += \
-	device/google/zuma/storage/5.15/init.zuma.storage.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.zuma.storage.rc
-else
-PRODUCT_COPY_FILES += \
-	device/google/zuma/storage/6.1/init.zuma.storage.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.zuma.storage.rc
-endif
-
 # Recovery files
 PRODUCT_COPY_FILES += \
 	device/google/zuma/conf/init.recovery.device.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.zuma.rc
