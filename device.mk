@@ -744,9 +744,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.display_update_imminent
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	persist.sys.sf.color_saturation=1.0
-PRODUCT_COPY_FILES += \
-	device/google/zuma/display/display_colordata_cal0.pb:$(TARGET_COPY_OUT_VENDOR)/etc/display_colordata_cal0.pb \
-	device/google/zuma/display/display_colordata_cal2.pb:$(TARGET_COPY_OUT_VENDOR)/etc/display_colordata_cal2.pb
 
 # limit DPP downscale ratio
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.hwc.dpp.downscale=4
