@@ -119,8 +119,6 @@ PRODUCT_PROPERTY_OVERRIDES += log.tag.ShannonQNS-mms=DEBUG
 PRODUCT_PROPERTY_OVERRIDES += log.tag.ShannonQNS-xcap=DEBUG
 PRODUCT_PROPERTY_OVERRIDES += log.tag.ShannonQNS-HC=DEBUG
 
-# Modem userdebug
-include device/google/zuma/modem/userdebug.mk
 endif
 
 ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
