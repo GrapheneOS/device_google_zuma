@@ -35,13 +35,6 @@ license {
     ],
 }
 
-sh_binary {
-    name: "disable_contaminant_detection.sh",
-    src: "disable_contaminant_detection.sh",
-    vendor: true,
-    sub_dir: "hw",
-}
-
 // Filesystem: Copy efs/efs_backup/modem_userdata to /data partition
 // so that they can be accessed under 16K mode. By default, these partitions
 // are 4K F2FS , which can't be mounted under 16K mode.

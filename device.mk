@@ -343,20 +343,13 @@ BOARD_USE_CODEC2_AIDL := V1
 ifneq (,$(filter aosp_%,$(TARGET_PRODUCT)))
 DEVICE_MANIFEST_FILE += \
 	device/google/zuma/manifest_media_aosp.xml
-
-PRODUCT_COPY_FILES += \
-	device/google/zuma/media_codecs_aosp_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml
 else
 DEVICE_MANIFEST_FILE += \
 	device/google/zuma/manifest_media.xml
-
-PRODUCT_COPY_FILES += \
-	device/google/zuma/media_codecs_bo_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml \
-	device/google/zuma/media_codecs_aosp_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_aosp_c2.xml
 endif
 
 DEVICE_MATRIX_FILE := \
-	device/google/zuma/compatibility_matrix.xml
+    device/google/zuma/compatibility_matrix.xml
 
 DEVICE_PACKAGE_OVERLAYS += device/google/zuma/overlay
 
@@ -393,10 +386,6 @@ PRODUCT_PACKAGES += \
 	fstab.zuma.vendor_ramdisk \
 	fstab.zuma-fips \
 	fstab.zuma-fips.vendor_ramdisk
-
-# Shell scripts
-PRODUCT_PACKAGES += \
-	disable_contaminant_detection.sh
 
 include device/google/gs-common/insmod/insmod.mk
 
@@ -517,9 +506,6 @@ endif
 # adpf 16ms update rate
 PRODUCT_PRODUCT_PROPERTIES += \
         vendor.powerhal.adpf.rate=16666666
-
-PRODUCT_COPY_FILES += \
-	device/google/zuma/task_profiles.json:$(TARGET_COPY_OUT_VENDOR)/etc/task_profiles.json
 
 -include hardware/google/pixel/power-libperfmgr/aidl/device.mk
 
@@ -788,9 +774,6 @@ include device/google/gs-common/mediacodec/common/mediacodec_common.mk
 # for Exynos C2 Hal
 include device/google/gs-common/mediacodec/samsung/mediacodec_samsung.mk
 
-PRODUCT_COPY_FILES += \
-	device/google/zuma/media_codecs_performance_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance_c2.xml \
-
 PRODUCT_PROPERTY_OVERRIDES += \
        debug.c2.use_dmabufheaps=1 \
        media.c2.dmabuf.padding=512 \
@@ -811,10 +794,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += media.c2.hal.selection=aidl
 
-# 2. OpenMAX IL
-PRODUCT_COPY_FILES += \
-	device/google/zuma/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
-	device/google/zuma/media_codecs_performance.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance.xml
 ####################################
 
 # Telephony
