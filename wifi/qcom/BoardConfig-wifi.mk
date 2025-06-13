@@ -40,10 +40,5 @@ WIFI_DRIVER_STATE_CTRL_PARAM := "/dev/wlan"
 WIFI_DRIVER_STATE_ON := "ON"
 WIFI_DRIVER_STATE_OFF := "OFF"
 
-# WLAN driver configuration files
-PRODUCT_COPY_FILES += \
-    $(LOCAL_WIFI_PATH)/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
-    $(LOCAL_WIFI_PATH)/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf
-
 # Add WIFI_FEATURE_IMU_DETECTION to soong_config
 $(call soong_config_set,wifi,feature_imu_detection,$(WIFI_FEATURE_IMU_DETECTION))
