@@ -1,3 +1,0 @@
-on init
-    # for parsing thismeal.bin
-    chown system system /vendor/bin/hw/battery_mitigation
