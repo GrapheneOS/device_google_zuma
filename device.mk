@@ -45,6 +45,7 @@ include device/google/gs-common/gyotaku_app/gyotaku.mk
 include device/google/gs-common/bootctrl/bootctrl_aidl.mk
 include device/google/gs-common/betterbug/betterbug.mk
 include device/google/gs-common/fingerprint/fingerprint.mk
+include device/google/gs-common/recorder/recorder.mk
 
 TARGET_BOARD_PLATFORM := zuma
 ALLOW_MISSING_DEPENDENCIES := true
