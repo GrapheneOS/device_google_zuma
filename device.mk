@@ -69,11 +69,6 @@ endif
 
 PRODUCT_SOONG_NAMESPACES += \
 	hardware/google/av \
-	hardware/google/gchips \
-	hardware/google/gchips/gralloc4 \
-	hardware/google/graphics/common \
-	hardware/google/graphics/zuma \
-	hardware/google/graphics/zuma/libhwc2.1 \
 	hardware/google/interfaces \
 	hardware/google/pixel \
 	device/google/zuma \
@@ -838,7 +833,6 @@ PRODUCT_PACKAGES += \
 
 $(call soong_config_set,google_displaycolor,displaycolor_platform,zuma)
 PRODUCT_PACKAGES += \
-	android.hardware.composer.hwc3-service.pixel \
 	libdisplaycolor
 
 # Storage: for factory reset protection feature
