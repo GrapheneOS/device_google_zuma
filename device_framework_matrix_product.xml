@@ -114,7 +114,7 @@
     </hal>
     <hal format="aidl" optional="true">
       <name>com.google.hardware.pixel.display</name>
-        <version>13</version>
+        <version>15</version>
         <interface>
             <name>IDisplay</name>
             <instance>default</instance>
@@ -183,6 +183,22 @@
         <interface>
             <name>IOemSlsiRadioExternal</name>
             <instance>rilExternal</instance>
+        </interface>
+    </hal>
+    <hal format="aidl" optional="true">
+        <name>com.google.input</name>
+        <version>5</version>
+        <interface>
+            <name>ITwoshayNotificationService</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl" optional="true">
+        <name>android.frameworks.sensorservice</name>
+        <version>1.0</version>
+        <interface>
+            <name>ISensorManager</name>
+            <instance>default</instance>
         </interface>
     </hal>
 </compatibility-matrix>
