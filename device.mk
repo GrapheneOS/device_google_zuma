@@ -214,8 +214,7 @@ PRODUCT_ENFORCE_PRODUCT_PARTITION_INTERFACE := true
 
 # Init files
 PRODUCT_COPY_FILES += \
-	$(LOCAL_KERNEL):kernel \
-	device/google/zuma/conf/ueventd.zuma.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc
+	$(LOCAL_KERNEL):kernel
 
 # Recovery files
 PRODUCT_COPY_FILES += \
