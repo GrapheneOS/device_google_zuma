@@ -583,12 +583,6 @@ PRODUCT_BUILD_PVMFW_IMAGE := true
 # Enable to build standalone vendor_kernel_boot image.
 PRODUCT_BUILD_VENDOR_KERNEL_BOOT_IMAGE := true
 
-# Suspend properties
-PRODUCT_PROPERTY_OVERRIDES += \
-    suspend.short_suspend_threshold_millis=2000 \
-    suspend.max_sleep_time_millis=40000 \
-    suspend.short_suspend_backoff_enabled=true
-
 # Enable Incremental on the device
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.incremental.enable=true
