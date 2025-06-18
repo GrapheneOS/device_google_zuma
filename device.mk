@@ -430,9 +430,6 @@ endif
 ## VIDEO
 ####################################
 
-# Video
-PRODUCT_SOONG_NAMESPACES += vendor/google/media/bigwave
-
 $(call soong_config_set,bigw,soc,$(TARGET_BOARD_PLATFORM))
 
 PRODUCT_PACKAGES += \
