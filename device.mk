@@ -444,10 +444,6 @@ include device/google/gs-common/mediacodec/samsung/mediacodec_samsung.mk
 
 ####################################
 
-# Telephony
-#PRODUCT_COPY_FILES += \
-	frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml
-
 # CBD (CP booting deamon)
 CBD_USE_V2 := true
 CBD_PROTOCOL_SIT := true
