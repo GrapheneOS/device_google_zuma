@@ -273,10 +273,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	checkpoint_gc
 
-# Add support dual SIM mode
-PRODUCT_PROPERTY_OVERRIDES += \
-	persist.vendor.radio.multisim_switch_support=true
-
 # RPMB TA
 PRODUCT_PACKAGES += \
 	tlrpmb
