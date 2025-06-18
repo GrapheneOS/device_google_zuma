@@ -530,12 +530,6 @@ SHARED_MODEM_PLATFORM_VENDOR := lassen
 # Shared Modem Platform
 include device/google/gs-common/modem/modem_svc_sit/shared_modem_platform.mk
 
-# modem_ml_svc_sit daemon (will be dropped to later)
-PRODUCT_PACKAGES += modem_ml_svc_sit
-
-# modem logging binary/configs
-PRODUCT_PACKAGES += modem_logging_control
-
 # libeomservice_proxy binary/configs
 PRODUCT_PACKAGES += liboemservice_proxy_default
 
