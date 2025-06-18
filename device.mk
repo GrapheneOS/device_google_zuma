@@ -442,12 +442,6 @@ include device/google/gs-common/mediacodec/common/mediacodec_common.mk
 # for Exynos C2 Hal
 include device/google/gs-common/mediacodec/samsung/mediacodec_samsung.mk
 
-PRODUCT_PROPERTY_OVERRIDES += \
-       debug.c2.use_dmabufheaps=1 \
-       media.c2.dmabuf.padding=512 \
-       debug.stagefright.ccodec_delayed_params=1 \
-       ro.vendor.gpu.dataspace=1
-
 ifneq ($(BOARD_USE_CODEC2_AIDL), )
 PRODUCT_PROPERTY_OVERRIDES += \
         debug.stagefright.c2-poolmask=1507328
