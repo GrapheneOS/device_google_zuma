@@ -115,13 +115,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
 	ro.logcat.compress=true
 endif
 
-# SIT-RIL Logging setting
-PRODUCT_PROPERTY_OVERRIDES += \
-	persist.vendor.ril.log_mask=3 \
-	persist.vendor.ril.log.base_dir=/data/vendor/radio/sit-ril \
-	persist.vendor.ril.log.chunk_size=5242880 \
-	persist.vendor.ril.log.num_file=3
-
 # Enable reboot free DSDS
 PRODUCT_PRODUCT_PROPERTIES += \
 	persist.radio.reboot_on_modem_change=false
