@@ -462,10 +462,6 @@ PRODUCT_PACKAGES_DEBUG += \
 
 $(call soong_config_set,google_displaycolor,displaycolor_platform,zuma)
 
-#VNDK
-PRODUCT_PACKAGES += \
-	vndk-libs
-
 #PRODUCT_ENFORCE_RRO_TARGETS := \
 #	framework-res
 
