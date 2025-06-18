@@ -314,14 +314,6 @@ endif
 # IRQ rebalancing.
 include hardware/google/pixel/rebalance_interrupts/rebalance_interrupts.mk
 
-# Calliope firmware overwrite
-#PRODUCT_COPY_FILES += \
-	device/google/zuma/firmware/calliope_dram.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_dram.bin \
-	device/google/zuma/firmware/calliope_sram.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_sram.bin \
-	device/google/zuma/firmware/calliope_dram_2.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_dram_2.bin \
-	device/google/zuma/firmware/calliope_sram_2.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_sram_2.bin \
-	device/google/zuma/firmware/calliope2.dt:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope2.dt \
-
 # Cannot reference variables defined in BoardConfig.mk, uncomment this if
 # BOARD_USE_OFFLOAD_AUDIO and BOARD_USE_OFFLOAD_EFFECT are true
 ## AudioEffectHAL library
