@@ -166,14 +166,6 @@ PRODUCT_PACKAGES += \
 	libGLESv1_CM_angle \
 	libGLESv2_angle \
 	vulkan.pastel
-
-PRODUCT_VENDOR_PROPERTIES += \
-	ro.hardware.egl=angle \
-	ro.hardware.vulkan=pastel
-else
-PRODUCT_VENDOR_PROPERTIES += \
-	ro.hardware.egl=mali \
-	ro.hardware.vulkan=mali
 endif
 
 # Mali Configuration Properties
