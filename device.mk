@@ -436,18 +436,6 @@ endif
 
 $(call soong_config_set,bigw,soc,$(TARGET_BOARD_PLATFORM))
 
-PRODUCT_PACKAGES += \
-	google.hardware.media.c2@2.0-service \
-	libgc2_bw_store \
-	libgc2_bw_base \
-	libgc2_bw_av1_dec \
-	libgc2_bw_av1_enc \
-	libbw_av1dec \
-	libbw_av1enc \
-	libgc2_bw_cwl \
-	libgc2_bw_log \
-	libgc2_bw_utils
-
 # 1. Codec 2.0
 # for settings used by different C2 hal
 include device/google/gs-common/mediacodec/common/mediacodec_common.mk
