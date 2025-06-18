@@ -449,11 +449,6 @@ $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 
-ifeq ($(TARGET_USES_CL_KERNEL),true)
-PRODUCT_PACKAGES += \
-	libopenvx-opencl
-endif
-
 # Trusty (KM, GK, Storage)
 $(call inherit-product, system/core/trusty/trusty-storage.mk)
 $(call inherit-product, system/core/trusty/trusty-base.mk)
