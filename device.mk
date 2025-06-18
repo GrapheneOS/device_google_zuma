@@ -526,9 +526,6 @@ SHARED_MODEM_PLATFORM_VENDOR := lassen
 # Shared Modem Platform
 include device/google/gs-common/modem/modem_svc_sit/shared_modem_platform.mk
 
-# libeomservice_proxy binary/configs
-PRODUCT_PACKAGES += liboemservice_proxy_default
-
 endif
 
 # Vibrator Diag
