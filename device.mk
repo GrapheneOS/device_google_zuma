@@ -168,14 +168,6 @@ PRODUCT_PACKAGES += \
 	vulkan.pastel
 endif
 
-# Mali Configuration Properties
-PRODUCT_VENDOR_PROPERTIES += \
-	vendor.mali.platform.config=/vendor/etc/mali/platform.config \
-	vendor.mali.debug.config=/vendor/etc/mali/debug.config \
-	vendor.mali.base_protected_max_core_count=4 \
-	vendor.mali.base_protected_tls_max=67108864 \
-	vendor.mali.platform_agt_frequency_khz=24576
-
 PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.opengles.aep.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.opengles.aep.xml \
 	frameworks/native/data/etc/android.hardware.vulkan.version-1_3.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version.xml \
