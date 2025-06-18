@@ -462,10 +462,6 @@ PRODUCT_PACKAGES_DEBUG += \
 
 $(call soong_config_set,google_displaycolor,displaycolor_platform,zuma)
 
-# Storage: for factory reset protection feature
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.frp.pst=/dev/block/by-name/frp
-
 # System props to enable Bluetooth Quality Report (BQR) feature
 ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
 PRODUCT_PRODUCT_PROPERTIES += \
