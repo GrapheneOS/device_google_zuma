@@ -309,10 +309,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	persist.vendor.usb.usbradio.config=dm
 endif
 
-# adpf 16ms update rate
-PRODUCT_PRODUCT_PROPERTIES += \
-        vendor.powerhal.adpf.rate=16666666
-
 -include hardware/google/pixel/power-libperfmgr/aidl/device.mk
 
 # IRQ rebalancing.
