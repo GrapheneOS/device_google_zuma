@@ -623,9 +623,3 @@ endif
 # Touch service
 include device/google/gs-common/touch/twoshay/aidl_zuma.mk
 include device/google/gs-common/touch/twoshay/twoshay.mk
-
-# Allow longer timeout for incident report generation in bugreport
-# Overriding in /product partition instead of /vendor intentionally,
-# since it can't be overridden from /vendor.
-PRODUCT_PRODUCT_PROPERTIES += \
-	dumpstate.strict_run=false
