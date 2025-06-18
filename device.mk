@@ -528,13 +528,6 @@ include device/google/gs-common/modem/modem_svc_sit/shared_modem_platform.mk
 
 endif
 
-# Vibrator Diag
-PRODUCT_PACKAGES_DEBUG += \
-	diag-vibrator \
-	diag-vibrator-cs40l25a \
-	diag-vibrator-drv2624 \
-	$(NULL)
-
 # Audio
 # Audio HAL Server & Default Implementations
 ifeq ($(USE_AUDIO_HAL_AIDL),true)
