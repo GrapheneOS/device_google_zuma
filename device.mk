@@ -442,18 +442,6 @@ include device/google/gs-common/mediacodec/common/mediacodec_common.mk
 # for Exynos C2 Hal
 include device/google/gs-common/mediacodec/samsung/mediacodec_samsung.mk
 
-ifneq ($(BOARD_USE_CODEC2_AIDL), )
-PRODUCT_PROPERTY_OVERRIDES += \
-        debug.stagefright.c2-poolmask=1507328
-else
-PRODUCT_PROPERTY_OVERRIDES += \
-        debug.stagefright.c2-poolmask=458752
-endif
-
-# Create input surface on the framework side
-PRODUCT_PROPERTY_OVERRIDES += \
-	debug.stagefright.c2inputsurface=-1 \
-
 PRODUCT_PROPERTY_OVERRIDES += media.c2.hal.selection=aidl
 
 ####################################
