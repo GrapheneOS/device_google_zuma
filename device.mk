@@ -563,9 +563,6 @@ include device/google/gs101/telephony/pktrouter.mk
 include device/google/gs-common/edgetpu/edgetpu.mk
 # Config variables for TPU chip on device.
 $(call soong_config_set,edgetpu_config,chip,rio)
-# Include the edgetpu targets defined the namespaces below into the final image.
-# TPU firmware
-PRODUCT_PACKAGES += edgetpu-rio.fw
 
 # Connectivity Thermal Power Manager
 PRODUCT_PACKAGES += \
