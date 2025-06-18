@@ -481,13 +481,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	whitelist
 
-#PRODUCT_PACKAGES += \
-	mfc_fw.bin \
-	calliope_sram.bin \
-	calliope_dram.bin \
-	calliope_iva.bin \
-	vts.bin
-
 # This will be called only if IMSService is building with source code for dev branches.
 $(call inherit-product-if-exists, vendor/samsung_slsi/telephony/$(BOARD_USES_SHARED_VENDOR_TELEPHONY)/shannon-ims/device-vendor.mk)
 
