@@ -327,10 +327,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	libhwjpeg
 
-# Video Editor
-PRODUCT_PACKAGES += \
-	VideoEditorGoogle
-
 # WideVine modules
 include device/google/zuma/widevine/device.mk
 PRODUCT_PACKAGES += \
