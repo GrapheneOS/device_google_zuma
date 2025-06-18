@@ -329,8 +329,6 @@ PRODUCT_PACKAGES += \
 
 # WideVine modules
 include device/google/zuma/widevine/device.mk
-PRODUCT_PACKAGES += \
-	liboemcrypto \
 
 RIPCURRENT_PRODUCT := %ripcurrent
 ifneq (,$(filter $(RIPCURRENT_PRODUCT), $(TARGET_PRODUCT)))
