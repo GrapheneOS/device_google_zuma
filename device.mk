@@ -314,22 +314,6 @@ endif
 # IRQ rebalancing.
 include hardware/google/pixel/rebalance_interrupts/rebalance_interrupts.mk
 
-#
-# Audio HALs
-#
-
-# Audio Configurations
-#USE_LEGACY_LOCAL_AUDIO_HAL := false
-#USE_XML_AUDIO_POLICY_CONF := 1
-
-# Enable AAudio MMAP/NOIRQ data path.
-PRODUCT_PROPERTY_OVERRIDES += aaudio.mmap_policy=2
-PRODUCT_PROPERTY_OVERRIDES += aaudio.mmap_exclusive_policy=2
-PRODUCT_PROPERTY_OVERRIDES += aaudio.hw_burst_min_usec=2000
-
-# Set util_clamp_min for s/w spatializer
-PRODUCT_PROPERTY_OVERRIDES += audio.spatializer.effect.util_clamp_min=300
-
 # Calliope firmware overwrite
 #PRODUCT_COPY_FILES += \
 	device/google/zuma/firmware/calliope_dram.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/calliope_dram.bin \
