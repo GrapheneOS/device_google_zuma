@@ -568,15 +568,6 @@ include device/google/gs-common/edgetpu/edgetpu.mk
 # Config variables for TPU chip on device.
 $(call soong_config_set,edgetpu_config,chip,rio)
 # Include the edgetpu targets defined the namespaces below into the final image.
-PRODUCT_SOONG_NAMESPACES += \
-	vendor/google_devices/zuma/proprietary/gchips/tpu/metrics \
-	vendor/google_devices/zuma/proprietary/gchips/tpu/tflite_delegate \
-	vendor/google_devices/zuma/proprietary/gchips/tpu/darwinn_logging_service \
-	vendor/google_devices/zuma/proprietary/gchips/tpu/nnapi_stable_aidl \
-	vendor/google_devices/zuma/proprietary/gchips/tpu/aidl \
-	vendor/google_devices/zuma/proprietary/gchips/tpu/hal \
-	vendor/google_devices/zuma/proprietary/gchips/tpu/tachyon/tachyon_apis \
-	vendor/google_devices/zuma/proprietary/gchips/tpu/tachyon/service
 # TPU firmware
 PRODUCT_PACKAGES += edgetpu-rio.fw
 
