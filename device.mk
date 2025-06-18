@@ -442,8 +442,6 @@ include device/google/gs-common/mediacodec/common/mediacodec_common.mk
 # for Exynos C2 Hal
 include device/google/gs-common/mediacodec/samsung/mediacodec_samsung.mk
 
-PRODUCT_PROPERTY_OVERRIDES += media.c2.hal.selection=aidl
-
 ####################################
 
 # Telephony
