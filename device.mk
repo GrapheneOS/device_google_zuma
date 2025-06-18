@@ -468,10 +468,6 @@ $(call soong_config_set,google_displaycolor,displaycolor_platform,zuma)
 # Dynamic Partitions
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
-# Use /product/etc/fstab.postinstall to mount system_other
-PRODUCT_PRODUCT_PROPERTIES += \
-	ro.postinstall.fstab.prefix=/product
-
 # fastbootd
 PRODUCT_PACKAGES += \
 	android.hardware.fastboot@1.1-impl.pixel \
