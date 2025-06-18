@@ -461,8 +461,6 @@ PRODUCT_PACKAGES_DEBUG += \
    trusty-coverage-controller \
 
 $(call soong_config_set,google_displaycolor,displaycolor_platform,zuma)
-PRODUCT_PACKAGES += \
-	libdisplaycolor
 
 # Storage: for factory reset protection feature
 PRODUCT_PROPERTY_OVERRIDES += \
