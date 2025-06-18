@@ -478,9 +478,7 @@ PRODUCT_PACKAGES += \
 	Iwlan
 
 PRODUCT_PACKAGES += \
-	whitelist \
-	libstagefright_hdcp \
-	libskia_opt
+	whitelist
 
 #PRODUCT_PACKAGES += \
 	mfc_fw.bin \
