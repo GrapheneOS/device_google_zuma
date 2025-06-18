@@ -318,10 +318,12 @@ include hardware/google/pixel/rebalance_interrupts/rebalance_interrupts.mk
 PRODUCT_PACKAGES += \
 	com.android.future.usb.accessory
 
+# TODO: Review this when handling hardware repos.
 PRODUCT_PACKAGES += \
 	android.hardware.memtrack-service.pixel \
 	libion
 
+# TODO: Review this when handling hardware repos.
 PRODUCT_PACKAGES += \
 	libhwjpeg
 
