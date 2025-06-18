@@ -464,9 +464,6 @@ PRODUCT_PACKAGES_DEBUG += \
    trusty_stats_test \
    trusty-coverage-controller \
 
-PRODUCT_PACKAGES += \
-	trusty_metricsd
-
 $(call soong_config_set,google_displaycolor,displaycolor_platform,zuma)
 PRODUCT_PACKAGES += \
 	libdisplaycolor
