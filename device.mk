@@ -481,6 +481,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	Iwlan
 
+# TODO: It might be possible to remove this, but it's hard to grep to confirm.
 PRODUCT_PACKAGES += \
 	whitelist
 
