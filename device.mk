@@ -115,6 +115,14 @@ PRODUCT_PRODUCT_PROPERTIES += \
 	ro.logcat.compress=true
 endif
 
+ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.vendor.usb.displayport.enabled=1
+else
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.vendor.usb.displayport.enabled=1
+endif
+
 PRODUCT_PROPERTY_OVERRIDES += \
 	persist.sys.hdcp_checking=drm-only
 
