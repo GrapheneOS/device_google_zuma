@@ -208,6 +208,8 @@ endif
 DEVICE_MATRIX_FILE := \
     device/google/zuma/compatibility_matrix.xml
 
+PRODUCT_PACKAGES += GosOverlay GosSettingsOverlay
+
 DEVICE_PACKAGE_OVERLAYS += device/google/zuma/overlay
 
 # This device is shipped with 34 (Android U)
