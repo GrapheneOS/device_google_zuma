@@ -200,8 +200,6 @@ endif
 DEVICE_MATRIX_FILE := \
     device/google/zuma/compatibility_matrix.xml
 
-DEVICE_PACKAGE_OVERLAYS += device/google/zuma/overlay
-
 # This device is shipped with 34 (Android U)
 PRODUCT_SHIPPING_API_LEVEL := 34
 
@@ -342,10 +340,6 @@ PRODUCT_PACKAGES += \
 	android.hardware.wifi-service \
 	wificond \
 	libwpa_client
-
-# Connectivity
-PRODUCT_PACKAGES += \
-        ConnectivityOverlay
 
 PRODUCT_PACKAGES_DEBUG += \
 	f2fs_io \
