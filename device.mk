@@ -210,8 +210,6 @@ DEVICE_MATRIX_FILE := \
 
 PRODUCT_PACKAGES += GosOverlay GosSettingsOverlay
 
-DEVICE_PACKAGE_OVERLAYS += device/google/zuma/overlay
-
 # This device is shipped with 34 (Android U)
 PRODUCT_SHIPPING_API_LEVEL := 34
 
@@ -357,10 +355,6 @@ $(call soong_config_set,google3a_config,soc,zuma)
 PRODUCT_PACKAGES += \
 	wificond \
 	libwpa_client
-
-# Connectivity
-PRODUCT_PACKAGES += \
-        ConnectivityOverlay
 
 PRODUCT_PACKAGES_DEBUG += \
 	f2fs_io \
