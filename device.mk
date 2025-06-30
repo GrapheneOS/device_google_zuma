@@ -302,10 +302,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += android.hardware.sensors-service.multihal
 
 # USB HAL
-PRODUCT_PACKAGES += \
-	android.hardware.usb-service
-PRODUCT_PACKAGES += \
-	android.hardware.usb.gadget-service
+PRODUCT_COPY_FILES += \
+    device/google/zuma/usb/usb/android.hardware.usb-service.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/android.hardware.usb-service.rc
 
 # MIDI feature
 PRODUCT_COPY_FILES += \
