@@ -301,11 +301,8 @@ PRODUCT_COPY_FILES += \
 # Add sensor HAL AIDL product packages
 PRODUCT_PACKAGES += android.hardware.sensors-service.multihal
 
-# USB HAL
-PRODUCT_PACKAGES += \
-	android.hardware.usb-service
-PRODUCT_PACKAGES += \
-	android.hardware.usb.gadget-service
+# USB HAL rc file
+PRODUCT_PACKAGES += usb_service_init_rc
 
 # MIDI feature
 PRODUCT_COPY_FILES += \
