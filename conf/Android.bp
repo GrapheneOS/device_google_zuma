@@ -27,3 +27,10 @@ filegroup {
     name: "fstab.zuma.common",
     srcs: ["fstab.zuma.common"],
 }
+
+prebuilt_etc {
+    name: "init.zuma.grapheneos.rc",
+    src: "init.zuma.grapheneos.rc",
+    sub_dir: "init",
+    vendor: true,
+}

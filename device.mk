@@ -202,6 +202,8 @@ DEVICE_MATRIX_FILE := \
 
 PRODUCT_PACKAGES += GosOverlay GosSettingsOverlay
 
+PRODUCT_PACKAGES += init.zuma.grapheneos.rc
+
 # This device is shipped with 34 (Android U)
 PRODUCT_SHIPPING_API_LEVEL := 34
 
